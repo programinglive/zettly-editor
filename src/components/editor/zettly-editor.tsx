@@ -24,6 +24,16 @@ import {
 import { DefaultToolbar } from "./toolbar";
 
 const computeMeta = (editor: Editor): EditorMeta => {
+  // Fast path: check TipTap's built-in isEmpty first to avoid DOM access
+  if (editor.isEmpty) {
+    return {
+      characters: 0,
+      words: 0,
+      empty: true,
+      flowState: editor.isEditable ? "idle" : "info",
+    };
+  }
+
   const characterStorage = editor.storage.characterCount as {
     characters: () => number;
     words: () => number;
@@ -31,7 +41,7 @@ const computeMeta = (editor: Editor): EditorMeta => {
 
   const textContent = editor.state.doc.textContent;
   const sanitizedText = textContent.replace(/[\s\u200b\u200c\u200d\u2060\ufeff]/g, "");
-  const empty = editor.isEmpty || sanitizedText.length === 0;
+  const empty = sanitizedText.length === 0;
   const characters = empty ? 0 : characterStorage?.characters?.() ?? sanitizedText.length;
   const words = empty
     ? 0
@@ -66,7 +76,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
   const { setMeta, createCommandContext } = useEditorContext();
   const lastValueRef = React.useRef(value);
   const skipNextEmitRef = React.useRef(false);
-  const selectAllRef = React.useRef(false);
+  const serializationScheduledRef = React.useRef(false);
 
   const emitEmpty = React.useCallback((ed: Editor) => {
     const meta: EditorMeta = {
@@ -102,10 +112,9 @@ const EditorShell: React.FC<EditorShellProps> = ({
       onCreate({ editor: createdEditor }) {
         const meta = computeMeta(createdEditor);
         setMeta(meta);
+        lastValueRef.current = value;
         if (autoFocus) {
-          window.requestAnimationFrame(() => {
-            createdEditor.commands.focus("end");
-          });
+          createdEditor.commands.focus("end");
         }
       },
       onUpdate({ editor: updatedEditor }) {
@@ -114,14 +123,20 @@ const EditorShell: React.FC<EditorShellProps> = ({
           return;
         }
         const meta = computeMeta(updatedEditor);
+        setMeta(meta);
         if (meta.empty) {
           emitEmpty(updatedEditor);
         } else {
-          const rawHtml = updatedEditor.getHTML();
-          const html = rawHtml;
-          lastValueRef.current = html;
-          setMeta(meta);
-          onChange(html, meta);
+          // Only defer the expensive HTML serialization, not metadata
+          if (!serializationScheduledRef.current) {
+            serializationScheduledRef.current = true;
+            setTimeout(() => {
+              serializationScheduledRef.current = false;
+              const html = updatedEditor.getHTML();
+              lastValueRef.current = html;
+              onChange(html, meta);
+            }, 0);
+          }
         }
       },
       onTransaction({ editor: txEditor }) {
@@ -131,8 +146,8 @@ const EditorShell: React.FC<EditorShellProps> = ({
         }
       },
       onSelectionUpdate({ editor: activeEditor }) {
-        const meta = computeMeta(activeEditor);
-        if (meta.empty && lastValueRef.current !== "") {
+        // Only check for empty state change to avoid expensive meta computation on every selection
+        if (activeEditor.isEmpty && lastValueRef.current !== "") {
           emitEmpty(activeEditor);
         }
       },
@@ -160,107 +175,6 @@ const EditorShell: React.FC<EditorShellProps> = ({
     }
     editor.setEditable(permissions.readOnly !== true);
   }, [editor, permissions.readOnly]);
-
-  React.useEffect(() => {
-    if (!editor) {
-      return;
-    }
-
-    const root = editor.view.dom as HTMLElement;
-    const content = (root.querySelector('.ProseMirror') as HTMLElement) ?? root;
-    const normalizeIfEmpty = () => {
-      const meta = computeMeta(editor);
-      if (meta.empty && lastValueRef.current !== "") {
-        emitEmpty(editor);
-      }
-    };
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== "Backspace" && event.key !== "Delete") {
-        return;
-      }
-      setTimeout(normalizeIfEmpty, 0);
-    };
-    const handleKeyUp = () => {
-      // In case the browser handled deletion internally
-      setTimeout(normalizeIfEmpty, 0);
-    };
-    const handleInput = () => setTimeout(normalizeIfEmpty, 0);
-    const handleCut = () => setTimeout(normalizeIfEmpty, 0);
-    const handleBeforeInput = (e: InputEvent) => {
-      const t = (e as any).inputType as string | undefined;
-      if (t && t.startsWith("delete")) {
-        setTimeout(normalizeIfEmpty, 0);
-      }
-    };
-
-    root.addEventListener("keydown", handleKeyDown, { capture: true });
-    root.addEventListener("keyup", handleKeyUp, { capture: true });
-    root.addEventListener("input", handleInput, { capture: true });
-    root.addEventListener("cut", handleCut, { capture: true });
-    root.addEventListener("beforeinput", handleBeforeInput as any, { capture: true } as any);
-    if (content !== root) {
-      content.addEventListener("keydown", handleKeyDown, { capture: true });
-      content.addEventListener("keyup", handleKeyUp, { capture: true });
-      content.addEventListener("input", handleInput, { capture: true });
-      content.addEventListener("cut", handleCut, { capture: true });
-      content.addEventListener("beforeinput", handleBeforeInput as any, { capture: true } as any);
-    }
-    const observer = new MutationObserver(() => setTimeout(normalizeIfEmpty, 0));
-    observer.observe(content, { childList: true, subtree: true, characterData: true });
-    return () => {
-      root.removeEventListener("keydown", handleKeyDown, { capture: true } as any);
-      root.removeEventListener("keyup", handleKeyUp, { capture: true } as any);
-      root.removeEventListener("input", handleInput, { capture: true } as any);
-      root.removeEventListener("cut", handleCut, { capture: true } as any);
-      root.removeEventListener("beforeinput", handleBeforeInput as any, { capture: true } as any);
-      if (content !== root) {
-        content.removeEventListener("keydown", handleKeyDown, { capture: true } as any);
-        content.removeEventListener("keyup", handleKeyUp, { capture: true } as any);
-        content.removeEventListener("input", handleInput, { capture: true } as any);
-        content.removeEventListener("cut", handleCut, { capture: true } as any);
-        content.removeEventListener("beforeinput", handleBeforeInput as any, { capture: true } as any);
-      }
-      observer.disconnect();
-    };
-  }, [editor, onChange, setMeta]);
-
-  React.useEffect(() => {
-    if (!editor) {
-      return;
-    }
-
-    const handleGlobalKeyDown = (e: KeyboardEvent) => {
-      if (!editor.isFocused) {
-        return;
-      }
-      const key = e.key.toLowerCase();
-      if ((e.metaKey || e.ctrlKey) && key === "a") {
-        selectAllRef.current = true;
-        return;
-      }
-      if ((key === "backspace" || key === "delete") && selectAllRef.current) {
-        e.preventDefault();
-        window.requestAnimationFrame(() => {
-          editor.commands.clearContent(true);
-          const meta = computeMeta(editor);
-          const html = meta.empty ? "" : editor.getHTML();
-          lastValueRef.current = html;
-          setMeta(meta);
-          onChange(html, meta);
-        });
-        selectAllRef.current = false;
-        return;
-      }
-      if (!e.metaKey && !e.ctrlKey) {
-        selectAllRef.current = false;
-      }
-    };
-
-    window.addEventListener("keydown", handleGlobalKeyDown, { capture: true });
-    return () => {
-      window.removeEventListener("keydown", handleGlobalKeyDown, { capture: true } as any);
-    };
-  }, [editor, onChange, setMeta]);
 
   const renderToolbar = React.useCallback(
     (props: ToolbarRenderProps) => {
