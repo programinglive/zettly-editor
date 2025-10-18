@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/programinglive/zettly-editor/compare/v0.0.3...v0.0.4) (2025-10-18)
+
+
+### 🧹 Chores
+
+* add social metadata for deployment site ([41c10a2](https://github.com/programinglive/zettly-editor/commit/41c10a27c3025d4d9e89e63ba405158cf8b18669))
+
 ### [0.0.3](https://github.com/programinglive/zettly-editor/compare/v0.0.2...v0.0.3) (2025-10-18)
 
 
