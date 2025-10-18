@@ -18,7 +18,7 @@ function isNodeVersionCompatible() {
 if (isNodeVersionCompatible()) {
   const result = spawnSync('npx', ['husky'], { stdio: 'inherit' });
   if (result.status !== 0) {
-    process.exit(result.status ?? 1);
+    process.exit(result.status === null || result.status === undefined ? 1 : result.status);
   }
 } else {
   process.stdout.write(
