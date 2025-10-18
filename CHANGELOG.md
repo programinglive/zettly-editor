@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/programinglive/zettly-editor/compare/v0.1.0...v0.1.1) (2025-10-18)
+
+
+### 🐛 Bug Fixes
+
+* widen editor surface and document new vite usage ([f06a276](https://github.com/programinglive/zettly-editor/commit/f06a2766f73788b17a9be59f1ddbe80c1a19a3f6))
+
 ## [0.1.0](https://github.com/programinglive/zettly-editor/compare/v0.0.5...v0.1.0) (2025-10-18)
 
 
