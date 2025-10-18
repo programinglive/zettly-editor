@@ -162,10 +162,10 @@ const EditorShell: React.FC<EditorShellProps> = ({
         return;
       }
       const target = event.target as HTMLElement;
-      if (target.closest(".ProseMirror")) {
-        return;
+      const insideEditor = Boolean(target.closest(".ProseMirror"));
+      if (!insideEditor) {
+        event.preventDefault();
       }
-      event.preventDefault();
       editor.chain().focus().run();
     },
     [editor]

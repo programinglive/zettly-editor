@@ -51,6 +51,7 @@
   font-size: 1rem;
   line-height: 1.65;
   color: inherit;
+  cursor: text;
 }
 
 [data-zettly-editor-surface] .ProseMirror p,
@@ -125,9 +126,11 @@
 }
 
 [data-zettly-editor-surface] .ProseMirror:focus,
+[data-zettly-editor-surface] .ProseMirror:focus-visible,
 [data-zettly-editor-surface] .ProseMirror-focused {
-  outline: none;
-  border: none;
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 [data-zettly-editor-surface] .ProseMirror p:last-child,
