@@ -34,8 +34,7 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
       aria-label={messages.info}
     >
       {commands.map((command) => {
-        const active =
-          command.type === "toggle" && command.isActive?.(context) === true;
+        const active = command.isActive?.(context) === true;
         const enabled = command.isEnabled?.(context) ?? true;
         const disabled = normalizedPermissions.readOnly === true || !enabled;
         return (

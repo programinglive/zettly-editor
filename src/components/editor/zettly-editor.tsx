@@ -145,8 +145,19 @@ const EditorShell: React.FC<EditorShellProps> = ({
   return (
     <div className={cn("flex flex-col gap-2 rounded-lg border border-border bg-background", className)}>
       {renderToolbar(toolbarProps)}
-      <div className={cn("min-h-[200px] rounded-lg border border-input bg-background p-4", editorClassName)}>
-        <EditorContent editor={editor} />
+      <div className={cn("rounded-lg border border-input bg-background p-4", editorClassName)}>
+        <EditorContent
+          editor={editor}
+          className={cn(
+            "min-h-[200px] w-full text-base leading-relaxed focus:outline-none",
+            "[&_p]:mb-4 [&_p:last-child]:mb-0 [&_h1]:mb-4 [&_h2]:mb-4 [&_h3]:mb-3",
+            "[&_ul]:ml-6 [&_ul]:list-disc [&_ul]:space-y-1",
+            "[&_ol]:ml-6 [&_ol]:list-decimal [&_ol]:space-y-1",
+            "[&_li]:marker:text-muted-foreground",
+            "[&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-muted [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground",
+            "[&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80"
+          )}
+        />
       </div>
     </div>
   );
