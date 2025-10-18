@@ -175,7 +175,7 @@ export function App() {
                 <span className="font-medium text-zinc-700 dark:text-zinc-300">Read only</span>
               </header>
               <div
-                className="space-y-4 text-base leading-relaxed text-zinc-800 dark:text-zinc-100 [&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80 [&_blockquote]:border-l-4 [&_blockquote]:border-zinc-200 [&_blockquote]:pl-4 [&_blockquote]:italic [&_h1]:text-3xl [&_h1]:font-semibold [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:text-xl [&_h3]:font-semibold [&_li]:marker:text-primary [&_ol]:ml-6 [&_ol]:list-decimal [&_ul]:ml-6 [&_ul]:list-disc [&_pre]:rounded-lg [&_pre]:bg-zinc-900 [&_pre]:p-4 [&_pre]:overflow-x-auto [&_code]:font-mono [&_code]:text-sm"
+                className="space-y-4 text-base leading-relaxed text-zinc-800 dark:text-zinc-100 [&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80 [&_blockquote]:border-l-4 [&_blockquote]:border-zinc-200 [&_blockquote]:pl-4 [&_blockquote]:italic [&_h1]:text-3xl [&_h1]:font-semibold [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:text-xl [&_h3]:font-semibold [&_li]:marker:text-primary [&_ol]:ml-6 [&_ol]:list-decimal [&_ul]:ml-6 [&_ul]:list-disc [&_pre]:rounded-lg [&_pre]:bg-zinc-100 [&_pre]:text-zinc-900 dark:[&_pre]:bg-slate-900 dark:[&_pre]:text-slate-100 [&_pre]:p-4 [&_pre]:overflow-x-auto [&_code]:font-mono [&_code]:text-sm"
                 dangerouslySetInnerHTML={{ __html: value }}
               />
             </article>
