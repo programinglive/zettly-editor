@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/programinglive/zettly-editor/compare/v0.1.1...v0.1.2) (2025-10-18)
+
+
+### 🐛 Bug Fixes
+
+* normalize editor empty state on full clear ([872b3af](https://github.com/programinglive/zettly-editor/commit/872b3af002f6dbfa49a2ab030d78b83914cb48f5))
+
 ### [0.1.1](https://github.com/programinglive/zettly-editor/compare/v0.1.0...v0.1.1) (2025-10-18)
 
 
