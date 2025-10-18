@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/programinglive/zettly-editor/compare/v0.1.4...v0.1.5) (2025-10-18)
+
+
+### 🐛 Bug Fixes
+
+* ensure surface click focus and remove UA outline ([d9feee0](https://github.com/programinglive/zettly-editor/commit/d9feee05a33b2881943c48e44ab1fd9374f256d3))
+
 ### [0.1.4](https://github.com/programinglive/zettly-editor/compare/v0.1.3...v0.1.4) (2025-10-18)
 
 
