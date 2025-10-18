@@ -42,7 +42,7 @@
     "example:dev": "vite --config example/vite.config.ts",
     "example:build": "vite build --config example/vite.config.ts",
     "example:preview": "vite preview --config example/vite.config.ts",
-    "prepare": "husky",
+    "prepare": "node scripts/prepare.cjs",
     "release": "standard-version",
     "release:major": "npm run release -- --release-as major",
     "release:minor": "npm run release -- --release-as minor",
