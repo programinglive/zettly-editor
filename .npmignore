@@ -1,0 +1,7 @@
+example/
+example/dist/
+example/node_modules/
+*.log
+coverage/
+.DS_Store
+commiter-report.json
