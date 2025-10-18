@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const { spawnSync } = require('node:child_process');
+const { spawnSync } = require('child_process');
 
 function isNodeVersionCompatible() {
   const [major, minor] = process.versions.node.split('.').map(Number);
