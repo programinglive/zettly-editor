@@ -26,6 +26,17 @@ export function MyEditor() {
 }
 ```
 
+The editor ships with opinionated defaults that match the example playground. Bold, italic, strike, lists, blockquotes, and links all have styling baked in so you can see how each toolbar action behaves immediately.
+
+## Example Playground
+
+- **Run locally**
+  ```bash
+  npm run example:dev
+  ```
+- **Edit vs Preview** The playground now includes an Edit/Preview toggle so you can test read-only rendering without leaving the page.
+- **Sample content** Out of the box, every toolbar button has a corresponding snippet in the starter document—use it as a reference when wiring up persistence.
+
 ## Props
 
 | Name | Type | Description |
