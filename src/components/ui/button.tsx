@@ -13,7 +13,7 @@ const buttonVariants = cva(
         outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         toolbar:
-          "border border-transparent bg-background/80 text-muted-foreground shadow-sm hover:border-primary/50 hover:bg-primary/10 hover:text-primary focus-visible:ring-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow",
+          "bg-transparent text-muted-foreground shadow-none hover:bg-primary/10 hover:text-primary focus-visible:ring-primary/60 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground",
       },
       size: {
         default: "h-9 px-4 py-2",

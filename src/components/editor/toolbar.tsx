@@ -28,7 +28,7 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
   return (
     <div
       className={cn(
-        "relative flex flex-wrap items-center gap-1 rounded-md border border-border/80 bg-background/70 p-1 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/50",
+        "relative flex flex-wrap items-center gap-1 rounded-full bg-background/40 px-1 py-1 backdrop-blur supports-[backdrop-filter]:bg-background/30",
         className
       )}
       aria-label={messages.info}

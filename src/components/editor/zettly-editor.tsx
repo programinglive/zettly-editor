@@ -143,9 +143,11 @@ const EditorShell: React.FC<EditorShellProps> = ({
   };
 
   return (
-    <div className={cn("flex flex-col gap-2 rounded-lg border border-border bg-background", className)}>
-      {renderToolbar(toolbarProps)}
-      <div className={cn("rounded-lg border border-input bg-background p-4", editorClassName)}>
+    <div className={cn("overflow-hidden rounded-2xl border border-border bg-background shadow-sm", className)}>
+      <div className="rounded-t-2xl border-b border-border/80 bg-background/90 px-3 py-2">
+        {renderToolbar(toolbarProps)}
+      </div>
+      <div className={cn("rounded-b-2xl bg-background px-4 py-4", editorClassName)}>
         <EditorContent
           editor={editor}
           className={cn(
@@ -155,13 +157,15 @@ const EditorShell: React.FC<EditorShellProps> = ({
             "[&_ol]:ml-6 [&_ol]:list-decimal [&_ol]:space-y-1",
             "[&_li]:marker:text-muted-foreground",
             "[&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-muted [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground",
-            "[&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80"
+            "[&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80",
+            "[&_.ProseMirror]:outline-none [&_.ProseMirror]:border-0 [&_.ProseMirror]:shadow-none",
+            "[&_.ProseMirror-focused]:outline-none [&_.ProseMirror-focused]:border-0 [&_.ProseMirror-focused]:shadow-none"
           )}
         />
       </div>
     </div>
   );
-};
+}
 
 export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
   const {
