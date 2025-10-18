@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/programinglive/zettly-editor/compare/v0.0.4...v0.0.5) (2025-10-18)
+
+
+### 🧹 Chores
+
+* guard husky prepare ([2054b80](https://github.com/programinglive/zettly-editor/commit/2054b80ea2ac71c34a9a885ad27cb6118eae5a3d))
+
 ### [0.0.4](https://github.com/programinglive/zettly-editor/compare/v0.0.3...v0.0.4) (2025-10-18)
 
 
