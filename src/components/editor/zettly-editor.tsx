@@ -7,6 +7,8 @@ import Link from "@tiptap/extension-link";
 import CharacterCount from "@tiptap/extension-character-count";
 
 import { cn } from "../../lib/utils";
+import { CodeBlockWithSyntaxHighlight } from "./code-block-config";
+import "./code-highlight.css";
 import {
   type EditorMessages,
   type EditorMeta,
@@ -62,7 +64,10 @@ const EditorShell: React.FC<EditorShellProps> = ({
 
   const mergedExtensions = React.useMemo(
     () => [
-      StarterKit.configure({}),
+      StarterKit.configure({
+        codeBlock: false,
+      }),
+      CodeBlockWithSyntaxHighlight,
       Link.configure({ openOnClick: false, autolink: true, HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" } }),
       Placeholder.configure({ placeholder: messages.placeholder }),
       CharacterCount.configure({ limit: undefined }),

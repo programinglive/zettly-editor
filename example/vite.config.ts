@@ -16,6 +16,15 @@ export default defineConfig({
   build: {
     outDir: path.resolve(__dirname, "dist"),
     emptyOutDir: true,
-    chunkSizeWarningLimit: 800,
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          tiptap: ["@tiptap/react", "@tiptap/core", "@tiptap/starter-kit"],
+          highlight: ["lowlight", "@tiptap/extension-code-block-lowlight"],
+        },
+      },
+    },
   },
 });

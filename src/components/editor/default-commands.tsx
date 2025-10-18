@@ -6,6 +6,7 @@ import {
   ListOrdered,
   Quote,
   Link2,
+  Code,
 } from "lucide-react";
 import { type CommandDefinition, type CommandContext } from "../../types/editor";
 
@@ -85,6 +86,16 @@ export const defaultCommands: CommandDefinition[] = [
     isActive: ({ editor }) => editor.isActive("blockquote"),
     icon: <Quote className="h-4 w-4" />,
   },
+  toggleCommand(
+    "codeBlock",
+    "Code Block",
+    ({ editor }) => {
+      editor.chain().focus().toggleCodeBlock().run();
+    },
+    ({ editor }) => editor.isActive("codeBlock"),
+    <Code className="h-4 w-4" />,
+    "Mod+Alt+C"
+  ),
   {
     id: "link",
     label: "Link",

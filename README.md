@@ -28,14 +28,33 @@ export function MyEditor() {
 
 The editor ships with opinionated defaults that match the example playground. Bold, italic, strike, lists, blockquotes, and links all have styling baked in so you can see how each toolbar action behaves immediately.
 
+## Syntax highlighting
+
+Code blocks use `@tiptap/extension-code-block-lowlight` together with `lowlight` and `highlight.js` for layered syntax highlighting. `lowlight` ships with a curated set of languages pre-registered inside `src/components/editor/code-block-config.ts`, including JavaScript, TypeScript, JSON, Bash, SQL, Go, PHP, Rust, Swift, Kotlin, and more. The default toolbar exposes a code-block toggle so editors can insert and format blocks instantly.
+
+To support an additional language, register the Highlight.js grammar before mounting the editor:
+
+```ts
+import python from "highlight.js/lib/languages/python";
+import { lowlight } from "lowlight";
+
+lowlight.registerLanguage("python", python);
+```
+
+Styling is handled in `src/components/editor/code-highlight.css`. Override the `.hljs` token classes or append your own theme to align with your design system. The example playground demonstrates how to render and theme read-only snippets via `example/src/syntax-highlighter.tsx`.
+
 ## Example Playground
 
 - **Run locally**
   ```bash
   npm run example:dev
   ```
-- **Edit vs Preview** The playground now includes an Edit/Preview toggle so you can test read-only rendering without leaving the page.
-- **Sample content** Out of the box, every toolbar button has a corresponding snippet in the starter document—use it as a reference when wiring up persistence.
+- ✨ Rich text editing powered by [tiptap](https://tiptap.dev/)
+- 🎨 Beautiful default toolbar built with [shadcn/ui](https://ui.shadcn.com/)
+- 🧰 Fully controlled component with single data flow
+- 🪝 Permission-aware commands out of the box
+- 🧪 Tested with React Testing Library + Vitest
+- 🌈 Syntax highlighting for code blocks powered by Highlight.js
 
 ## Props
 

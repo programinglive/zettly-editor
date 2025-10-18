@@ -1,6 +1,7 @@
 import React from "react";
 
 import { ZettlyEditor } from "@programinglive/zettly-editor";
+import { SyntaxHighlighter } from "./syntax-highlighter";
 
 const initialContent = `<h1>Zettly Editor</h1>
 <p>
@@ -13,6 +14,26 @@ const initialContent = `<h1>Zettly Editor</h1>
 <blockquote>
   “This blockquote is ready for inspiration. Edit it or add your own quote to see the formatting update in preview mode.”
 </blockquote>
+<h2>Code Block with Syntax Highlighting</h2>
+<p>The editor now supports syntax highlighting for code blocks. Try the code block button in the toolbar!</p>
+<pre><code class="language-javascript">// Example JavaScript code
+function greet(name) {
+  console.log(\`Hello, \${name}!\`);
+  return true;
+}
+
+const user = "Developer";
+greet(user);</code></pre>
+<pre><code class="language-typescript">// TypeScript example
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const createUser = (data: User): User => {
+  return { ...data };
+};</code></pre>
 <ul>
   <li>Bullet list item one</li>
   <li>Bullet list item two</li>
@@ -154,7 +175,7 @@ export function App() {
                 <span className="font-medium text-zinc-700 dark:text-zinc-300">Read only</span>
               </header>
               <div
-                className="space-y-4 text-base leading-relaxed text-zinc-800 dark:text-zinc-100 [&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80 [&_blockquote]:border-l-4 [&_blockquote]:border-zinc-200 [&_blockquote]:pl-4 [&_blockquote]:italic [&_h1]:text-3xl [&_h1]:font-semibold [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:text-xl [&_h3]:font-semibold [&_li]:marker:text-primary [&_ol]:ml-6 [&_ol]:list-decimal [&_ul]:ml-6 [&_ul]:list-disc"
+                className="space-y-4 text-base leading-relaxed text-zinc-800 dark:text-zinc-100 [&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80 [&_blockquote]:border-l-4 [&_blockquote]:border-zinc-200 [&_blockquote]:pl-4 [&_blockquote]:italic [&_h1]:text-3xl [&_h1]:font-semibold [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:text-xl [&_h3]:font-semibold [&_li]:marker:text-primary [&_ol]:ml-6 [&_ol]:list-decimal [&_ul]:ml-6 [&_ul]:list-disc [&_pre]:rounded-lg [&_pre]:bg-zinc-900 [&_pre]:p-4 [&_pre]:overflow-x-auto [&_code]:font-mono [&_code]:text-sm"
                 dangerouslySetInnerHTML={{ __html: value }}
               />
             </article>
@@ -186,7 +207,7 @@ export function App() {
             <code className="mx-1 rounded bg-zinc-200 px-1 py-0.5 text-xs dark:bg-zinc-800">ZettlyEditor</code> as the
             <code className="mx-1 rounded bg-zinc-200 px-1 py-0.5 text-xs dark:bg-zinc-800">value</code> prop.
           </p>
-          <pre className="max-h-64 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
+          <pre className="max-h-64 overflow-auto rounded-md bg-zinc-100 p-4 text-xs text-zinc-800 dark:bg-slate-900 dark:text-slate-100">
 {value.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
           </pre>
         </section>
@@ -220,16 +241,17 @@ export function App() {
           <div className="space-y-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
             <div>
               <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">1. Install dependencies</h4>
-              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
-                {`npm install @programinglive/zettly-editor @tiptap/react @tiptap/starter-kit lucide-react
+              <SyntaxHighlighter
+                code={`npm install @programinglive/zettly-editor @tiptap/react @tiptap/starter-kit lucide-react
 npm install tailwindcss postcss autoprefixer
 npx tailwindcss init -p`}
-              </pre>
+                language="bash"
+              />
             </div>
             <div>
               <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">2. Tailwind config essentials</h4>
-              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
-                {`import type { Config } from "tailwindcss";
+              <SyntaxHighlighter
+                code={`import type { Config } from "tailwindcss";
 
 const config: Config = {
   darkMode: ["class"],
@@ -253,12 +275,13 @@ const config: Config = {
 };
 
 export default config;`}
-            </pre>
-          </div>
-          <div>
-            <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">3. Render with single data flow</h4>
-            <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
-              {`import { useState } from "react";
+                language="typescript"
+              />
+            </div>
+            <div>
+              <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">3. Render with single data flow</h4>
+              <SyntaxHighlighter
+                code={`import { useState } from "react";
 import { ZettlyEditor } from "@programinglive/zettly-editor";
 
 export function NoteEditor() {
@@ -271,15 +294,16 @@ export function NoteEditor() {
     />
   );
 }`}
-            </pre>
-          </div>
-          <div className="space-y-3">
-            <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">4. Save HTML to your database</h4>
-            <p>Pick the backend stack that matches your project. Each snippet expects <code>content</code> to be the editor output.</p>
-            <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
-              <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">Prisma (MySQL/PostgreSQL)</summary>
-              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
-                {`// prisma/schema.prisma
+                language="typescript"
+              />
+            </div>
+            <div className="space-y-3">
+              <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">4. Save HTML to your database</h4>
+              <p>Pick the backend stack that matches your project. Each snippet expects <code>content</code> to be the editor output.</p>
+              <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+                <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">Prisma (MySQL/PostgreSQL)</summary>
+                <SyntaxHighlighter
+                  code={`// prisma/schema.prisma
 model Note {
   id        String   @id @default(cuid())
   title     String
@@ -297,12 +321,13 @@ export async function POST(request: Request) {
   const note = await prisma.note.create({ data: { title, content } });
   return NextResponse.json(note, { status: 201 });
 }`}
-              </pre>
+                language="typescript"
+              />
             </details>
             <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
               <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">MySQL (mysql2)</summary>
-              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
-                {`import mysql from "mysql2/promise";
+              <SyntaxHighlighter
+                code={`import mysql from "mysql2/promise";
 
 export const pool = mysql.createPool({ uri: process.env.MYSQL_DATABASE_URL! });
 
@@ -311,12 +336,13 @@ export async function POST(request: Request) {
   await pool.execute("INSERT INTO notes (title, content_html) VALUES (?, ?)", [title, content]);
   return Response.json({ ok: true });
 }`}
-              </pre>
+                language="typescript"
+              />
             </details>
             <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
               <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">PostgreSQL (pg)</summary>
-              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
-                {`import { Pool } from "pg";
+              <SyntaxHighlighter
+                code={`import { Pool } from "pg";
 
 export const pgPool = new Pool({ connectionString: process.env.POSTGRES_URL });
 
@@ -325,12 +351,13 @@ export async function POST(request: Request) {
   await pgPool.query("INSERT INTO notes (title, content_html) VALUES ($1, $2)", [title, content]);
   return Response.json({ ok: true });
 }`}
-              </pre>
+                language="typescript"
+              />
             </details>
             <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
               <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">MongoDB</summary>
-              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
-                {`import { MongoClient } from "mongodb";
+              <SyntaxHighlighter
+                code={`import { MongoClient } from "mongodb";
 
 const client = new MongoClient(process.env.MONGODB_URI!);
 const collection = client.db("zettly").collection("notes");
@@ -340,12 +367,13 @@ export async function POST(request: Request) {
   await collection.insertOne({ title, content, createdAt: new Date() });
   return Response.json({ ok: true });
 }`}
-              </pre>
+                language="typescript"
+              />
             </details>
             <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
               <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">Firebase Firestore</summary>
-              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
-                {`import { cert, getApps, initializeApp } from "firebase-admin/app";
+              <SyntaxHighlighter
+                code={`import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
 const app = getApps()[0] ?? initializeApp({
@@ -359,16 +387,18 @@ export async function POST(request: Request) {
   await firestore.collection("notes").add({ title, content, createdAt: Date.now() });
   return Response.json({ ok: true });
 }`}
-              </pre>
+                language="typescript"
+              />
             </details>
           </div>
           <div>
             <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">5. Restore saved HTML</h4>
-            <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
-              {`const note = await fetch("/api/notes/123").then((res) => res.json());
+            <SyntaxHighlighter
+              code={`const note = await fetch("/api/notes/123").then((res) => res.json());
 
 return <ZettlyEditor value={note.content} onChange={(next) => setValue(next)} />;`}
-            </pre>
+              language="typescript"
+            />
           </div>
         </div>
       </section>

@@ -1,0 +1,175 @@
+/* Syntax highlighting styles for code blocks */
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  font-family: "JetBrains Mono", "Fira Code", Menlo, Consolas, ui-monospace, SFMono-Regular, "SF Mono", monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  background: rgba(248, 250, 252, 0.85);
+  color: #0f172a;
+}
+
+.dark .hljs {
+  background: rgba(15, 23, 42, 0.85);
+  color: #e2e8f0;
+}
+
+/* Light mode tokens */
+.hljs-comment,
+.hljs-quote {
+  color: #64748b;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-meta .hljs-keyword {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable {
+  color: #0369a1;
+}
+
+.hljs-string,
+.hljs-doctag,
+.hljs-formula {
+  color: #0f766e;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-selector-id {
+  color: #7c3aed;
+  font-weight: 600;
+}
+
+.hljs-type,
+.hljs-class .hljs-title,
+.hljs-built_in {
+  color: #9333ea;
+}
+
+.hljs-tag,
+.hljs-name,
+.hljs-attribute {
+  color: #db2777;
+  font-weight: 600;
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-link {
+  color: #ea580c;
+}
+
+.hljs-addition {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.hljs-deletion {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 700;
+}
+
+/* Dark mode tokens */
+.dark .hljs-comment,
+.dark .hljs-quote {
+  color: #94a3b8;
+}
+
+.dark .hljs-keyword,
+.dark .hljs-selector-tag,
+.dark .hljs-meta .hljs-keyword {
+  color: #60a5fa;
+}
+
+.dark .hljs-number,
+.dark .hljs-literal,
+.dark .hljs-variable,
+.dark .hljs-template-variable {
+  color: #38bdf8;
+}
+
+.dark .hljs-string,
+.dark .hljs-doctag,
+.dark .hljs-formula {
+  color: #34d399;
+}
+
+.dark .hljs-title,
+.dark .hljs-section,
+.dark .hljs-selector-id {
+  color: #c084fc;
+}
+
+.dark .hljs-type,
+.dark .hljs-class .hljs-title,
+.dark .hljs-built_in {
+  color: #f472b6;
+}
+
+.dark .hljs-tag,
+.dark .hljs-name,
+.dark .hljs-attribute {
+  color: #f87171;
+}
+
+.dark .hljs-symbol,
+.dark .hljs-bullet,
+.dark .hljs-link {
+  color: #fb923c;
+}
+
+.dark .hljs-addition {
+  background: rgba(22, 163, 74, 0.22);
+}
+
+.dark .hljs-deletion {
+  background: rgba(220, 38, 38, 0.24);
+}
+
+/* Code block container styles */
+pre[class*="language-"] {
+  margin: 1rem 0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+pre code.hljs {
+  padding: 0;
+  background: transparent;
+}
+
+/* Language label */
+.code-block-language-selector {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.55rem;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 9999px;
+  color: #475569;
+  backdrop-filter: blur(6px);
+}
+
+.dark .code-block-language-selector {
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(148, 163, 184, 0.3);
+  color: #cbd5f5;
+}
