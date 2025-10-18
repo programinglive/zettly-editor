@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/programinglive/zettly-editor/compare/v0.0.5...v0.1.0) (2025-10-18)
+
+
+### 🐛 Bug Fixes
+
+* compat prepare script ([1654245](https://github.com/programinglive/zettly-editor/commit/16542453e9dd150aa3d2feb857c09e487a655755))
+* remove node: protocol for legacy compat ([f9753cf](https://github.com/programinglive/zettly-editor/commit/f9753cfc3125b3b6daa3099599abd920e2ba3019))
+
+
+### ✨ Features
+
+* add syntax highlighting support ([a5da7b5](https://github.com/programinglive/zettly-editor/commit/a5da7b564f5779fef45ccf68e461376a7a04a10f))
+
 ### [0.0.5](https://github.com/programinglive/zettly-editor/compare/v0.0.4...v0.0.5) (2025-10-18)
 
 
