@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/programinglive/zettly-editor/compare/v0.0.2...v0.0.3) (2025-10-18)
+
+
+### 📝 Documentation
+
+* note preview mode and sample formatting ([42186fd](https://github.com/programinglive/zettly-editor/commit/42186fd2928b42699db40070be12a65ad4310e4a))
+
+
+### 🧹 Chores
+
+* raise example bundle warning threshold ([3fe79a1](https://github.com/programinglive/zettly-editor/commit/3fe79a1f42f499d6d24e8a4101f3abac2c7140a8))
+
 ### [0.0.2](https://github.com/programinglive/zettly-editor/compare/v0.0.1...v0.0.2) (2025-10-18)
 
 
