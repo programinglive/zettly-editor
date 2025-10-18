@@ -1,0 +1,277 @@
+# @programinglive/zettly-editor
+
+Shadcn-styled TipTap editor for Zettly todo/notes apps.
+
+## Installation
+
+```bash
+npm install @programinglive/zettly-editor @tiptap/react @tiptap/starter-kit react react-dom
+```
+
+## Usage
+
+```tsx
+import { useState } from "react";
+import { ZettlyEditor } from "@programinglive/zettly-editor";
+
+export function MyEditor() {
+  const [value, setValue] = useState("<p>Hello Zettly</p>");
+
+  return (
+    <ZettlyEditor
+      value={value}
+      onChange={(nextValue) => setValue(nextValue)}
+    />
+  );
+}
+```
+
+## Props
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `value` | `string` | Controlled HTML content. |
+| `onChange` | `(value: string, meta: EditorMeta) => void` | Receive updates plus meta information. |
+| `extensions` | `AnyExtension[]` | Additional TipTap extensions. |
+| `commands` | `CommandDefinition[]` | Custom toolbar commands. |
+| `permissions` | `EditorPermissions` | Control read-only/link behavior. |
+| `messages` | `Partial<EditorMessages>` | Override UI copy. |
+| `toolbar` | `(props: ToolbarRenderProps) => ReactNode` | Custom toolbar renderer. |
+| `className` | `string` | Wrapper class. |
+| `editorClassName` | `string` | Content area class. |
+| `autoFocus` | `boolean` | Focus editor on mount. |
+
+## Integrating with a Shadcn Project
+
+### 1. Install Dependencies
+
+```bash
+npm install @programinglive/zettly-editor @tiptap/react @tiptap/starter-kit lucide-react
+npm install tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+### 2. Configure Tailwind Tokens
+
+Add the content globs and CSS variables used by `ZettlyEditor` inside your `tailwind.config.ts`:
+
+```ts
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  darkMode: ["class"],
+  content: ["./src/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;
+```
+
+Import the Tailwind entry file in your app layout:
+
+```tsx
+// app/layout.tsx (Next.js)
+import "./globals.css";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className="bg-background text-foreground">
+      <body className="min-h-screen antialiased">{children}</body>
+    </html>
+  );
+}
+```
+
+### 3. Render the Editor with Single Data Flow
+
+```tsx
+import { useState } from "react";
+import { ZettlyEditor, type EditorMeta } from "@programinglive/zettly-editor";
+
+export function NoteEditor() {
+  const [value, setValue] = useState("<p>Start writing...</p>");
+  const [meta, setMeta] = useState<EditorMeta | null>(null);
+
+  return (
+    <div className="space-y-4">
+      <ZettlyEditor
+        value={value}
+        onChange={(next, nextMeta) => {
+          setValue(next);
+          setMeta(nextMeta);
+        }}
+      />
+      <pre className="rounded-md bg-muted p-4 text-xs">{value}</pre>
+      <p className="text-sm text-muted-foreground">Words: {meta?.words ?? 0}</p>
+    </div>
+  );
+}
+```
+
+## Persisting Editor Output
+
+`ZettlyEditor` emits HTML through the `onChange` callback. Save this string in your preferred backend. Below are minimal examples for popular databases. All examples assume a Next.js 14 route handler, but you can adapt them to Express/Fastify easily.
+
+### Prisma (MySQL, PostgreSQL, SQLite, PlanetScale, Supabase)
+
+**Schema:**
+
+```prisma
+// prisma/schema.prisma
+model Note {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
+
+**Route handler:**
+
+```ts
+// app/api/notes/route.ts
+import { NextResponse } from "next/server";
+import { prisma } from "~/lib/prisma";
+
+export async function POST(request: Request) {
+  const { title, content } = await request.json();
+  const note = await prisma.note.create({ data: { title, content } });
+  return NextResponse.json(note, { status: 201 });
+}
+
+export async function GET() {
+  const notes = await prisma.note.findMany({ orderBy: { createdAt: "desc" } });
+  return NextResponse.json(notes);
+}
+```
+
+**Client usage:**
+
+```tsx
+async function saveNote(value: string) {
+  await fetch("/api/notes", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ title: "Daily Log", content: value }),
+  });
+}
+```
+
+### MySQL (mysql2)
+
+```ts
+// src/lib/mysql.ts
+import mysql from "mysql2/promise";
+
+export const pool = mysql.createPool({
+  uri: process.env.MYSQL_DATABASE_URL!,
+});
+
+// app/api/notes/mysql/route.ts
+import { NextResponse } from "next/server";
+import { pool } from "~/lib/mysql";
+
+export async function POST(request: Request) {
+  const { title, content } = await request.json();
+  await pool.execute("INSERT INTO notes (title, content_html) VALUES (?, ?)", [title, content]);
+  return NextResponse.json({ ok: true });
+}
+```
+
+### PostgreSQL (pg)
+
+```ts
+// src/lib/postgres.ts
+import { Pool } from "pg";
+
+export const pgPool = new Pool({ connectionString: process.env.POSTGRES_URL });
+
+// app/api/notes/postgres/route.ts
+import { NextResponse } from "next/server";
+import { pgPool } from "~/lib/postgres";
+
+export async function POST(request: Request) {
+  const { title, content } = await request.json();
+  await pgPool.query("INSERT INTO notes (title, content_html) VALUES ($1, $2)", [title, content]);
+  return NextResponse.json({ ok: true });
+}
+```
+
+### MongoDB (mongodb driver)
+
+```ts
+// src/lib/mongo.ts
+import { MongoClient } from "mongodb";
+
+const client = new MongoClient(process.env.MONGODB_URI!);
+export const mongo = client.db("zettly").collection("notes");
+
+// app/api/notes/mongo/route.ts
+import { NextResponse } from "next/server";
+import { mongo } from "~/lib/mongo";
+
+export async function POST(request: Request) {
+  const { title, content } = await request.json();
+  await mongo.insertOne({ title, content, createdAt: new Date() });
+  return NextResponse.json({ ok: true });
+}
+```
+
+### Firebase Firestore
+
+```ts
+// src/lib/firebase-admin.ts
+import { cert, getApps, initializeApp } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
+
+const app = getApps()[0] ?? initializeApp({
+  credential: cert(JSON.parse(process.env.FIREBASE_ADMIN_KEY!)),
+});
+
+export const firestore = getFirestore(app);
+
+// app/api/notes/firebase/route.ts
+import { NextResponse } from "next/server";
+import { firestore } from "~/lib/firebase-admin";
+
+export async function POST(request: Request) {
+  const { title, content } = await request.json();
+  await firestore.collection("notes").add({ title, content, createdAt: Date.now() });
+  return NextResponse.json({ ok: true });
+}
+```
+
+### Loading Saved Content
+
+When you fetch stored HTML, feed it back into the editor as `value`.
+
+```tsx
+const note = await fetch("/api/notes/123").then((res) => res.json());
+
+return <ZettlyEditor value={note.content} onChange={handleChange} />;
+```
+
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+Build outputs to `dist/` via `tsup`.

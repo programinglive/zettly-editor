@@ -1,0 +1,330 @@
+import React from "react";
+
+import { ZettlyEditor } from "@programinglive/zettly-editor";
+
+const initialContent = `<h1>Zettly Editor</h1>
+<p>
+  This is the <strong>ZettlyEditor</strong> component rendered inside the example playground.
+  Use the toolbar above the editor area to format text.
+</p>
+<ul>
+  <li>Bold, Italic, Strike</li>
+  <li>Bullet and Ordered lists</li>
+  <li>Links</li>
+</ul>`;
+
+export function App() {
+  const [value, setValue] = React.useState(initialContent);
+  const [words, setWords] = React.useState(0);
+  const [characters, setCharacters] = React.useState(0);
+  const [theme, setTheme] = React.useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") {
+      return "light";
+    }
+    const stored = window.localStorage.getItem("zettly-theme");
+    if (stored === "light" || stored === "dark") {
+      return stored;
+    }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  });
+
+  React.useEffect(() => {
+    if (typeof document === "undefined") {
+      return;
+    }
+    const root = document.documentElement;
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+    window.localStorage.setItem("zettly-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
+  const menuItems = React.useMemo(
+    () => [
+      { id: "playground", label: "Playground" },
+      { id: "metadata", label: "Metadata" },
+      { id: "output", label: "Output" },
+      { id: "integration", label: "Integration" },
+    ],
+    []
+  );
+
+  const handleNavClick = React.useCallback((sectionId: string) => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const target = document.getElementById(sectionId);
+    if (!target) {
+      return;
+    }
+    const headerOffset = 120;
+    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top, behavior: "smooth" });
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-white via-sky-50 to-indigo-50 pb-20 text-zinc-900 transition-colors duration-300 dark:from-slate-950 dark:via-slate-950 dark:to-black dark:text-zinc-100">
+      <header className="sticky top-0 z-20 border-b border-white/30 bg-white/70 backdrop-blur transition-colors duration-200 supports-[backdrop-filter]:bg-white/40 dark:border-zinc-800/60 dark:bg-zinc-950/70 dark:supports-[backdrop-filter]:bg-zinc-900/60">
+        <nav className="mx-auto flex max-w-4xl flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-1">
+            <span className="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">Zettly Editor</span>
+            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">WYSIWYG Playground</h1>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            {menuItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => handleNavClick(item.id)}
+                className="rounded-full border border-zinc-200 bg-white/80 px-4 py-1 text-sm font-medium text-zinc-700 shadow-sm transition hover:border-primary/60 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 dark:border-zinc-700 dark:bg-zinc-900/70 dark:text-zinc-300 dark:hover:border-primary/60 dark:hover:text-primary"
+              >
+                {item.label}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="rounded-full border border-zinc-200 bg-white/80 px-4 py-1 text-sm font-semibold text-zinc-700 shadow-sm transition hover:border-primary/60 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 dark:border-zinc-700 dark:bg-zinc-900/70 dark:text-zinc-200 dark:hover:border-primary/60 dark:hover:text-primary"
+            >
+              {theme === "light" ? "☀️ Light" : "🌙 Dark"}
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      <main className="mx-auto flex max-w-3xl flex-col gap-8 px-6 py-10" id="playground">
+        <section className="space-y-2">
+          <h2 className="text-3xl font-semibold tracking-tight text-zinc-950">Zettly Editor Playground</h2>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            Controlled example using the published component from <code>@programinglive/zettly-editor</code>.
+          </p>
+        </section>
+
+        <ZettlyEditor
+          value={value}
+          onChange={(nextValue, meta) => {
+            setValue(nextValue);
+            setWords(meta.words);
+            setCharacters(meta.characters);
+          }}
+          messages={{ placeholder: "Start jotting your notes..." }}
+        />
+
+        <section
+          className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+          id="metadata"
+        >
+          <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">Metadata</h3>
+          <p className="text-sm text-zinc-700 dark:text-zinc-300">Characters: {characters}</p>
+          <p className="text-sm text-zinc-700 dark:text-zinc-300">Words: {words}</p>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            Value length: {value.length} characters.
+          </p>
+        </section>
+
+        <section
+          className="space-y-3 rounded-lg border border-dashed border-zinc-300 bg-zinc-50/60 p-4 dark:border-zinc-700 dark:bg-zinc-900/50"
+          id="output"
+        >
+          <header className="flex items-center justify-between">
+            <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">Editor Output</h3>
+            <span className="text-xs uppercase tracking-wide text-zinc-500">HTML stored in DB</span>
+          </header>
+          <p className="text-sm text-zinc-600 dark:text-zinc-300">
+            Persist the string below to your backend. When you need to display the note again, pass it back into
+            <code className="mx-1 rounded bg-zinc-200 px-1 py-0.5 text-xs dark:bg-zinc-800">ZettlyEditor</code> as the
+            <code className="mx-1 rounded bg-zinc-200 px-1 py-0.5 text-xs dark:bg-zinc-800">value</code> prop.
+          </p>
+          <pre className="max-h-64 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
+{value.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
+          </pre>
+        </section>
+
+        <section
+          className="space-y-6 rounded-lg border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
+          id="integration"
+        >
+          <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Integration Tutorial</h3>
+          <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+            Store the editor output as a <strong>string</strong> or <strong>text/blob</strong> column in your database. Use
+            the largest text type available to avoid truncation:
+          </p>
+          <ul className="grid gap-3 rounded-md border border-zinc-100 bg-zinc-50 p-4 text-sm text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-300 sm:grid-cols-2">
+            <li>
+              <strong>MySQL:</strong> <code>LONGTEXT</code> or <code>TEXT</code>
+            </li>
+            <li>
+              <strong>PostgreSQL:</strong> <code>TEXT</code>
+            </li>
+            <li>
+              <strong>MongoDB:</strong> <code>string</code> field (BSON)
+            </li>
+            <li>
+              <strong>Firebase Firestore:</strong> <code>string</code> field
+            </li>
+            <li>
+              <strong>Prisma:</strong> <code>String @db.LongText</code> (MySQL) or plain <code>String</code> (PostgreSQL)
+            </li>
+          </ul>
+          <div className="space-y-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+            <div>
+              <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">1. Install dependencies</h4>
+              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
+                {`npm install @programinglive/zettly-editor @tiptap/react @tiptap/starter-kit lucide-react
+npm install tailwindcss postcss autoprefixer
+npx tailwindcss init -p`}
+              </pre>
+            </div>
+            <div>
+              <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">2. Tailwind config essentials</h4>
+              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
+                {`import type { Config } from "tailwindcss";
+
+const config: Config = {
+  darkMode: ["class"],
+  content: ["./src/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;`}
+            </pre>
+          </div>
+          <div>
+            <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">3. Render with single data flow</h4>
+            <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
+              {`import { useState } from "react";
+import { ZettlyEditor } from "@programinglive/zettly-editor";
+
+export function NoteEditor() {
+  const [value, setValue] = useState("<p>Start writing...</p>");
+
+  return (
+    <ZettlyEditor
+      value={value}
+      onChange={(next) => setValue(next)}
+    />
+  );
+}`}
+            </pre>
+          </div>
+          <div className="space-y-3">
+            <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">4. Save HTML to your database</h4>
+            <p>Pick the backend stack that matches your project. Each snippet expects <code>content</code> to be the editor output.</p>
+            <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+              <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">Prisma (MySQL/PostgreSQL)</summary>
+              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
+                {`// prisma/schema.prisma
+model Note {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @db.LongText
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// app/api/notes/route.ts
+import { NextResponse } from "next/server";
+import { prisma } from "~/lib/prisma";
+
+export async function POST(request: Request) {
+  const { title, content } = await request.json();
+  const note = await prisma.note.create({ data: { title, content } });
+  return NextResponse.json(note, { status: 201 });
+}`}
+              </pre>
+            </details>
+            <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+              <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">MySQL (mysql2)</summary>
+              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
+                {`import mysql from "mysql2/promise";
+
+export const pool = mysql.createPool({ uri: process.env.MYSQL_DATABASE_URL! });
+
+export async function POST(request: Request) {
+  const { title, content } = await request.json();
+  await pool.execute("INSERT INTO notes (title, content_html) VALUES (?, ?)", [title, content]);
+  return Response.json({ ok: true });
+}`}
+              </pre>
+            </details>
+            <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+              <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">PostgreSQL (pg)</summary>
+              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
+                {`import { Pool } from "pg";
+
+export const pgPool = new Pool({ connectionString: process.env.POSTGRES_URL });
+
+export async function POST(request: Request) {
+  const { title, content } = await request.json();
+  await pgPool.query("INSERT INTO notes (title, content_html) VALUES ($1, $2)", [title, content]);
+  return Response.json({ ok: true });
+}`}
+              </pre>
+            </details>
+            <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+              <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">MongoDB</summary>
+              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
+                {`import { MongoClient } from "mongodb";
+
+const client = new MongoClient(process.env.MONGODB_URI!);
+const collection = client.db("zettly").collection("notes");
+
+export async function POST(request: Request) {
+  const { title, content } = await request.json();
+  await collection.insertOne({ title, content, createdAt: new Date() });
+  return Response.json({ ok: true });
+}`}
+              </pre>
+            </details>
+            <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+              <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">Firebase Firestore</summary>
+              <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
+                {`import { cert, getApps, initializeApp } from "firebase-admin/app";
+import { getFirestore } from "firebase-admin/firestore";
+
+const app = getApps()[0] ?? initializeApp({
+  credential: cert(JSON.parse(process.env.FIREBASE_ADMIN_KEY!)),
+});
+
+export const firestore = getFirestore(app);
+
+export async function POST(request: Request) {
+  const { title, content } = await request.json();
+  await firestore.collection("notes").add({ title, content, createdAt: Date.now() });
+  return Response.json({ ok: true });
+}`}
+              </pre>
+            </details>
+          </div>
+          <div>
+            <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">5. Restore saved HTML</h4>
+            <pre className="mt-2 overflow-auto rounded-md bg-zinc-950/90 p-4 text-xs text-zinc-100">
+              {`const note = await fetch("/api/notes/123").then((res) => res.json());
+
+return <ZettlyEditor value={note.content} onChange={(next) => setValue(next)} />;`}
+            </pre>
+          </div>
+        </div>
+      </section>
+      </main>
+    </div>
+  );
+}

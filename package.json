@@ -1,0 +1,86 @@
+{
+  "name": "@programinglive/zettly-editor",
+  "version": "0.0.1",
+  "description": "Shadcn-based WYSIWYG editor for Zettly todo and notes applications.",
+  "keywords": [
+    "tiptap",
+    "wysiwyg",
+    "editor",
+    "react",
+    "shadcn",
+    "zettly"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/programinglive/zettly-editor.git"
+  },
+  "homepage": "https://github.com/programinglive/zettly-editor#readme",
+  "bugs": {
+    "url": "https://github.com/programinglive/zettly-editor/issues"
+  },
+  "sideEffects": false,
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "example:dev": "vite --config example/vite.config.ts",
+    "example:build": "vite build --config example/vite.config.ts",
+    "example:preview": "vite preview --config example/vite.config.ts"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "dependencies": {
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-slot": "^1.0.3",
+    "@radix-ui/react-toggle": "^1.0.3",
+    "@tiptap/core": "^2.0.3",
+    "@tiptap/extension-character-count": "^2.0.3",
+    "@tiptap/extension-link": "^2.0.3",
+    "@tiptap/extension-placeholder": "^2.0.3",
+    "@tiptap/react": "^2.0.3",
+    "@tiptap/starter-kit": "^2.0.3",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.370.0",
+    "tailwind-merge": "^2.2.1"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^14.1.2",
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "postcss": "^8.5.6",
+    "prettier": "^3.2.5",
+    "tailwindcss": "^3.4.18",
+    "tsup": "^8.0.1",
+    "typescript": "^5.4.3",
+    "vite": "^5.2.8",
+    "vitest": "^1.5.0"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "lib": ["DOM", "ES2020"],
+    "jsx": "react-jsx",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": ["vitest"],
+    "baseUrl": ".",
+    "paths": {
+      "@programinglive/zettly-editor": ["./src/index.ts"],
+      "@programinglive/zettly-editor/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "example"],
+  "exclude": ["dist", "node_modules", "example/dist"]
+}
