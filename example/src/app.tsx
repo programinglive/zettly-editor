@@ -4,14 +4,25 @@ import { ZettlyEditor } from "@programinglive/zettly-editor";
 
 const initialContent = `<h1>Zettly Editor</h1>
 <p>
-  This is the <strong>ZettlyEditor</strong> component rendered inside the example playground.
-  Use the toolbar above the editor area to format text.
+  This playground showcases every toolbar button. Try toggling each option below to see how the editor responds.
 </p>
+<p>
+  <strong>Bold example</strong> • <em>Italic example</em> • <span style="text-decoration: line-through;">Strike example</span> •
+  <a href="https://programinglive.com" target="_blank" rel="noopener noreferrer">Link example</a>
+</p>
+<blockquote>
+  “This blockquote is ready for inspiration. Edit it or add your own quote to see the formatting update in preview mode.”
+</blockquote>
 <ul>
-  <li>Bold, Italic, Strike</li>
-  <li>Bullet and Ordered lists</li>
-  <li>Links</li>
-</ul>`;
+  <li>Bullet list item one</li>
+  <li>Bullet list item two</li>
+  <li>Bullet list item three</li>
+</ul>
+<ol>
+  <li>Ordered list item one</li>
+  <li>Ordered list item two</li>
+  <li>Ordered list item three</li>
+</ol>`;
 
 export function App() {
   const [value, setValue] = React.useState(initialContent);
