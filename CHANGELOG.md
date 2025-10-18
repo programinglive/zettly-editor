@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/programinglive/zettly-editor/compare/v0.1.3...v0.1.4) (2025-10-18)
+
+
+### 🐛 Bug Fixes
+
+* bundle editor base styles and surface focus ([011fba0](https://github.com/programinglive/zettly-editor/commit/011fba00aa14aef157fe244a014340abf5ed1e1d))
+* reduce editor main-thread work and optimize example ([c8eba20](https://github.com/programinglive/zettly-editor/commit/c8eba2054b852f568286db2b1c780f088c75da00))
+
 ### [0.1.3](https://github.com/programinglive/zettly-editor/compare/v0.1.2...v0.1.3) (2025-10-18)
 
 ### [0.1.2](https://github.com/programinglive/zettly-editor/compare/v0.1.1...v0.1.2) (2025-10-18)
