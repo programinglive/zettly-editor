@@ -9,6 +9,7 @@ import CharacterCount from "@tiptap/extension-character-count";
 import { cn } from "../../lib/utils";
 import { CodeBlockWithSyntaxHighlight } from "./code-block-config";
 import "./code-highlight.css";
+import "./zettly-editor.css";
 import {
   type EditorMessages,
   type EditorMeta,
@@ -155,6 +156,21 @@ const EditorShell: React.FC<EditorShellProps> = ({
     [mergedExtensions, permissions.readOnly]
   );
 
+  const handleSurfaceMouseDown = React.useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      if (!editor) {
+        return;
+      }
+      const target = event.target as HTMLElement;
+      if (target.closest(".ProseMirror")) {
+        return;
+      }
+      event.preventDefault();
+      editor.chain().focus().run();
+    },
+    [editor]
+  );
+
   React.useEffect(() => {
     if (!editor) {
       return;
@@ -198,11 +214,15 @@ const EditorShell: React.FC<EditorShellProps> = ({
   };
 
   return (
-    <div className={cn("overflow-hidden rounded-2xl border border-border bg-background shadow-sm", className)}>
-      <div className="rounded-t-2xl border-b border-border/80 bg-background/90 px-3 py-2">
+    <div data-zettly-editor-root="" className={cn("overflow-hidden", className)}>
+      <div data-zettly-editor-toolbar="" className="px-3 py-2">
         {renderToolbar(toolbarProps)}
       </div>
-      <div className={cn("rounded-b-2xl bg-background px-4 py-4", editorClassName)}>
+      <div
+        data-zettly-editor-surface=""
+        className={cn("px-4 py-4", editorClassName)}
+        onMouseDown={handleSurfaceMouseDown}
+      >
         <EditorContent
           editor={editor}
           className={cn(

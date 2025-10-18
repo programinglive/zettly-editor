@@ -1,0 +1,148 @@
+:root {
+  --zettly-editor-border: rgba(148, 163, 184, 0.4);
+  --zettly-editor-border-strong: rgba(99, 102, 241, 0.45);
+  --zettly-editor-shadow: rgba(15, 23, 42, 0.04);
+  --zettly-editor-bg: #ffffff;
+  --zettly-editor-toolbar-bg: rgba(248, 250, 252, 0.93);
+  --zettly-editor-toolbar-border: rgba(148, 163, 184, 0.3);
+  --zettly-editor-text: #0f172a;
+}
+
+[data-zettly-editor-root] {
+  border-radius: 16px;
+  border: 1px solid var(--zettly-editor-border);
+  background: var(--zettly-editor-bg);
+  box-shadow: 0 12px 24px -8px var(--zettly-editor-shadow);
+  color: var(--zettly-editor-text);
+  transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+[data-zettly-editor-root]:focus-within {
+  border-color: var(--zettly-editor-border-strong);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+[data-zettly-editor-toolbar] {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--zettly-editor-toolbar-border);
+  background: var(--zettly-editor-toolbar-bg);
+  backdrop-filter: blur(12px);
+}
+
+[data-zettly-editor-surface] {
+  background: var(--zettly-editor-bg);
+  padding: 1.25rem 1.5rem;
+  cursor: text;
+}
+
+[data-zettly-editor-surface] .ProseMirror {
+  min-height: 200px;
+  width: 100%;
+  outline: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: inherit;
+}
+
+[data-zettly-editor-surface] .ProseMirror p,
+[data-zettly-editor-surface] .ProseMirror h1,
+[data-zettly-editor-surface] .ProseMirror h2,
+[data-zettly-editor-surface] .ProseMirror h3,
+[data-zettly-editor-surface] .ProseMirror h4,
+[data-zettly-editor-surface] .ProseMirror h5,
+[data-zettly-editor-surface] .ProseMirror h6,
+[data-zettly-editor-surface] .ProseMirror ul,
+[data-zettly-editor-surface] .ProseMirror ol,
+[data-zettly-editor-surface] .ProseMirror blockquote,
+[data-zettly-editor-surface] .ProseMirror pre {
+  margin: 0 0 1rem 0;
+}
+
+[data-zettly-editor-surface] .ProseMirror ul,
+[data-zettly-editor-surface] .ProseMirror ol {
+  padding-left: 1.5rem;
+}
+
+[data-zettly-editor-surface] .ProseMirror li + li {
+  margin-top: 0.35rem;
+}
+
+[data-zettly-editor-surface] .ProseMirror h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+[data-zettly-editor-surface] .ProseMirror h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+[data-zettly-editor-surface] .ProseMirror h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+[data-zettly-editor-surface] .ProseMirror blockquote {
+  border-left: 4px solid var(--zettly-editor-border);
+  padding-left: 1rem;
+  font-style: italic;
+  color: rgba(15, 23, 42, 0.75);
+}
+
+[data-zettly-editor-surface] .ProseMirror a {
+  color: #4f46e5;
+  text-decoration: underline;
+}
+
+[data-zettly-editor-surface] .ProseMirror code {
+  font-family: "JetBrains Mono", "Fira Code", Menlo, Consolas, ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.95rem;
+  background: rgba(79, 70, 229, 0.08);
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.4rem;
+}
+
+[data-zettly-editor-surface] .ProseMirror pre {
+  background: rgba(15, 23, 42, 0.75);
+  color: #f8fafc;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+}
+
+[data-zettly-editor-surface] .ProseMirror pre code {
+  background: transparent;
+  padding: 0;
+}
+
+[data-zettly-editor-surface] .ProseMirror:focus,
+[data-zettly-editor-surface] .ProseMirror-focused {
+  outline: none;
+  border: none;
+}
+
+[data-zettly-editor-surface] .ProseMirror p:last-child,
+[data-zettly-editor-surface] .ProseMirror h1:last-child,
+[data-zettly-editor-surface] .ProseMirror h2:last-child,
+[data-zettly-editor-surface] .ProseMirror h3:last-child,
+[data-zettly-editor-surface] .ProseMirror ul:last-child,
+[data-zettly-editor-surface] .ProseMirror ol:last-child,
+[data-zettly-editor-surface] .ProseMirror pre:last-child,
+[data-zettly-editor-surface] .ProseMirror blockquote:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  [data-zettly-editor-surface] {
+    padding: 1rem;
+  }
+}
