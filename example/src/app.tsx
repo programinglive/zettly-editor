@@ -17,6 +17,7 @@ export function App() {
   const [value, setValue] = React.useState(initialContent);
   const [words, setWords] = React.useState(0);
   const [characters, setCharacters] = React.useState(0);
+  const [mode, setMode] = React.useState<"edit" | "preview">("edit");
   const [theme, setTheme] = React.useState<"light" | "dark">(() => {
     if (typeof window === "undefined") {
       return "light";
@@ -103,15 +104,51 @@ export function App() {
           </p>
         </section>
 
-        <ZettlyEditor
-          value={value}
-          onChange={(nextValue, meta) => {
-            setValue(nextValue);
-            setWords(meta.words);
-            setCharacters(meta.characters);
-          }}
-          messages={{ placeholder: "Start jotting your notes..." }}
-        />
+        <section className="flex flex-col gap-4">
+          <div className="inline-flex w-fit items-center gap-1 rounded-full border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <button
+              type="button"
+              onClick={() => setMode("edit")}
+              className="rounded-full px-4 py-1 text-sm font-medium transition data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+              data-state={mode === "edit" ? "on" : "off"}
+              aria-pressed={mode === "edit"}
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode("preview")}
+              className="rounded-full px-4 py-1 text-sm font-medium transition data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+              data-state={mode === "preview" ? "on" : "off"}
+              aria-pressed={mode === "preview"}
+            >
+              Preview
+            </button>
+          </div>
+
+          {mode === "edit" ? (
+            <ZettlyEditor
+              value={value}
+              onChange={(nextValue, meta) => {
+                setValue(nextValue);
+                setWords(meta.words);
+                setCharacters(meta.characters);
+              }}
+              messages={{ placeholder: "Start jotting your notes..." }}
+            />
+          ) : (
+            <article className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition dark:border-zinc-800 dark:bg-zinc-900">
+              <header className="mb-4 flex items-center justify-between text-xs uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                <span>Preview</span>
+                <span className="font-medium text-zinc-700 dark:text-zinc-300">Read only</span>
+              </header>
+              <div
+                className="space-y-4 text-base leading-relaxed text-zinc-800 dark:text-zinc-100 [&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80 [&_blockquote]:border-l-4 [&_blockquote]:border-zinc-200 [&_blockquote]:pl-4 [&_blockquote]:italic [&_h1]:text-3xl [&_h1]:font-semibold [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:text-xl [&_h3]:font-semibold [&_li]:marker:text-primary [&_ol]:ml-6 [&_ol]:list-decimal [&_ul]:ml-6 [&_ul]:list-disc"
+                dangerouslySetInnerHTML={{ __html: value }}
+              />
+            </article>
+          )}
+        </section>
 
         <section
           className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
