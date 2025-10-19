@@ -120,6 +120,7 @@ export const defaultCommands: CommandDefinition[] = [
       editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
     },
     isActive: ({ editor }) => editor.isActive("link"),
+    isEnabled: ({ permissions }) => permissions.allowLinks === true && !permissions.readOnly,
     icon: <Link2 className="h-4 w-4" />,
   },
 ];

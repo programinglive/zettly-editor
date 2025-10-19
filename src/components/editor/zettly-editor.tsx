@@ -5,6 +5,10 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
 import CharacterCount from "@tiptap/extension-character-count";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import ListItem from "@tiptap/extension-list-item";
+import Blockquote from "@tiptap/extension-blockquote";
 
 import { cn } from "../../lib/utils";
 import { CodeBlockWithSyntaxHighlight } from "./code-block-config";
@@ -95,7 +99,15 @@ const EditorShell: React.FC<EditorShellProps> = ({
     () => [
       StarterKit.configure({
         codeBlock: false,
+        bulletList: false,
+        orderedList: false,
+        listItem: false,
+        blockquote: false,
       }),
+      BulletList,
+      OrderedList,
+      ListItem,
+      Blockquote,
       CodeBlockWithSyntaxHighlight,
       Link.configure({ openOnClick: false, autolink: true, HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" } }),
       Placeholder.configure({ placeholder: messages.placeholder }),
