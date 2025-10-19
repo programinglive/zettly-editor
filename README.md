@@ -118,12 +118,52 @@ Styling is handled in `src/components/editor/code-highlight.css`. Override the `
 | `className` | `string` | Wrapper class. |
 | `editorClassName` | `string` | Content area class. |
 | `autoFocus` | `boolean` | Focus editor on mount. |
-| `debug` | `boolean` | Print verbose lifecycle + toolbar logs to the console. |
+| `debug` | `boolean` | Enable debug mode (shows console logs and toolbar toggle). |
 | `onDebugEvent` | `(event: DebugEvent) => void` | Receive structured lifecycle/toolbar events for remote logging. |
+| `onDebugToggle` | `(enabled: boolean) => void` | Callback when debug is toggled via toolbar button. |
 
 ### Debug logging
 
-Set the `debug` prop to `true` during integration to surface rich console output from the editor. This logs TipTap lifecycle callbacks (`onCreate`, `onUpdate`, `onTransaction`, `onSelectionUpdate`) and the toolbar's active command state, which is especially helpful when diagnosing highlight/selection issues in downstream apps. Remember to toggle it off for production builds.
+Set the `debug` prop to `true` during integration to surface rich console output from the editor. This logs TipTap lifecycle callbacks (`onCreate`, `onUpdate`, `onTransaction`, `onSelectionUpdate`) and the toolbar's active command state, which is especially helpful when diagnosing highlight/selection issues in downstream apps.
+
+#### Debug toolbar toggle
+
+When you provide an `onDebugToggle` callback, a debug button (🐞) appears in the editor toolbar, allowing users to toggle debug mode on/off without code changes:
+
+```tsx
+import { useState } from "react";
+import { ZettlyEditor, type DebugEvent } from "@programinglive/zettly-editor";
+
+export function MyEditor() {
+  const [value, setValue] = useState("<p>Hello</p>");
+  const [debugEnabled, setDebugEnabled] = useState(false);
+
+  const handleDebugEvent = (event: DebugEvent) => {
+    if (!debugEnabled) return;
+    console.log("zettly debug event", event);
+  };
+
+  return (
+    <ZettlyEditor
+      value={value}
+      onChange={setValue}
+      debug={debugEnabled}
+      onDebugEvent={handleDebugEvent}
+      onDebugToggle={setDebugEnabled}
+    />
+  );
+}
+```
+
+The debug toggle button appears at the end of the toolbar and shows the current debug state visually.
+
+#### Editor footer
+
+The editor includes a footer that displays:
+- **Version**: Shows the current `@programinglive/zettly-editor` version (e.g., "Zettly Editor v0.1.9")
+- **Debug status**: Indicates whether debug mode is "Enabled" or "Disabled"
+
+This footer helps you verify which version is running and monitor debug state at a glance.
 
 #### Forwarding debug events to a backend
 
