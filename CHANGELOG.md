@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/programinglive/zettly-editor/compare/v0.1.8...v0.1.9) (2025-10-19)
+
+
+### ✨ Features
+
+* add debug toggle to toolbar and editor footer with version display ([3f362bb](https://github.com/programinglive/zettly-editor/commit/3f362bb7ab74051bdff1120d70d8eefbdcd1f1ae))
+
 ### [0.1.8](https://github.com/programinglive/zettly-editor/compare/v0.1.7...v0.1.8) (2025-10-19)
 
 
