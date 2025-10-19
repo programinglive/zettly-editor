@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.11](https://github.com/programinglive/zettly-editor/compare/v0.1.10...v0.1.11) (2025-10-19)
+
+
+### 🐛 Bug Fixes
+
+* enable toolbar debug toggle without explicit handler ([0431b4b](https://github.com/programinglive/zettly-editor/commit/0431b4b17d30c09e10124770151a7afa36e97629))
+
 ### [0.1.10](https://github.com/programinglive/zettly-editor/compare/v0.1.9...v0.1.10) (2025-10-19)
 
 
