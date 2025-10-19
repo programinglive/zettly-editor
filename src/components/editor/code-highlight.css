@@ -12,7 +12,7 @@
 }
 
 .dark .hljs {
-  background: rgba(15, 23, 42, 0.85);
+  background: #0f172a !important;
   color: #e2e8f0;
 }
 
@@ -152,6 +152,15 @@ pre[class*="language-"] {
 pre code.hljs {
   padding: 0;
   background: transparent;
+}
+
+.dark pre[class*="language-"] {
+  background: #0f172a;
+}
+
+.dark pre code.hljs {
+  background: transparent !important;
+  color: inherit;
 }
 
 /* Language label */

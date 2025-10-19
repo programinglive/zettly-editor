@@ -8,6 +8,16 @@
   --zettly-editor-text: #0f172a;
 }
 
+.dark [data-zettly-editor-root] {
+  --zettly-editor-border: rgba(51, 65, 85, 0.5);
+  --zettly-editor-border-strong: rgba(99, 102, 241, 0.45);
+  --zettly-editor-shadow: rgba(0, 0, 0, 0.35);
+  --zettly-editor-bg: #0f172a;
+  --zettly-editor-toolbar-bg: rgba(17, 24, 39, 0.7);
+  --zettly-editor-toolbar-border: rgba(148, 163, 184, 0.25);
+  --zettly-editor-text: #e5e7eb;
+}
+
 [data-zettly-editor-root] {
   border-radius: 16px;
   border: 1px solid var(--zettly-editor-border);
@@ -15,6 +25,12 @@
   box-shadow: 0 12px 24px -8px var(--zettly-editor-shadow);
   color: var(--zettly-editor-text);
   transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.dark [data-zettly-editor-root] {
+  background: var(--zettly-editor-bg);
+  color: var(--zettly-editor-text);
+  border-color: var(--zettly-editor-border);
 }
 
 [data-zettly-editor-root]:focus-within {
@@ -35,10 +51,32 @@
   backdrop-filter: blur(12px);
 }
 
+.dark [data-zettly-editor-toolbar] {
+  background: var(--zettly-editor-toolbar-bg);
+  border-bottom-color: var(--zettly-editor-toolbar-border);
+}
+
+.dark [data-zettly-editor-toolbar] > div {
+  background-color: rgba(17, 24, 39, 0.7) !important; /* override inline bg classes */
+}
+
+.dark [data-zettly-editor-toolbar] button {
+  color: #cbd5e1 !important; /* ensure contrast over muted-foreground */
+}
+
+.dark [data-zettly-editor-toolbar] button[data-state="on"] {
+  color: #0b1020; /* will be overridden by bg below */
+  background: rgba(99, 102, 241, 0.9) !important; /* primary */
+}
+
 [data-zettly-editor-surface] {
   background: var(--zettly-editor-bg);
   padding: 1.25rem 1.5rem;
   cursor: text;
+}
+
+.dark [data-zettly-editor-surface] {
+  background: var(--zettly-editor-bg);
 }
 
 [data-zettly-editor-surface] .ProseMirror {
@@ -99,9 +137,18 @@
   color: rgba(15, 23, 42, 0.75);
 }
 
+.dark [data-zettly-editor-surface] .ProseMirror blockquote {
+  border-left-color: rgba(148, 163, 184, 0.35);
+  color: #cbd5e1;
+}
+
 [data-zettly-editor-surface] .ProseMirror a {
   color: #4f46e5;
   text-decoration: underline;
+}
+
+.dark [data-zettly-editor-surface] .ProseMirror a {
+  color: #93c5fd;
 }
 
 [data-zettly-editor-surface] .ProseMirror code {
@@ -112,12 +159,31 @@
   border-radius: 0.4rem;
 }
 
+.dark [data-zettly-editor-surface] .ProseMirror code {
+  background: rgba(51, 65, 85, 0.65);
+  color: #f1f5f9;
+}
+
 [data-zettly-editor-surface] .ProseMirror pre {
-  background: rgba(15, 23, 42, 0.75);
-  color: #f8fafc;
+  background: rgba(248, 250, 252, 0.95);
+  color: #0f172a;
   padding: 1rem;
   border-radius: 0.75rem;
   overflow-x: auto;
+}
+
+[data-zettly-editor-surface] .ProseMirror pre code {
+  color: inherit;
+}
+
+.dark [data-zettly-editor-surface] .ProseMirror pre {
+  background: #111827;
+  color: #e2e8f0;
+}
+
+.dark [data-zettly-editor-surface] .ProseMirror pre code {
+  background: transparent;
+  color: inherit;
 }
 
 [data-zettly-editor-surface] .ProseMirror pre code {
