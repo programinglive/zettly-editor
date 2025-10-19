@@ -99,6 +99,7 @@ export interface ToolbarRenderProps {
   messages: EditorMessages;
   debug: boolean;
   onDebugEvent?: (event: DebugEvent) => void;
+  onToggleDebug?: (next: boolean) => void;
 }
 
 export interface ZettlyEditorProps extends EditorValueSync {
@@ -112,4 +113,5 @@ export interface ZettlyEditorProps extends EditorValueSync {
   autoFocus?: boolean;
   debug?: boolean;
   onDebugEvent?: (event: DebugEvent) => void;
+  onDebugToggle?: (next: boolean) => void;
 }

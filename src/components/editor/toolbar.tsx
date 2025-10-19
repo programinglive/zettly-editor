@@ -17,6 +17,7 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
   className,
   debug,
   onDebugEvent,
+  onToggleDebug,
 }) => {
   const [, forceUpdate] = React.useReducer((state) => state + 1, 0);
   const normalizedPermissions = React.useMemo(
@@ -92,6 +93,19 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
           </Button>
         );
       })}
+      {onToggleDebug ? (
+        <Button
+          type="button"
+          variant="toolbar"
+          size="icon"
+          aria-pressed={debug}
+          onClick={() => onToggleDebug(!debug)}
+          title={debug ? "Disable debug" : "Enable debug"}
+          data-state={debug ? "on" : "off"}
+        >
+          <span className="text-xs font-medium">🐞</span>
+        </Button>
+      ) : null}
     </div>
   );
 };

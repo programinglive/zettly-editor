@@ -2,6 +2,7 @@ export { ZettlyEditor } from "./components/editor/zettly-editor";
 export type {
   CommandDefinition,
   CommandContext,
+  DebugEvent,
   EditorMessages,
   EditorMeta,
   EditorPermissions,

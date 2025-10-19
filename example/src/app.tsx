@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ZettlyEditor } from "@programinglive/zettly-editor";
+import { ZettlyEditor, type DebugEvent } from "@programinglive/zettly-editor";
 import { SyntaxHighlighter } from "./syntax-highlighter";
 
 const initialContent = `<h1>Zettly Editor</h1>
@@ -60,6 +60,14 @@ export function App() {
     }
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   });
+  const [debugEnabled, setDebugEnabled] = React.useState(false);
+
+  const handleDebugEvent = React.useCallback((event: DebugEvent) => {
+    if (!debugEnabled) {
+      return;
+    }
+    console.log("zettly debug event", event);
+  }, [debugEnabled]);
 
   React.useEffect(() => {
     if (typeof document === "undefined") {
@@ -167,6 +175,9 @@ export function App() {
                 setCharacters(meta.characters);
               }}
               messages={{ placeholder: "Start jotting your notes..." }}
+              debug={debugEnabled}
+              onDebugEvent={handleDebugEvent}
+              onDebugToggle={setDebugEnabled}
             />
           ) : (
             <article className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition dark:border-zinc-800 dark:bg-zinc-900">

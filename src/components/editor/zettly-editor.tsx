@@ -28,6 +28,7 @@ import {
 } from "./editor-context";
 import { DefaultToolbar } from "./toolbar";
 import { emitDebugEvent, type DebugEventInput } from "./debug-utils";
+import { ZETTLY_EDITOR_VERSION } from "../../version";
 
 const computeMeta = (editor: Editor): EditorMeta => {
   // Fast path: check TipTap's built-in isEmpty first to avoid DOM access
@@ -80,6 +81,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
   autoFocus = false,
   debug = false,
   onDebugEvent,
+  onDebugToggle,
 }) => {
   const { setMeta, createCommandContext } = useEditorContext();
   const lastValueRef = React.useRef(value);
@@ -264,6 +266,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
     messages,
     debug,
     onDebugEvent,
+    onToggleDebug: onDebugToggle,
   };
 
   return (
@@ -291,6 +294,13 @@ const EditorShell: React.FC<EditorShellProps> = ({
           )}
         />
       </div>
+      <div
+        data-zettly-editor-footer=""
+        className="flex items-center justify-between border-t border-border/60 bg-background/70 px-3 py-2 text-xs text-muted-foreground"
+      >
+        <span>Zettly Editor v{ZETTLY_EDITOR_VERSION}</span>
+        <span>Debug {debug ? "Enabled" : "Disabled"}</span>
+      </div>
     </div>
   );
 }
@@ -304,6 +314,7 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
     messages = {},
     debug = false,
     onDebugEvent,
+    onDebugToggle,
     ...rest
   } = props;
 
@@ -332,6 +343,7 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
         messages={mergedMessages}
         debug={debug}
         onDebugEvent={onDebugEvent}
+        onDebugToggle={onDebugToggle}
         {...rest}
       />
     </EditorContextProvider>
