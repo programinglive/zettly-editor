@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/programinglive/zettly-editor/compare/v0.1.7...v0.1.8) (2025-10-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **debug:** None - all changes are additive and opt-in
+
+### ✨ Features
+
+* **debug:** add structured debug event system with remote capture support ([ebbfb4e](https://github.com/programinglive/zettly-editor/commit/ebbfb4e1a25dacc6b8f64db259cdfeb5819905d6))
+
 ### [0.1.7](https://github.com/programinglive/zettly-editor/compare/v0.1.6...v0.1.7) (2025-10-19)
 
 
