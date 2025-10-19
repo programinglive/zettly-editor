@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/programinglive/zettly-editor/compare/v0.1.6...v0.1.7) (2025-10-19)
+
+
+### 🐛 Bug Fixes
+
+* improve toolbar state updates and code block exit ([51b5a50](https://github.com/programinglive/zettly-editor/commit/51b5a50c60a8d1681417bb44446f09b94c5ac9fb))
+
+
+### 💄 Styles
+
+* **dark:** improve editor dark theme (surface, toolbar, buttons, links, code, blockquote) ([b3ae0b7](https://github.com/programinglive/zettly-editor/commit/b3ae0b747cf3fc6af889b12fcd1463df08f867fe))
+* **dark:** refine playground heading and code block contrast ([97b82d3](https://github.com/programinglive/zettly-editor/commit/97b82d3f202bf466f8be49f880b4696ac20d31fb))
+
 ### [0.1.6](https://github.com/programinglive/zettly-editor/compare/v0.1.5...v0.1.6) (2025-10-19)
 
 
