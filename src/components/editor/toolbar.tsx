@@ -15,6 +15,7 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
   messages,
   className,
 }) => {
+  const [, forceUpdate] = React.useReducer((state) => state + 1, 0);
   const normalizedPermissions = React.useMemo(
     () => ({ allowLinks: true, ...permissions }),
     [permissions]
@@ -24,6 +25,20 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
     () => ({ editor, permissions: normalizedPermissions }),
     [editor, normalizedPermissions]
   );
+
+  React.useEffect(() => {
+    const handleUpdate = () => {
+      forceUpdate();
+    };
+
+    editor.on("selectionUpdate", handleUpdate);
+    editor.on("transaction", handleUpdate);
+
+    return () => {
+      editor.off("selectionUpdate", handleUpdate);
+      editor.off("transaction", handleUpdate);
+    };
+  }, [editor, forceUpdate]);
 
   return (
     <div
