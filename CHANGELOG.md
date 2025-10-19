@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/programinglive/zettly-editor/compare/v0.1.5...v0.1.6) (2025-10-19)
+
+
+### 🐛 Bug Fixes
+
+* ensure toolbar formatting commands work ([4db3972](https://github.com/programinglive/zettly-editor/commit/4db3972034691a3ecdc97e186eecf9746b52b762))
+
 ### [0.1.5](https://github.com/programinglive/zettly-editor/compare/v0.1.4...v0.1.5) (2025-10-18)
 
 
