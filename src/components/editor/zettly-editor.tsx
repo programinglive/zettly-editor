@@ -88,11 +88,28 @@ const EditorShell: React.FC<EditorShellProps> = ({
   const skipNextEmitRef = React.useRef(false);
   const serializationScheduledRef = React.useRef(false);
 
+  // Allow toolbar to toggle debug even if consumer didn't provide onDebugToggle
+  const [internalDebug, setInternalDebug] = React.useState(debug);
+  React.useEffect(() => {
+    setInternalDebug(debug);
+  }, [debug]);
+  const effectiveDebug = onDebugToggle ? debug : internalDebug;
+  const handleToggleDebug = React.useCallback(
+    (next: boolean) => {
+      if (onDebugToggle) {
+        onDebugToggle(next);
+      } else {
+        setInternalDebug(next);
+      }
+    },
+    [onDebugToggle]
+  );
+
   const emit = React.useCallback(
     (event: DebugEventInput) => {
-      emitDebugEvent(debug, onDebugEvent, event);
+      emitDebugEvent(effectiveDebug, onDebugEvent, event);
     },
-    [debug, onDebugEvent]
+    [effectiveDebug, onDebugEvent]
   );
 
   const emitEmpty = React.useCallback((ed: Editor) => {
@@ -264,9 +281,9 @@ const EditorShell: React.FC<EditorShellProps> = ({
     commands,
     permissions,
     messages,
-    debug,
+    debug: effectiveDebug,
     onDebugEvent,
-    onToggleDebug: onDebugToggle,
+    onToggleDebug: handleToggleDebug,
   };
 
   return (
@@ -299,7 +316,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
         className="flex items-center justify-between border-t border-border/60 bg-background/70 px-3 py-2 text-xs text-muted-foreground"
       >
         <span>Zettly Editor v{ZETTLY_EDITOR_VERSION}</span>
-        <span>Debug {debug ? "Enabled" : "Disabled"}</span>
+        <span>Debug {effectiveDebug ? "Enabled" : "Disabled"}</span>
       </div>
     </div>
   );
