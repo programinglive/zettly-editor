@@ -27,6 +27,7 @@ import {
   defaultMessages,
 } from "./editor-context";
 import { DefaultToolbar } from "./toolbar";
+import { emitDebugEvent, type DebugEventInput } from "./debug-utils";
 
 const computeMeta = (editor: Editor): EditorMeta => {
   // Fast path: check TipTap's built-in isEmpty first to avoid DOM access
@@ -77,11 +78,20 @@ const EditorShell: React.FC<EditorShellProps> = ({
   className,
   editorClassName,
   autoFocus = false,
+  debug = false,
+  onDebugEvent,
 }) => {
   const { setMeta, createCommandContext } = useEditorContext();
   const lastValueRef = React.useRef(value);
   const skipNextEmitRef = React.useRef(false);
   const serializationScheduledRef = React.useRef(false);
+
+  const emit = React.useCallback(
+    (event: DebugEventInput) => {
+      emitDebugEvent(debug, onDebugEvent, event);
+    },
+    [debug, onDebugEvent]
+  );
 
   const emitEmpty = React.useCallback((ed: Editor) => {
     const meta: EditorMeta = {
@@ -124,6 +134,12 @@ const EditorShell: React.FC<EditorShellProps> = ({
       editable: permissions.readOnly !== true,
       onCreate({ editor: createdEditor }) {
         const meta = computeMeta(createdEditor);
+        emit({
+          type: "create",
+          selection: createdEditor.state.selection.toJSON(),
+          html: createdEditor.getHTML(),
+          meta,
+        });
         setMeta(meta);
         lastValueRef.current = value;
         if (autoFocus) {
@@ -131,11 +147,21 @@ const EditorShell: React.FC<EditorShellProps> = ({
         }
       },
       onUpdate({ editor: updatedEditor }) {
-        if (skipNextEmitRef.current) {
+        const skipped = skipNextEmitRef.current;
+        if (skipped) {
           skipNextEmitRef.current = false;
-          return;
         }
         const meta = computeMeta(updatedEditor);
+        emit({
+          type: "update",
+          selection: updatedEditor.state.selection.toJSON(),
+          html: updatedEditor.getHTML(),
+          meta,
+          skipped,
+        });
+        if (skipped) {
+          return;
+        }
         setMeta(meta);
         if (meta.empty) {
           emitEmpty(updatedEditor);
@@ -152,20 +178,33 @@ const EditorShell: React.FC<EditorShellProps> = ({
           }
         }
       },
-      onTransaction({ editor: txEditor }) {
+      onTransaction({ editor: txEditor, transaction }) {
+        emit({
+          type: "transaction",
+          selection: txEditor.state.selection.toJSON(),
+          transaction: {
+            docChanged: transaction.docChanged,
+            stepCount: transaction.steps.length,
+            selectionSet: transaction.selectionSet === true,
+          },
+        });
         const meta = computeMeta(txEditor);
         if (meta.empty && lastValueRef.current !== "") {
           emitEmpty(txEditor);
         }
       },
       onSelectionUpdate({ editor: activeEditor }) {
+        emit({
+          type: "selectionUpdate",
+          selection: activeEditor.state.selection.toJSON(),
+        });
         // Only check for empty state change to avoid expensive meta computation on every selection
         if (activeEditor.isEmpty && lastValueRef.current !== "") {
           emitEmpty(activeEditor);
         }
       },
     },
-    [mergedExtensions, permissions.readOnly]
+    [emit, mergedExtensions, permissions.readOnly]
   );
 
   const handleSurfaceMouseDown = React.useCallback(
@@ -223,6 +262,8 @@ const EditorShell: React.FC<EditorShellProps> = ({
     commands,
     permissions,
     messages,
+    debug,
+    onDebugEvent,
   };
 
   return (
@@ -261,6 +302,8 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
     commands = defaultCommands,
     permissions = {},
     messages = {},
+    debug = false,
+    onDebugEvent,
     ...rest
   } = props;
 
@@ -287,6 +330,8 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
         commands={commands}
         permissions={normalizedPermissions}
         messages={mergedMessages}
+        debug={debug}
+        onDebugEvent={onDebugEvent}
         {...rest}
       />
     </EditorContextProvider>

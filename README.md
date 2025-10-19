@@ -78,7 +78,7 @@ The editable surface uses the full container width and a comfortable minimum hei
 
 ## Syntax highlighting
 
-Code blocks use `@tiptap/extension-code-block-lowlight` together with `lowlight` and `highlight.js` for layered syntax highlighting. `lowlight` ships with a curated set of languages pre-registered inside `src/components/editor/code-block-config.ts`, including JavaScript, TypeScript, JSON, Bash, SQL, Go, PHP, Rust, Swift, Kotlin, and more. The default toolbar exposes a code-block toggle so editors can insert and format blocks instantly.
+Code blocks use `@tiptap/extension-code-block-lowlight` together with `lowlight` and `highlight.js` for layered syntax highlighting. `lowlight` ships with a curated set of languages pre-registered inside `src/components/editor/code-block-config.ts`, including JavaScript, TypeScript, JSON, Bash, SQL, Go, PHP, Rust, Swift, Kotlin, and more. The default toolbar exposes a code-block toggle so editors can insert and format blocks instantly. While editing a block, press `Shift+Enter` / `Mod+Enter` or hit `Enter` on an empty line at the end to exit back to a normal paragraph.
 
 To support an additional language, register the Highlight.js grammar before mounting the editor:
 
@@ -89,7 +89,7 @@ import { lowlight } from "lowlight";
 lowlight.registerLanguage("python", python);
 ```
 
-Styling is handled in `src/components/editor/code-highlight.css`. Override the `.hljs` token classes or append your own theme to align with your design system. The example playground demonstrates how to render and theme read-only snippets via `example/src/syntax-highlighter.tsx`.
+Styling is handled in `src/components/editor/code-highlight.css`. Override the `.hljs` token classes or append your own theme to align with your design system. The default palette now differentiates between light and dark surfaces, so code blocks remain legible regardless of theme. The example playground demonstrates how to render and theme read-only snippets via `example/src/syntax-highlighter.tsx`.
 
 ## Example Playground
 
@@ -118,6 +118,75 @@ Styling is handled in `src/components/editor/code-highlight.css`. Override the `
 | `className` | `string` | Wrapper class. |
 | `editorClassName` | `string` | Content area class. |
 | `autoFocus` | `boolean` | Focus editor on mount. |
+| `debug` | `boolean` | Print verbose lifecycle + toolbar logs to the console. |
+| `onDebugEvent` | `(event: DebugEvent) => void` | Receive structured lifecycle/toolbar events for remote logging. |
+
+### Debug logging
+
+Set the `debug` prop to `true` during integration to surface rich console output from the editor. This logs TipTap lifecycle callbacks (`onCreate`, `onUpdate`, `onTransaction`, `onSelectionUpdate`) and the toolbar's active command state, which is especially helpful when diagnosing highlight/selection issues in downstream apps. Remember to toggle it off for production builds.
+
+#### Forwarding debug events to a backend
+
+When you need to capture events centrally (for example in `https://zettly-debug.programinglive.com/`), provide an `onDebugEvent` callback. The editor emits structured payloads describing lifecycle changes, transactions, selections, and toolbar state.
+
+```tsx
+import { ZettlyEditor, type DebugEvent } from "@programinglive/zettly-editor";
+
+const sendDebugEvent = (event: DebugEvent) => {
+  fetch("https://zettly-debug.programinglive.com/api/editor-debug", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-Key": import.meta.env.VITE_ZETTLY_DEBUG_KEY,
+    },
+    body: JSON.stringify({
+      ...event,
+      app: "todo-app",
+      noteId: currentNoteId,
+      userId: currentUser.id,
+    }),
+    keepalive: true,
+  });
+};
+
+<ZettlyEditor value={value} onChange={handleChange} debug onDebugEvent={sendDebugEvent} />;
+```
+
+Each event includes a timestamp, selection JSON, HTML snapshot (where applicable), and active toolbar commands. This makes it easy to store, replay, or alert on anomalies in an external service.
+
+#### Laravel logging example
+
+Create a dedicated channel in `config/logging.php`:
+
+```php
+'channels' => [
+    // ...
+    'zettly' => [
+        'driver' => 'single',
+        'path' => storage_path('logs/zettly-editor.log'),
+        'level' => 'debug',
+    ],
+],
+```
+
+Then wire an ingest route:
+
+```php
+// routes/api.php
+Route::post('/editor-debug', [EditorDebugController::class, 'store'])->middleware('auth:sanctum');
+
+// app/Http/Controllers/EditorDebugController.php
+class EditorDebugController extends Controller
+{
+    public function store(EditorDebugRequest $request)
+    {
+        Log::channel('zettly')->info('zettly editor debug', $request->validated());
+        return response()->json(['ok' => true]);
+    }
+}
+```
+
+From there you can tail `storage/logs/zettly-editor.log`, ship the file to your APM provider, or build a dashboard to inspect events.
 
 ## Integrating with a Shadcn Project
 

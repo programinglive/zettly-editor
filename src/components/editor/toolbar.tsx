@@ -3,6 +3,7 @@ import * as React from "react";
 import { cn } from "../../lib/utils";
 import { type ToolbarRenderProps } from "../../types/editor";
 import { Button } from "../ui/button";
+import { emitDebugEvent } from "./debug-utils";
 
 interface EditorToolbarProps extends ToolbarRenderProps {
   className?: string;
@@ -14,6 +15,8 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
   permissions,
   messages,
   className,
+  debug,
+  onDebugEvent,
 }) => {
   const [, forceUpdate] = React.useReducer((state) => state + 1, 0);
   const normalizedPermissions = React.useMemo(
@@ -26,8 +29,24 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
     [editor, normalizedPermissions]
   );
 
+  const emit = React.useCallback(
+    (activeCommands: string[]) => {
+      emitDebugEvent(debug, onDebugEvent, {
+        type: "toolbarUpdate",
+        selection: editor.state.selection.toJSON(),
+        activeCommands,
+      });
+    },
+    [debug, editor, onDebugEvent]
+  );
+
   React.useEffect(() => {
     const handleUpdate = () => {
+      const activeCommands = commands
+        .filter((command) => command.isActive?.(context) === true)
+        .map((command) => command.id);
+
+      emit(activeCommands);
       forceUpdate();
     };
 
@@ -38,7 +57,7 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
       editor.off("selectionUpdate", handleUpdate);
       editor.off("transaction", handleUpdate);
     };
-  }, [editor, forceUpdate]);
+  }, [commands, context, emit, editor, forceUpdate]);
 
   return (
     <div

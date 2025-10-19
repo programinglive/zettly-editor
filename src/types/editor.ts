@@ -1,4 +1,5 @@
 import { type AnyExtension, type Editor } from "@tiptap/core";
+import type { EditorState } from "@tiptap/pm/state";
 import { type ReactNode } from "react";
 
 export type EditorFlowState = "idle" | "loading" | "success" | "warning" | "error" | "info";
@@ -18,6 +19,50 @@ export interface EditorMessages {
   error: string;
   info: string;
 }
+
+export type EditorSelectionJSON = ReturnType<EditorState["selection"]["toJSON"]>;
+
+interface DebugEventBase {
+  timestamp: number;
+}
+
+export type DebugEvent =
+  | (DebugEventBase & {
+      type: "create";
+      selection: EditorSelectionJSON;
+      html: string;
+      meta: EditorMeta;
+    })
+  | (DebugEventBase & {
+      type: "update";
+      selection: EditorSelectionJSON;
+      html: string;
+      meta: EditorMeta;
+      skipped: boolean;
+    })
+  | (DebugEventBase & {
+      type: "transaction";
+      selection: EditorSelectionJSON;
+      transaction: {
+        docChanged: boolean;
+        stepCount: number;
+        selectionSet: boolean;
+      };
+    })
+  | (DebugEventBase & {
+      type: "selectionUpdate";
+      selection: EditorSelectionJSON;
+    })
+  | (DebugEventBase & {
+      type: "toolbarUpdate";
+      selection: EditorSelectionJSON;
+      activeCommands: string[];
+    })
+  | (DebugEventBase & {
+      type: "error";
+      message: string;
+      context?: string;
+    });
 
 export interface EditorPermissions {
   readOnly?: boolean;
@@ -52,6 +97,8 @@ export interface ToolbarRenderProps {
   commands: CommandDefinition[];
   permissions: EditorPermissions;
   messages: EditorMessages;
+  debug: boolean;
+  onDebugEvent?: (event: DebugEvent) => void;
 }
 
 export interface ZettlyEditorProps extends EditorValueSync {
@@ -63,4 +110,6 @@ export interface ZettlyEditorProps extends EditorValueSync {
   className?: string;
   editorClassName?: string;
   autoFocus?: boolean;
+  debug?: boolean;
+  onDebugEvent?: (event: DebugEvent) => void;
 }
