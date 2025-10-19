@@ -12,8 +12,9 @@
 }
 
 .dark .hljs {
-  background: #0f172a !important;
+  background: #1e293b !important;
   color: #e2e8f0;
+  border: 1px solid rgba(148, 163, 184, 0.18);
 }
 
 /* Light mode tokens */
@@ -155,7 +156,8 @@ pre code.hljs {
 }
 
 .dark pre[class*="language-"] {
-  background: #0f172a;
+  background: #1e293b;
+  border: 1px solid rgba(148, 163, 184, 0.18);
 }
 
 .dark pre code.hljs {

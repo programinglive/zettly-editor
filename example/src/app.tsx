@@ -130,7 +130,7 @@ export function App() {
 
       <main className="mx-auto flex max-w-3xl flex-col gap-8 px-6 py-10" id="playground">
         <section className="space-y-2">
-          <h2 className="text-3xl font-semibold tracking-tight text-zinc-950">Zettly Editor Playground</h2>
+          <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-100">Zettly Editor Playground</h2>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
             Controlled example using the published component from <code>@programinglive/zettly-editor</code>.
           </p>

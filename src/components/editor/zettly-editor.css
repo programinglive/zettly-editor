@@ -31,6 +31,9 @@
   background: var(--zettly-editor-bg);
   color: var(--zettly-editor-text);
   border-color: var(--zettly-editor-border);
+  box-shadow: 0 16px 28px -10px rgba(0, 0, 0, 0.6);
+  background-color: var(--zettly-editor-bg) !important;
+  color: var(--zettly-editor-text) !important;
 }
 
 [data-zettly-editor-root]:focus-within {
@@ -76,7 +79,7 @@
 }
 
 .dark [data-zettly-editor-surface] {
-  background: var(--zettly-editor-bg);
+  background: var(--zettly-editor-bg) !important;
 }
 
 [data-zettly-editor-surface] .ProseMirror {
@@ -90,6 +93,19 @@
   line-height: 1.65;
   color: inherit;
   cursor: text;
+}
+
+.dark [data-zettly-editor-surface] .ProseMirror {
+  color: var(--zettly-editor-text);
+}
+
+.dark [data-zettly-editor-surface] .ProseMirror h1,
+.dark [data-zettly-editor-surface] .ProseMirror h2,
+.dark [data-zettly-editor-surface] .ProseMirror h3,
+.dark [data-zettly-editor-surface] .ProseMirror h4,
+.dark [data-zettly-editor-surface] .ProseMirror h5,
+.dark [data-zettly-editor-surface] .ProseMirror h6 {
+  color: inherit;
 }
 
 [data-zettly-editor-surface] .ProseMirror p,
