@@ -16,9 +16,22 @@ function isNodeVersionCompatible() {
 }
 
 if (isNodeVersionCompatible()) {
-  const result = spawnSync('npx', ['husky'], { stdio: 'inherit' });
+  const npxArgs = ['--yes', 'husky'];
+  const result = spawnSync('npx', npxArgs, {
+    stdio: 'inherit',
+    shell: process.platform === 'win32'
+  });
   if (result.status !== 0) {
-    process.exit(result.status === null || result.status === undefined ? 1 : result.status);
+    const exitCode = result.status === null || result.status === undefined ? 1 : result.status;
+    const message = `husky prepare failed with exit code ${exitCode}`;
+    process.stderr.write(`${message}\n`);
+    if (result.error) {
+      process.stderr.write(`error: ${result.error.message}\n`);
+    }
+    if (result.stderr) {
+      process.stderr.write(`stderr: ${result.stderr.toString()}\n`);
+    }
+    process.exit(exitCode);
   }
 } else {
   process.stdout.write(
