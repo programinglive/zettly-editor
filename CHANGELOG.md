@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.13](https://github.com/programinglive/zettly-editor/compare/v0.1.12...v0.1.13) (2025-10-20)
+
+
+### ✨ Features
+
+* add branding assets to example app ([d286f3a](https://github.com/programinglive/zettly-editor/commit/d286f3a4f4914beb8728595471675dfd1370b3e4))
+
 ### [0.1.12](https://github.com/programinglive/zettly-editor/compare/v0.1.11...v0.1.12) (2025-10-19)
 
 ### [0.1.11](https://github.com/programinglive/zettly-editor/compare/v0.1.10...v0.1.11) (2025-10-19)
