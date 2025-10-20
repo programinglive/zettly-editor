@@ -3,52 +3,71 @@ name: Publish package
 on:
   workflow_dispatch:
   release:
-    types:
-      - published
+    types: [published]
 
 permissions:
-  id-token: write
+  id-token: write     # needed for npm provenance (npmjs.com)
   contents: read
+  packages: write     # needed for GitHub Packages
 
 jobs:
   publish:
-    name: Build, test, and publish to npm
+    name: Build, test, and publish to npm & GitHub Packages
     runs-on: ubuntu-latest
-    environment:
-      name: npm-publish
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Set up Node.js (npmjs.com)
         uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
           scope: '@programinglive'
-          cache: 'npm'
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run build
-        run: npm run build
+      - name: Build
+        run: npm run build --if-present
 
-      - name: Run tests
-        run: npm run test
+      - name: Test
+        run: npm test --if-present
 
-      - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Pack once so we publish the same bits to both registries
+      - name: Create tarball
         run: |
-          npm config get registry
-          npm whoami || echo "whoami failed"
-          npm publish --provenance --access public
+          rm -f *.tgz
+          npm pack --silent
+      # This outputs something like: programinglive-zettly-editor-0.1.16.tgz
+      # We'll capture the filename for reuse.
+      - id: tarball
+        run: echo "TARBALL=$(ls *.tgz)" >> $GITHUB_ENV
+
+      # ---- Publish to npmjs.com ----
+      - name: Publish to npm (npmjs.com) with provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # npm Automation token
+        run: |
+          echo "Registry: $(npm config get registry)"
+          npm whoami || true
+          npm publish "${TARBALL}" --provenance --access public
+
+      # ---- Publish to GitHub Packages ----
+      # Switch registry for GitHub Packages
+      - name: Set up Node.js (GitHub Packages)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://npm.pkg.github.com
+          scope: '@programinglive'
 
       - name: Publish to GitHub Packages
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # built-in token
         run: |
-          npm config set registry https://npm.pkg.github.com
-          npm whoami || echo "whoami failed"
-          npm publish --access public --registry https://npm.pkg.github.com
+          echo "Registry: $(npm config get registry)"
+          # No --provenance here
+          npm publish "${TARBALL}"
