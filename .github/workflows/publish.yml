@@ -44,3 +44,11 @@ jobs:
           npm config get registry
           npm whoami || echo "whoami failed"
           npm publish --provenance --access public
+
+      - name: Publish to GitHub Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+        run: |
+          npm config set registry https://npm.pkg.github.com
+          npm whoami || echo "whoami failed"
+          npm publish --access public --registry https://npm.pkg.github.com
