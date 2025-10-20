@@ -2,6 +2,7 @@ import React from "react";
 
 import { ZettlyEditor, type DebugEvent } from "@programinglive/zettly-editor";
 import { SyntaxHighlighter } from "./syntax-highlighter";
+import Logo from "./assets/logo_zettlt_editor.PNG";
 
 const initialContent = `<h1>Zettly Editor</h1>
 <p>
@@ -110,9 +111,12 @@ export function App() {
     <div className="min-h-screen bg-gradient-to-br from-white via-sky-50 to-indigo-50 pb-20 text-zinc-900 transition-colors duration-300 dark:from-slate-950 dark:via-slate-950 dark:to-black dark:text-zinc-100">
       <header className="sticky top-0 z-20 border-b border-white/30 bg-white/70 backdrop-blur transition-colors duration-200 supports-[backdrop-filter]:bg-white/40 dark:border-zinc-800/60 dark:bg-zinc-950/70 dark:supports-[backdrop-filter]:bg-zinc-900/60">
         <nav className="mx-auto flex max-w-4xl flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-col gap-1">
-            <span className="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">Zettly Editor</span>
-            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">WYSIWYG Playground</h1>
+          <div className="flex items-center gap-3">
+            <img src={Logo} alt="Zettly Editor logo" className="h-10 w-auto rounded" />
+            <div className="flex flex-col gap-1">
+              <span className="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">Zettly Editor</span>
+              <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">WYSIWYG Playground</h1>
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {menuItems.map((item) => (

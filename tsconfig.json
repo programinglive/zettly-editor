@@ -13,7 +13,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "types": ["vitest"],
+    "types": ["vitest", "node", "react", "react-dom"],
     "baseUrl": ".",
     "paths": {
       "@programinglive/zettly-editor": ["./src/index.ts"],
