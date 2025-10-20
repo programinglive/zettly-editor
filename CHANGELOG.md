@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.21](https://github.com/programinglive/zettly-editor/compare/v0.1.20...v0.1.21) (2025-10-20)
+
+
+### 🏗️ Build System
+
+* expose styles export and update example ([a85036d](https://github.com/programinglive/zettly-editor/commit/a85036d551787b32838318a3cf1c02f7220d4d66))
+
 ### [0.1.20](https://github.com/programinglive/zettly-editor/compare/v0.1.19...v0.1.20) (2025-10-20)
 
 
