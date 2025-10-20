@@ -39,7 +39,7 @@ export default defineConfig({
         __dirname,
         "node_modules/@programinglive/zettly-editor/dist/index.mjs"
       ),
-      "zettly-editor/styles": path.resolve(
+      "@programinglive/zettly-editor/styles": path.resolve(
         __dirname,
         "node_modules/@programinglive/zettly-editor/dist/index.css"
       ),
@@ -51,7 +51,7 @@ export default defineConfig({
 Then import the stylesheet inside `resources/js/app.jsx` (or your SPA entry file):
 
 ```tsx
-import "zettly-editor/styles";
+import "@programinglive/zettly-editor/styles";
 ```
 
 ## Usage

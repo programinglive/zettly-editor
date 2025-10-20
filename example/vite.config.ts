@@ -13,11 +13,20 @@ export default defineConfig(({ mode }) => {
       hmr: disableHmr ? false : { overlay: false },
     },
     resolve: {
-      alias: {
-        "@programinglive/zettly-editor": isDev
-          ? path.resolve(__dirname, "../src")
-          : path.resolve(__dirname, "../dist/index.js"),
-      },
+      alias: [
+        {
+          find: /^@programinglive\/zettly-editor\/styles$/,
+          replacement: isDev
+            ? path.resolve(__dirname, "../src/components/editor/zettly-editor.css")
+            : path.resolve(__dirname, "../dist/index.css"),
+        },
+        {
+          find: /^@programinglive\/zettly-editor$/,
+          replacement: isDev
+            ? path.resolve(__dirname, "../src")
+            : path.resolve(__dirname, "../dist/index.js"),
+        },
+      ],
     },
     optimizeDeps: {
       force: true,

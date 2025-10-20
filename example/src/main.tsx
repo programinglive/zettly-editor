@@ -1,4 +1,5 @@
 import "../style.css";
+import "@programinglive/zettly-editor/styles";
 
 import React from "react";
 import ReactDOM from "react-dom/client";

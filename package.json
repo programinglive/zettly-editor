@@ -19,7 +19,9 @@
   "bugs": {
     "url": "https://github.com/programinglive/zettly-editor/issues"
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "./dist/index.css"
+  ],
   "type": "module",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
@@ -29,8 +31,13 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
+    },
+    "./styles": {
+      "types": "./dist/index.css",
+      "default": "./dist/index.css"
     }
   },
+  "style": "dist/index.css",
   "files": [
     "dist"
   ],
