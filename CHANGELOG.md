@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.20](https://github.com/programinglive/zettly-editor/compare/v0.1.19...v0.1.20) (2025-10-20)
+
+
+### 🐛 Bug Fixes
+
+* rename playground logo for case-sensitive builds ([ba5bf17](https://github.com/programinglive/zettly-editor/commit/ba5bf1701761896f624bb47e632ac7588e618f50))
+
+
+### 👷 Continuous Integration
+
+* trigger publish on tag push ([c187f3a](https://github.com/programinglive/zettly-editor/commit/c187f3a6678a443bce5f3b4b0ce775b0cc2065f9))
+
 ### [0.1.19](https://github.com/programinglive/zettly-editor/compare/v0.1.18...v0.1.19) (2025-10-20)
 
 
