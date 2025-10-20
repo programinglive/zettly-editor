@@ -2,7 +2,7 @@ import React from "react";
 
 import { ZettlyEditor, type DebugEvent } from "@programinglive/zettly-editor";
 import { SyntaxHighlighter } from "./syntax-highlighter";
-import Logo from "./assets/logo_zettlt_editor.PNG";
+import Logo from "./assets/logo_zettly_editor.png";
 
 const initialContent = `<h1>Zettly Editor</h1>
 <p>
