@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.22](https://github.com/programinglive/zettly-editor/compare/v0.1.21...v0.1.22) (2025-10-20)
+
+
+### ✨ Features
+
+* add heading dropdown select in toolbar ([364bdb4](https://github.com/programinglive/zettly-editor/commit/364bdb4b88a47daf0e31ec493c386d6433d913ea))
+
 ### [0.1.21](https://github.com/programinglive/zettly-editor/compare/v0.1.20...v0.1.21) (2025-10-20)
 
 
