@@ -107,16 +107,15 @@ export function App() {
     window.scrollTo({ top, behavior: "smooth" });
   }, []);
 
+  const navButtonClass =
+    "rounded-full px-3 py-1 text-sm font-medium text-zinc-600 transition hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 dark:text-zinc-300";
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-sky-50 to-indigo-50 pb-20 text-zinc-900 transition-colors duration-300 dark:from-slate-950 dark:via-slate-950 dark:to-black dark:text-zinc-100">
       <header className="sticky top-0 z-20 border-b border-white/30 bg-white/70 backdrop-blur transition-colors duration-200 supports-[backdrop-filter]:bg-white/40 dark:border-zinc-800/60 dark:bg-zinc-950/70 dark:supports-[backdrop-filter]:bg-zinc-900/60">
         <nav className="mx-auto flex max-w-4xl flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <img src={Logo} alt="Zettly Editor logo" className="h-10 w-auto rounded" />
-            <div className="flex flex-col gap-1">
-              <span className="text-sm font-semibold uppercase tracking-[0.2em] text-zinc-500 dark:text-zinc-400">Zettly Editor</span>
-              <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">WYSIWYG Playground</h1>
-            </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {menuItems.map((item) => (
@@ -124,7 +123,7 @@ export function App() {
                 key={item.id}
                 type="button"
                 onClick={() => handleNavClick(item.id)}
-                className="rounded-full border border-zinc-200 bg-white/80 px-4 py-1 text-sm font-medium text-zinc-700 shadow-sm transition hover:border-primary/60 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 dark:border-zinc-700 dark:bg-zinc-900/70 dark:text-zinc-300 dark:hover:border-primary/60 dark:hover:text-primary"
+                className={navButtonClass}
               >
                 {item.label}
               </button>
@@ -132,7 +131,7 @@ export function App() {
             <button
               type="button"
               onClick={toggleTheme}
-              className="rounded-full border border-zinc-200 bg-white/80 px-4 py-1 text-sm font-semibold text-zinc-700 shadow-sm transition hover:border-primary/60 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 dark:border-zinc-700 dark:bg-zinc-900/70 dark:text-zinc-200 dark:hover:border-primary/60 dark:hover:text-primary"
+              className={`${navButtonClass} font-semibold`}
             >
               {theme === "light" ? "☀️ Light" : "🌙 Dark"}
             </button>
@@ -225,6 +224,48 @@ export function App() {
           <pre className="max-h-64 overflow-auto rounded-md bg-zinc-100 p-4 text-xs text-zinc-800 dark:bg-slate-900 dark:text-slate-100">
 {value.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
           </pre>
+        </section>
+
+        <section className="rounded-xl border border-zinc-200 bg-white/70 p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/70">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+            Toolbar quick actions
+          </h3>
+          <ul className="mt-2 space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
+            <li>
+              <strong>Heading select:</strong> Switch between <em>Paragraph</em> and <code>Heading 1-6</code> for structured
+              titles.
+            </li>
+            <li>
+              <strong>Bold:</strong> Highlight a word or phrase and hit the <strong>B</strong> button or press <kbd>Ctrl</kbd>
+              / <kbd>Cmd</kbd> + <kbd>B</kbd>.
+            </li>
+            <li>
+              <strong>Italic:</strong> Emphasize text with <strong>I</strong> or <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> +
+              <kbd>I</kbd>.
+            </li>
+            <li>
+              <strong>Strike:</strong> Mark revisions with the strikethrough toggle (<kbd>Ctrl</kbd> / <kbd>Cmd</kbd> +
+              <kbd>Shift</kbd> + <kbd>X</kbd>).
+            </li>
+            <li>
+              <strong>Bullet list:</strong> Quickly outline ideas using unordered lists.
+            </li>
+            <li>
+              <strong>Ordered list:</strong> Create numbered steps or procedures.
+            </li>
+            <li>
+              <strong>Blockquote:</strong> Call attention to quotes or pull statements.
+            </li>
+            <li>
+              <strong>Code block:</strong> Insert formatted snippets with syntax highlighting.
+            </li>
+            <li>
+              <strong>Link:</strong> Add or remove hyperlinks—prompted input respects permissions.
+            </li>
+            <li>
+              <strong>Debug toggle:</strong> Enable the 🐞 button to stream lifecycle events to the console.
+            </li>
+          </ul>
         </section>
 
         <section

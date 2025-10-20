@@ -1,8 +1,70 @@
 import * as React from "react";
 
 import { cn } from "../../lib/utils";
-import { type ToolbarRenderProps } from "../../types/editor";
+import {
+  type ToolbarRenderProps,
+  type CommandDefinition,
+  type CommandContext,
+} from "../../types/editor";
 import { Button } from "../ui/button";
+
+const renderCommand = (
+  command: CommandDefinition,
+  context: CommandContext,
+  active: boolean,
+  disabled: boolean
+) => {
+  if (command.type === "select") {
+    const value = command.getValue?.(context) ?? "";
+    return (
+      <select
+        key={command.id}
+        className="h-9 rounded-md border border-input bg-background px-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        value={value}
+        aria-label={command.label}
+        disabled={disabled}
+        onChange={(event) => {
+          if (disabled) {
+            return;
+          }
+          command.run(context, event.target.value);
+        }}
+      >
+        {command.placeholder ? (
+          <option value="" disabled hidden>
+            {command.placeholder}
+          </option>
+        ) : null}
+        {command.options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    );
+  }
+
+  return (
+    <Button
+      key={command.id}
+      type="button"
+      variant="toolbar"
+      size="icon"
+      aria-pressed={command.type === "toggle" ? active : undefined}
+      disabled={disabled}
+      onClick={() => {
+        if (disabled) {
+          return;
+        }
+        command.run(context);
+      }}
+      data-state={active ? "on" : "off"}
+      title={command.description ?? command.label}
+    >
+      {command.icon ?? <span className="text-xs font-medium">{command.label}</span>}
+    </Button>
+  );
+};
 import { emitDebugEvent } from "./debug-utils";
 
 interface EditorToolbarProps extends ToolbarRenderProps {
@@ -25,7 +87,7 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
     [permissions]
   );
 
-  const context = React.useMemo(
+  const context = React.useMemo<CommandContext>(
     () => ({ editor, permissions: normalizedPermissions }),
     [editor, normalizedPermissions]
   );
@@ -72,26 +134,7 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
         const active = command.isActive?.(context) === true;
         const enabled = command.isEnabled?.(context) ?? true;
         const disabled = normalizedPermissions.readOnly === true || !enabled;
-        return (
-          <Button
-            key={command.id}
-            type="button"
-            variant="toolbar"
-            size="icon"
-            aria-pressed={command.type === "toggle" ? active : undefined}
-            disabled={disabled}
-            onClick={() => {
-              if (disabled) {
-                return;
-              }
-              command.run(context);
-            }}
-            data-state={active ? "on" : "off"}
-            title={command.description ?? command.label}
-          >
-            {command.icon ?? <span className="text-xs font-medium">{command.label}</span>}
-          </Button>
-        );
+        return renderCommand(command, context, active, disabled);
       })}
       {onToggleDebug ? (
         <Button

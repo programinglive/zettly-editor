@@ -28,6 +28,47 @@ const toggleCommand = (
 });
 
 export const defaultCommands: CommandDefinition[] = [
+  {
+    id: "heading",
+    label: "Heading",
+    type: "select",
+    options: [
+      { value: "paragraph", label: "Paragraph" },
+      { value: "heading1", label: "Heading 1" },
+      { value: "heading2", label: "Heading 2" },
+      { value: "heading3", label: "Heading 3" },
+      { value: "heading4", label: "Heading 4" },
+      { value: "heading5", label: "Heading 5" },
+      { value: "heading6", label: "Heading 6" },
+    ],
+    placeholder: "Heading",
+    getValue: ({ editor }) => {
+      for (let level = 1; level <= 6; level += 1) {
+        if (editor.isActive("heading", { level })) {
+          return `heading${level}`;
+        }
+      }
+      return "paragraph";
+    },
+    run: ({ editor }, value) => {
+      if (!value) {
+        return;
+      }
+
+      const chain = editor.chain().focus();
+      if (value === "paragraph") {
+        chain.setParagraph().run();
+        return;
+      }
+
+      const levelNumber = Number.parseInt(value.replace("heading", ""), 10);
+      if (Number.isNaN(levelNumber) || levelNumber < 1 || levelNumber > 6) {
+        return;
+      }
+
+      chain.setHeading({ level: levelNumber as 1 | 2 | 3 | 4 | 5 | 6 }).run();
+    },
+  },
   toggleCommand(
     "bold",
     "Bold",

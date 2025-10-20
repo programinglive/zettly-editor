@@ -74,18 +74,43 @@ export interface CommandContext {
   permissions: EditorPermissions;
 }
 
-export interface CommandDefinition {
+export interface CommandSelectOption {
+  value: string;
+  label: string;
+}
+
+interface BaseCommandDefinition {
   id: string;
   label: string;
   description?: string;
   shortcut?: string;
   group?: string;
   icon?: ReactNode;
-  type: "toggle" | "button";
   isActive?: (context: CommandContext) => boolean;
   isEnabled?: (context: CommandContext) => boolean;
-  run: (context: CommandContext) => void;
+  run: (context: CommandContext, value?: string) => void;
 }
+
+export interface ToggleCommandDefinition extends BaseCommandDefinition {
+  type: "toggle";
+  isActive?: (context: CommandContext) => boolean;
+}
+
+export interface ButtonCommandDefinition extends BaseCommandDefinition {
+  type: "button";
+}
+
+export interface SelectCommandDefinition extends BaseCommandDefinition {
+  type: "select";
+  options: CommandSelectOption[];
+  placeholder?: string;
+  getValue?: (context: CommandContext) => string | undefined;
+}
+
+export type CommandDefinition =
+  | ToggleCommandDefinition
+  | ButtonCommandDefinition
+  | SelectCommandDefinition;
 
 export interface EditorValueSync {
   value: string;

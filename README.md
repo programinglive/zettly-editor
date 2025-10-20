@@ -76,6 +76,16 @@ The editor ships with opinionated defaults that match the example playground. Bo
 
 The editable surface uses the full container width and a comfortable minimum height, matching the mockups shown in the docs.
 
+### Toolbar defaults
+
+- **Heading select**: Switch between `Paragraph` and `Heading 1-6` for structured titles.
+- **Bold / Italic / Strike**: Toggle inline emphasis with buttons or keyboard shortcuts (`Mod+B`, `Mod+I`, `Mod+Shift+X`).
+- **Lists**: Insert bullet or ordered lists to outline ideas quickly.
+- **Blockquote**: Highlight important quotes or callouts.
+- **Code block**: Add syntax-highlighted blocks for snippets or documentation.
+- **Link**: Prompted link control honors permissions and allows quick insertion/removal.
+- **Debug toggle**: When `onDebugToggle` is provided, a 🐞 button exposes lifecycle events for troubleshooting.
+
 ## Syntax highlighting
 
 Code blocks use `@tiptap/extension-code-block-lowlight` together with `lowlight` and `highlight.js` for layered syntax highlighting. `lowlight` ships with a curated set of languages pre-registered inside `src/components/editor/code-block-config.ts`, including JavaScript, TypeScript, JSON, Bash, SQL, Go, PHP, Rust, Swift, Kotlin, and more. The default toolbar exposes a code-block toggle so editors can insert and format blocks instantly. While editing a block, press `Shift+Enter` / `Mod+Enter` or hit `Enter` on an empty line at the end to exit back to a normal paragraph.
