@@ -38,4 +38,9 @@ jobs:
         run: npm run test
 
       - name: Publish to npm
-        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm config get registry
+          npm whoami || echo "whoami failed"
+          npm publish --provenance --access public
