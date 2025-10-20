@@ -1,6 +1,6 @@
 {
   "name": "@programinglive/zettly-editor",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Shadcn-based WYSIWYG editor for Zettly todo and notes applications.",
   "keywords": [
     "tiptap",

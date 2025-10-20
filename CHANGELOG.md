@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.18](https://github.com/programinglive/zettly-editor/compare/v0.1.17...v0.1.18) (2025-10-20)
+
+
+### 👷 Continuous Integration
+
+* publish also to github packages ([2ec9b8a](https://github.com/programinglive/zettly-editor/commit/2ec9b8ae52ee860e4a9e88a534d42d8bd9a02d12))
+
 ### [0.1.17](https://github.com/programinglive/zettly-editor/compare/v0.1.16...v0.1.17) (2025-10-20)
 
 
