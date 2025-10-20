@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
   release:
     types: [published]
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   id-token: write     # needed for npm provenance (npmjs.com)
