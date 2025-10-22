@@ -6,6 +6,12 @@
   --zettly-editor-toolbar-bg: rgba(248, 250, 252, 0.93);
   --zettly-editor-toolbar-border: rgba(148, 163, 184, 0.3);
   --zettly-editor-text: #0f172a;
+  --zettly-editor-menu-bg: #ffffff;
+  --zettly-editor-menu-border: rgba(148, 163, 184, 0.35);
+  --zettly-editor-menu-hover: rgba(15, 23, 42, 0.05);
+  --zettly-editor-menu-selected: rgba(79, 70, 229, 0.14);
+  --zettly-editor-menu-muted: rgba(15, 23, 42, 0.55);
+  --zettly-editor-menu-accent: #4f46e5;
 }
 
 .dark [data-zettly-editor-root] {
@@ -16,6 +22,12 @@
   --zettly-editor-toolbar-bg: rgba(17, 24, 39, 0.7);
   --zettly-editor-toolbar-border: rgba(148, 163, 184, 0.25);
   --zettly-editor-text: #e5e7eb;
+  --zettly-editor-menu-bg: rgba(17, 24, 39, 0.95);
+  --zettly-editor-menu-border: rgba(51, 65, 85, 0.6);
+  --zettly-editor-menu-hover: rgba(148, 163, 184, 0.12);
+  --zettly-editor-menu-selected: rgba(99, 102, 241, 0.32);
+  --zettly-editor-menu-muted: rgba(226, 232, 240, 0.65);
+  --zettly-editor-menu-accent: #a5b4fc;
 }
 
 [data-zettly-editor-root] {
@@ -25,6 +37,37 @@
   box-shadow: 0 12px 24px -8px var(--zettly-editor-shadow);
   color: var(--zettly-editor-text);
   transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+[data-zettly-editor-menu] {
+  background: var(--zettly-editor-menu-bg);
+  border: 1px solid var(--zettly-editor-menu-border);
+  color: var(--zettly-editor-text);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 24px -12px rgba(15, 23, 42, 0.25);
+}
+
+[data-zettly-editor-menu] button {
+  color: var(--zettly-editor-menu-muted);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+[data-zettly-editor-menu] button[data-selected="true"] {
+  background: var(--zettly-editor-menu-selected);
+  color: var(--zettly-editor-menu-accent);
+}
+
+[data-zettly-editor-menu] button:not([data-selected="true"]):hover {
+  background: var(--zettly-editor-menu-hover);
+  color: var(--zettly-editor-text);
+}
+
+[data-zettly-editor-menu] button span:last-child {
+  color: var(--zettly-editor-menu-muted);
+}
+
+[data-zettly-editor-menu] button[data-selected="true"] span:last-child {
+  color: var(--zettly-editor-menu-accent);
 }
 
 .dark [data-zettly-editor-root] {

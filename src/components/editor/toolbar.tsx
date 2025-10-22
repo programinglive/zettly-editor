@@ -99,22 +99,21 @@ const HeadingSelect: React.FC<{
           ref={menuRef}
           role="listbox"
           aria-label={command.label}
-          className="absolute left-0 z-50 mt-2 w-44 rounded-xl border border-border/40 bg-background p-2 text-sm shadow-lg"
+          className="absolute left-0 z-50 mt-2 w-44 rounded-xl p-2 text-sm shadow-lg"
+          data-zettly-editor-menu=""
         >
           {command.options.map((option) => (
             <button
               key={option.value}
               type="button"
-              className={cn(
-                "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left font-medium transition",
-                option.value === value ? "bg-primary/10 text-primary" : "hover:bg-muted"
-              )}
+              className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left font-medium transition"
               role="option"
               aria-selected={option.value === value}
+              data-selected={option.value === value}
               onClick={() => handleSelect(option.value)}
             >
               <span>{option.label}</span>
-              <span className="text-xs text-muted-foreground">{option.value === value ? "Active" : ""}</span>
+              <span className="text-xs">{option.value === value ? "Active" : ""}</span>
             </button>
           ))}
         </div>
