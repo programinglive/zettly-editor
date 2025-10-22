@@ -207,6 +207,20 @@
   padding: 0;
 }
 
+/* Highlight mark default styles */
+[data-zettly-editor-surface] .ProseMirror mark,
+[data-zettly-editor-surface] .ProseMirror .hl {
+  background-color: rgba(250, 204, 21, 0.35); /* amber-400 @ 35% */
+  color: inherit;
+  padding: 0.05rem 0.15rem;
+  border-radius: 0.15rem;
+}
+
+.dark [data-zettly-editor-surface] .ProseMirror mark,
+.dark [data-zettly-editor-surface] .ProseMirror .hl {
+  background-color: rgba(234, 179, 8, 0.35); /* darker amber in dark */
+}
+
 [data-zettly-editor-surface] .ProseMirror:focus,
 [data-zettly-editor-surface] .ProseMirror:focus-visible,
 [data-zettly-editor-surface] .ProseMirror-focused {
