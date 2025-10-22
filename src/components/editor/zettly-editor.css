@@ -97,6 +97,12 @@
   backdrop-filter: blur(12px);
 }
 
+:root:not(.dark) [data-zettly-editor-toolbar] button[data-state="on"],
+.light [data-zettly-editor-toolbar] button[data-state="on"] {
+  background: var(--zettly-editor-menu-selected) !important;
+  color: var(--zettly-editor-menu-accent) !important;
+}
+
 .dark [data-zettly-editor-toolbar] {
   background: var(--zettly-editor-toolbar-bg);
   border-bottom-color: var(--zettly-editor-toolbar-border);
