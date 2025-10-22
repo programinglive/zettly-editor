@@ -132,14 +132,13 @@ const HeadingSelect: React.FC<{
                   <button
                     key={option.value}
                     type="button"
-                    className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left font-medium transition"
+                    className="flex w-full items-center rounded-lg px-3 py-2 text-left font-medium transition"
                     role="option"
                     aria-selected={option.value === value}
                     data-selected={option.value === value}
                     onClick={() => handleSelect(option.value)}
                   >
                     <span>{option.label}</span>
-                    <span className="text-xs">{option.value === value ? "Active" : ""}</span>
                   </button>
                 ))}
               </div>
