@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/programinglive/zettly-editor/compare/v0.2.3...v0.2.4) (2025-10-22)
+
+
+### 🧹 Chores
+
+* polish marketing copy and docs ([5654b60](https://github.com/programinglive/zettly-editor/commit/5654b6057fea1a9e02b6f883436a90ed271ad4cb))
+
 ### [0.2.3](https://github.com/programinglive/zettly-editor/compare/v0.2.2...v0.2.3) (2025-10-22)
 
 
