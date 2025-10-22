@@ -49,14 +49,21 @@ jobs:
       - id: tarball
         run: echo "TARBALL=$(ls *.tgz)" >> $GITHUB_ENV
 
+      - name: Determine package version
+        id: pkg
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
       # ---- Publish to npmjs.com ----
       - name: Publish to npm (npmjs.com) with provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # npm Automation token
+          VERSION: ${{ steps.pkg.outputs.version }}
         run: |
           echo "Registry: $(npm config get registry)"
           npm whoami || true
-          VERSION=$(node -p "require('./package.json').version")
           if npm view "@programinglive/zettly-editor@${VERSION}" version >/dev/null 2>&1; then
             echo "Version ${VERSION} already published on npm, skipping..."
           else
@@ -75,11 +82,41 @@ jobs:
       - name: Publish to GitHub Packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # built-in token
+          VERSION: ${{ steps.pkg.outputs.version }}
         run: |
           echo "Registry: $(npm config get registry)"
-          VERSION=$(node -p "require('./package.json').version")
           if npm view "@programinglive/zettly-editor@${VERSION}" version >/dev/null 2>&1; then
             echo "Version ${VERSION} already published on GitHub Packages, skipping..."
           else
             npm publish "${TARBALL}"
           fi
+
+      - name: Record deployment
+        if: ${{ success() }}
+        uses: actions/github-script@v7
+        env:
+          VERSION: ${{ steps.pkg.outputs.version }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const version = process.env.VERSION;
+            const description = `Published @programinglive/zettly-editor@${version}`;
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.sha,
+              environment: 'npm-publish',
+              auto_merge: false,
+              required_contexts: [],
+              description,
+            });
+
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deployment.data.id,
+              state: 'success',
+              environment: 'npm-publish',
+              environment_url: `https://www.npmjs.com/package/@programinglive/zettly-editor/v/${version}`,
+              log_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+            });
