@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/programinglive/zettly-editor/compare/v0.2.4...v0.2.5) (2025-10-22)
+
+
+### 🐛 Bug Fixes
+
+* add version check to github packages publish step ([2bb16a2](https://github.com/programinglive/zettly-editor/commit/2bb16a22d85668f4f1b34ee6bd5989070022aa9f))
+
 ### [0.2.4](https://github.com/programinglive/zettly-editor/compare/v0.2.3...v0.2.4) (2025-10-22)
 
 
