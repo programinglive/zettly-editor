@@ -21,7 +21,13 @@ The toolbar and surface rely on the published CSS bundle. Import it near the top
 import "@programinglive/zettly-editor/styles";
 ```
 
-> **Tip**: When using frameworks with SSR (Next.js, Remix), place the import in your global layout so both client and server renders stay in sync.
+Prefer a single import? Use the helper that pulls in CSS automatically:
+
+```tsx
+import { ZettlyEditor } from "@programinglive/zettly-editor/dist/with-styles.js";
+```
+
+> **Tip**: When using frameworks with SSR (Next.js, Remix), place the import in your global layout so both client and server renders stay in sync. The `with-styles` helper works in SSR because it only adds side-effect CSS once per bundle.
 
 ### 3. Configure bundler aliases (Laravel + Vite only)
 
@@ -68,6 +74,7 @@ No aliasing is required for plain React, Next.js, or Vite projects—the publish
 ```tsx
 import { useState } from "react";
 import { ZettlyEditor } from "@programinglive/zettly-editor";
+// or: import { ZettlyEditor } from "@programinglive/zettly-editor/dist/with-styles.js";
 
 export function MyEditor() {
   const [value, setValue] = useState("<p>Hello Zettly</p>");
@@ -111,6 +118,7 @@ The editable surface uses the full container width and a comfortable minimum hei
 - **Blockquote**: Highlight important quotes or callouts.
 - **Code block**: Add syntax-highlighted blocks for snippets or documentation.
 - **Link**: Prompted link control honors permissions and allows quick insertion/removal.
+- **Highlight**: Toggle yellow background marks. The library ships explicit mark styling so host CSS resets cannot hide the highlight.
 - **Debug toggle**: When `onDebugToggle` is provided, a 🐞 button exposes lifecycle events for troubleshooting.
 
 ## Syntax highlighting
