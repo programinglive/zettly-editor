@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/programinglive/zettly-editor/compare/v0.2.2...v0.2.3) (2025-10-22)
+
+
+### 🐛 Bug Fixes
+
+* skip npm publish if version already exists ([40858ac](https://github.com/programinglive/zettly-editor/commit/40858ac296b47acc516472908802e4cf4eac52cc))
+
 ### [0.2.2](https://github.com/programinglive/zettly-editor/compare/v0.2.0...v0.2.2) (2025-10-22)
 
 ## [0.2.0](https://github.com/programinglive/zettly-editor/compare/v0.1.24...v0.2.0) (2025-10-22)
