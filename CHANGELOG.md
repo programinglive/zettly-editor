@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.24](https://github.com/programinglive/zettly-editor/compare/v0.1.23...v0.1.24) (2025-10-22)
+
+
+### ✨ Features
+
+* add GitHub link and star badge to example navbar ([6ab51bc](https://github.com/programinglive/zettly-editor/commit/6ab51bc6adf12d382b9b4087040b307ab9f89323))
+
 ### [0.1.23](https://github.com/programinglive/zettly-editor/compare/v0.1.22...v0.1.23) (2025-10-20)
 
 ### [0.1.22](https://github.com/programinglive/zettly-editor/compare/v0.1.21...v0.1.22) (2025-10-20)
