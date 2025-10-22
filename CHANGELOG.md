@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.6](https://github.com/programinglive/zettly-editor/compare/v0.2.5...v0.2.6) (2025-10-22)
+
+
+### 📝 Documentation
+
+* clarify quickstart steps and enable highlight command ([289f64c](https://github.com/programinglive/zettly-editor/commit/289f64ce081ea7e62b275b7a5422c1b7b2590930))
+
+
+### 👷 Continuous Integration
+
+* record deployments after publish workflow ([ff45133](https://github.com/programinglive/zettly-editor/commit/ff451333668fc484bd2a9deccdaa21d255d566bc))
+
 ### [0.2.5](https://github.com/programinglive/zettly-editor/compare/v0.2.4...v0.2.5) (2025-10-22)
 
 
