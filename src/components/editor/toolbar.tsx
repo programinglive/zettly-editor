@@ -99,7 +99,7 @@ const HeadingSelect: React.FC<{
           ref={menuRef}
           role="listbox"
           aria-label={command.label}
-          className="absolute left-0 z-20 mt-2 w-44 rounded-xl border border-border/40 bg-background/95 p-2 text-sm shadow-lg"
+          className="absolute left-0 z-50 mt-2 w-44 rounded-xl border border-border/40 bg-background p-2 text-sm shadow-lg"
         >
           {command.options.map((option) => (
             <button
