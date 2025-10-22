@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.8](https://github.com/programinglive/zettly-editor/compare/v0.2.7...v0.2.8) (2025-10-22)
+
+
+### 🐛 Bug Fixes
+
+* adjust heading dropdown layering in light mode ([d0dff82](https://github.com/programinglive/zettly-editor/commit/d0dff82f7da8ea53642d2fc646ac12f1e722c8ce))
+
 ### [0.2.7](https://github.com/programinglive/zettly-editor/compare/v0.2.6...v0.2.7) (2025-10-22)
 
 
