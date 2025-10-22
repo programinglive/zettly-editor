@@ -4,6 +4,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
+import Highlight from "@tiptap/extension-highlight";
 import CharacterCount from "@tiptap/extension-character-count";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
@@ -138,6 +139,9 @@ const EditorShell: React.FC<EditorShellProps> = ({
       ListItem,
       Blockquote,
       CodeBlockWithSyntaxHighlight,
+      Highlight.configure({
+        multicolor: true,
+      }),
       Link.configure({ openOnClick: false, autolink: true, HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" } }),
       Placeholder.configure({ placeholder: messages.placeholder }),
       CharacterCount.configure({ limit: undefined }),

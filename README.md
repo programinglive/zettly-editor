@@ -4,15 +4,28 @@ Shadcn-styled TipTap editor for Zettly todo/notes apps.
 
 ## Installation
 
+### 1. Grab the package and peer dependencies
+
 ```bash
 npm install @programinglive/zettly-editor @tiptap/react @tiptap/starter-kit react react-dom
 ```
 
-### Laravel + Vite setup (consumer project)
+`@programinglive/zettly-editor` bundles every required TipTap extension except the peers above. Install them once in your consumer app—no local linking needed.
 
-When integrating inside a Laravel project (Jetstream, Inertia, Breeze, etc.), adjust *that* project's `vite.config.js` to point at the published bundle. The snippet below assumes you already have Laravel's default `laravel-vite-plugin` installed—nothing needs to be added to this library package.
+### 2. Import the polished styles
 
-Add the aliases so Laravel can compile the editor and styles:
+The toolbar and surface rely on the published CSS bundle. Import it near the top of your app entry file:
+
+```tsx
+// main.tsx / app.jsx
+import "@programinglive/zettly-editor/styles";
+```
+
+> **Tip**: When using frameworks with SSR (Next.js, Remix), place the import in your global layout so both client and server renders stay in sync.
+
+### 3. Configure bundler aliases (Laravel + Vite only)
+
+If you consume the editor from a Laravel + Inertia/React stack, Vite needs explicit aliases so the published ESM bundle and CSS resolve correctly. Update your `vite.config.js`:
 
 ```ts
 // vite.config.js
@@ -48,10 +61,24 @@ export default defineConfig({
 });
 ```
 
-Then import the stylesheet inside `resources/js/app.jsx` (or your SPA entry file):
+No aliasing is required for plain React, Next.js, or Vite projects—the published package tree already works with standard Node resolution.
+
+### 4. Render the editor
 
 ```tsx
-import "@programinglive/zettly-editor/styles";
+import { useState } from "react";
+import { ZettlyEditor } from "@programinglive/zettly-editor";
+
+export function MyEditor() {
+  const [value, setValue] = useState("<p>Hello Zettly</p>");
+
+  return (
+    <ZettlyEditor
+      value={value}
+      onChange={(nextValue) => setValue(nextValue)}
+    />
+  );
+}
 ```
 
 ## Usage

@@ -1,6 +1,7 @@
 import {
   Bold,
   Italic,
+  Highlighter,
   Strikethrough,
   List,
   ListOrdered,
@@ -112,6 +113,16 @@ export const defaultCommands: CommandDefinition[] = [
     ({ editor }) => editor.isActive("italic"),
     <Italic className="h-4 w-4" />,
     "Mod+I"
+  ),
+  toggleCommand(
+    "highlight",
+    "Highlight",
+    ({ editor }) => {
+      editor.chain().focus().toggleHighlight().run();
+    },
+    ({ editor }) => editor.isActive("highlight"),
+    <Highlighter className="h-4 w-4" />,
+    "Mod+Shift+H"
   ),
   toggleCommand(
     "strike",
