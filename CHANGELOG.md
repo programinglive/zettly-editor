@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.11](https://github.com/programinglive/zettly-editor/compare/v0.2.10...v0.2.11) (2025-10-22)
+
+
+### ✨ Features
+
+* add light theme toolbar active state ([3d63fcd](https://github.com/programinglive/zettly-editor/commit/3d63fcdc5fe2782f7a8bfcc0a82a0edc6835743b))
+
+
+### 💄 Styles
+
+* **dark:** refine dropdown palette for heading menu ([13bb51b](https://github.com/programinglive/zettly-editor/commit/13bb51b5c47d54c3b5207b7fd7c7f317a0c5edac))
+
+
 ### [0.2.10](https://github.com/programinglive/zettly-editor/compare/v0.2.9...v0.2.10) (2025-10-22)
 
 
