@@ -56,7 +56,12 @@ jobs:
         run: |
           echo "Registry: $(npm config get registry)"
           npm whoami || true
-          npm publish "${TARBALL}" --provenance --access public
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "@programinglive/zettly-editor@${VERSION}" version >/dev/null 2>&1; then
+            echo "Version ${VERSION} already published on npm, skipping..."
+          else
+            npm publish "${TARBALL}" --provenance --access public
+          fi
 
       # ---- Publish to GitHub Packages ----
       # Switch registry for GitHub Packages
