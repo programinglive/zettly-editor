@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/programinglive/zettly-editor/compare/v0.1.24...v0.2.0) (2025-10-22)
+
+
+### ✨ Features
+
+* redesign toolbar with undo redo and heading dropdown ([c045888](https://github.com/programinglive/zettly-editor/commit/c045888c3a6e8e56815b1a17f7e33050cfd94562))
+
 ### [0.1.24](https://github.com/programinglive/zettly-editor/compare/v0.1.23...v0.1.24) (2025-10-22)
 
 
