@@ -1,4 +1,5 @@
 import React from "react";
+import { Github, Star } from "lucide-react";
 
 import { ZettlyEditor, type DebugEvent } from "@programinglive/zettly-editor";
 import { SyntaxHighlighter } from "./syntax-highlighter";
@@ -62,6 +63,7 @@ export function App() {
     return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   });
   const [debugEnabled, setDebugEnabled] = React.useState(false);
+  const [githubStars, setGithubStars] = React.useState<number | null>(null);
 
   const handleDebugEvent = React.useCallback((event: DebugEvent) => {
     if (!debugEnabled) {
@@ -79,6 +81,63 @@ export function App() {
     root.classList.add(theme);
     window.localStorage.setItem("zettly-theme", theme);
   }, [theme]);
+
+  React.useEffect(() => {
+    if (typeof window === "undefined") {
+      return () => undefined;
+    }
+
+    let active = true;
+    const controller = new AbortController();
+
+    const fetchStars = async () => {
+      try {
+        const response = await fetch("https://api.github.com/repos/programinglive/zettly-editor", {
+          signal: controller.signal,
+          headers: {
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+            "User-Agent": "zettly-editor-example",
+          },
+          cache: "no-store",
+        });
+        if (!response.ok) {
+          return;
+        }
+        const data: { stargazers_count?: number; watchers_count?: number } = await response.json();
+        if (!active) {
+          return;
+        }
+        const stargazers = typeof data.stargazers_count === "number" ? data.stargazers_count : null;
+        const watchers = typeof data.watchers_count === "number" ? data.watchers_count : null;
+        const stars = stargazers ?? watchers;
+        setGithubStars(typeof stars === "number" ? stars : null);
+      } catch (error: unknown) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+      }
+    };
+
+    fetchStars();
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, []);
+
+  const githubStarsLabel = React.useMemo(() => {
+    if (githubStars === null) {
+      return "—";
+    }
+    if (githubStars >= 1000) {
+      const valueInThousands = githubStars / 1000;
+      const formatted = valueInThousands.toFixed(valueInThousands >= 10 ? 0 : 1);
+      return `${formatted}k`;
+    }
+    return githubStars.toString();
+  }, [githubStars]);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
@@ -128,6 +187,25 @@ export function App() {
                 {item.label}
               </button>
             ))}
+            <a
+              href="https://github.com/programinglive/zettly-editor"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${navButtonClass} inline-flex items-center gap-2 font-semibold`}
+              aria-label="View the Zettly Editor repository on GitHub"
+              title={
+                githubStars !== null
+                  ? `${githubStars.toLocaleString()} stars on GitHub`
+                  : "View the Zettly Editor repository on GitHub"
+              }
+            >
+              <Github className="h-4 w-4" aria-hidden="true" />
+              <span className="hidden sm:inline">GitHub</span>
+              <span className="flex items-center gap-1 rounded-full border border-zinc-200 bg-white/80 px-2 py-0.5 text-xs font-medium text-zinc-600 transition dark:border-zinc-700 dark:bg-zinc-900/70 dark:text-zinc-300">
+                <Star className="h-3 w-3" aria-hidden="true" fill="currentColor" />
+                {githubStarsLabel}
+              </span>
+            </a>
             <button
               type="button"
               onClick={toggleTheme}
@@ -276,6 +354,19 @@ export function App() {
           <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
             Store the editor output as a <strong>string</strong> or <strong>text/blob</strong> column in your database. Use
             the largest text type available to avoid truncation:
+          </p>
+          <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+            Explore the full example source on
+            {" "}
+            <a
+              href="https://github.com/programinglive/zettly-editor"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-primary hover:text-primary/80"
+            >
+              GitHub
+            </a>
+            .
           </p>
           <ul className="grid gap-3 rounded-md border border-zinc-100 bg-zinc-50 p-4 text-sm text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-300 sm:grid-cols-2">
             <li>
