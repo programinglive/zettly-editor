@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.9](https://github.com/programinglive/zettly-editor/compare/v0.2.8...v0.2.9) (2025-10-22)
+
+
+### 🐛 Bug Fixes
+
+* style heading menu for light mode ([463c28f](https://github.com/programinglive/zettly-editor/commit/463c28faee169fe9e9fc34715b47ce0f7ed8ccce))
+
 ### [0.2.8](https://github.com/programinglive/zettly-editor/compare/v0.2.7...v0.2.8) (2025-10-22)
 
 
