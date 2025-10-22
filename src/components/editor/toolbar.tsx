@@ -1,4 +1,5 @@
 import * as React from "react";
+import { createPortal } from "react-dom";
 
 import { ChevronDown } from "lucide-react";
 
@@ -116,31 +117,36 @@ const HeadingSelect: React.FC<{
         <span className="font-semibold text-primary">{shortLabel}</span>
         <ChevronDown className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
       </Button>
-      {open ? (
-        <div
-          ref={menuRef}
-          role="listbox"
-          aria-label={command.label}
-          className="z-50 rounded-xl p-2 text-sm shadow-lg"
-          data-zettly-editor-menu=""
-          style={menuStyle}
-        >
-          {command.options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left font-medium transition"
-              role="option"
-              aria-selected={option.value === value}
-              data-selected={option.value === value}
-              onClick={() => handleSelect(option.value)}
-            >
-              <span>{option.label}</span>
-              <span className="text-xs">{option.value === value ? "Active" : ""}</span>
-            </button>
-          ))}
-        </div>
-      ) : null}
+      {open && typeof window !== "undefined"
+        ? createPortal(
+            (
+              <div
+                ref={menuRef}
+                role="listbox"
+                aria-label={command.label}
+                className="z-50 rounded-xl p-2 text-sm shadow-lg"
+                data-zettly-editor-menu=""
+                style={menuStyle}
+              >
+                {command.options.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left font-medium transition"
+                    role="option"
+                    aria-selected={option.value === value}
+                    data-selected={option.value === value}
+                    onClick={() => handleSelect(option.value)}
+                  >
+                    <span>{option.label}</span>
+                    <span className="text-xs">{option.value === value ? "Active" : ""}</span>
+                  </button>
+                ))}
+              </div>
+            ),
+            document.body
+          )
+        : null}
     </div>
   );
 };
