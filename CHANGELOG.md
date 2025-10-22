@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.7](https://github.com/programinglive/zettly-editor/compare/v0.2.6...v0.2.7) (2025-10-22)
+
+
+### 👷 Continuous Integration
+
+* grant deployments permission for publish workflow ([cd096f5](https://github.com/programinglive/zettly-editor/commit/cd096f5ea0ad9c6fb9a321b83e1d54e83a2c100f))
+
+
+### 🐛 Bug Fixes
+
+* ensure highlight mark is visible and correct ESM export path ([20ccc19](https://github.com/programinglive/zettly-editor/commit/20ccc19f665b96dbfd447a3189f79fcf11df5c12))
+
+
+### 📝 Documentation
+
+* document single import helper ([7c1e4ab](https://github.com/programinglive/zettly-editor/commit/7c1e4ab24a6ee5669d186a7d8caea436566f0639))
+
 ### [0.2.6](https://github.com/programinglive/zettly-editor/compare/v0.2.5...v0.2.6) (2025-10-22)
 
 
