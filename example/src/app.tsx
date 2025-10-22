@@ -219,9 +219,14 @@ export function App() {
 
       <main className="mx-auto flex max-w-3xl flex-col gap-8 px-6 py-10" id="playground">
         <section className="space-y-2">
+          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-zinc-600 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
+            <Github className="h-3.5 w-3.5" aria-hidden="true" />
+            Open source · MIT licensed
+          </span>
           <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-100">Zettly Editor Playground</h2>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            Controlled example using the published component from <code>@programinglive/zettly-editor</code>.
+            Explore the production-ready toolkit behind Zettly—this playground runs on the published
+            <code className="mx-1">@programinglive/zettly-editor</code> package so you can prototype, preview, and ship rich text flows fast.
           </p>
         </section>
 

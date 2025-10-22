@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a vulnerability, please email programinglive@gmail.com with the following details:
+If you discover a vulnerability, please email creative@programinglive.com with the following details:
 
 - Description of the vulnerability
 - Steps to reproduce (if possible)
