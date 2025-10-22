@@ -23,6 +23,7 @@ const HeadingSelect: React.FC<{
   const [open, setOpen] = React.useState(false);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const menuRef = React.useRef<HTMLDivElement>(null);
+  const [menuStyle, setMenuStyle] = React.useState<React.CSSProperties | undefined>(undefined);
 
   const value = command.getValue?.(context) ?? "paragraph";
   const labelMap = React.useMemo(
@@ -36,6 +37,23 @@ const HeadingSelect: React.FC<{
     if (!open) {
       return;
     }
+
+    const positionMenu = () => {
+      const trigger = triggerRef.current;
+      if (!trigger) {
+        return;
+      }
+      const rect = trigger.getBoundingClientRect();
+      setMenuStyle({
+        position: "fixed",
+        left: Math.round(rect.left),
+        top: Math.round(rect.bottom + 6),
+        minWidth: Math.round(rect.width),
+        zIndex: 10000,
+      });
+    };
+
+    positionMenu();
 
     const handleClick = (event: MouseEvent) => {
       if (
@@ -55,10 +73,14 @@ const HeadingSelect: React.FC<{
 
     document.addEventListener("mousedown", handleClick);
     document.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("resize", positionMenu);
+    window.addEventListener("scroll", positionMenu, true);
 
     return () => {
       document.removeEventListener("mousedown", handleClick);
       document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", positionMenu);
+      window.removeEventListener("scroll", positionMenu, true);
     };
   }, [open]);
 
@@ -99,8 +121,9 @@ const HeadingSelect: React.FC<{
           ref={menuRef}
           role="listbox"
           aria-label={command.label}
-          className="absolute left-0 z-50 mt-2 w-44 rounded-xl p-2 text-sm shadow-lg"
+          className="z-50 rounded-xl p-2 text-sm shadow-lg"
           data-zettly-editor-menu=""
+          style={menuStyle}
         >
           {command.options.map((option) => (
             <button
