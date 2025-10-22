@@ -7,6 +7,8 @@ import {
   Quote,
   Link2,
   Code,
+  Undo2,
+  Redo2,
 } from "lucide-react";
 import { type CommandDefinition, type CommandContext } from "../../types/editor";
 
@@ -28,6 +30,28 @@ const toggleCommand = (
 });
 
 export const defaultCommands: CommandDefinition[] = [
+  {
+    id: "undo",
+    label: "Undo",
+    type: "button",
+    run: ({ editor }) => {
+      editor.chain().focus().undo().run();
+    },
+    isEnabled: ({ editor }) => editor.can().chain().focus().undo().run(),
+    icon: <Undo2 className="h-4 w-4" />,
+    shortcut: "Mod+Z",
+  },
+  {
+    id: "redo",
+    label: "Redo",
+    type: "button",
+    run: ({ editor }) => {
+      editor.chain().focus().redo().run();
+    },
+    isEnabled: ({ editor }) => editor.can().chain().focus().redo().run(),
+    icon: <Redo2 className="h-4 w-4" />,
+    shortcut: "Mod+Shift+Z",
+  },
   {
     id: "heading",
     label: "Heading",

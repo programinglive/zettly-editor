@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import { ChevronDown } from "lucide-react";
+
 import { cn } from "../../lib/utils";
 import {
   type ToolbarRenderProps,
@@ -7,6 +9,119 @@ import {
   type CommandContext,
 } from "../../types/editor";
 import { Button } from "../ui/button";
+import { emitDebugEvent } from "./debug-utils";
+
+const HeadingSelect: React.FC<{
+  command: CommandDefinition;
+  context: CommandContext;
+  disabled: boolean;
+}> = ({ command, context, disabled }) => {
+  if (command.type !== "select") {
+    return null;
+  }
+
+  const [open, setOpen] = React.useState(false);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+  const menuRef = React.useRef<HTMLDivElement>(null);
+
+  const value = command.getValue?.(context) ?? "paragraph";
+  const labelMap = React.useMemo(
+    () => new Map(command.options.map((option) => [option.value, option.label] as const)),
+    [command.options]
+  );
+  const currentLabel = labelMap.get(value) ?? command.label;
+  const shortLabel = React.useMemo(() => currentLabel?.split(" ")[0] ?? "--", [currentLabel]);
+
+  React.useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const handleClick = (event: MouseEvent) => {
+      if (
+        menuRef.current?.contains(event.target as Node) ||
+        triggerRef.current?.contains(event.target as Node)
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  const handleSelect = React.useCallback(
+    (nextValue: string) => {
+      if (disabled) {
+        return;
+      }
+      command.run(context, nextValue);
+      setOpen(false);
+    },
+    [command, context, disabled]
+  );
+
+  return (
+    <div className="relative">
+      <Button
+        ref={triggerRef}
+        type="button"
+        variant="toolbar"
+        className="min-w-[72px] justify-between gap-2 rounded-full px-3"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={command.label}
+        disabled={disabled}
+        onClick={() => {
+          if (disabled) {
+            return;
+          }
+          setOpen((prev) => !prev);
+        }}
+      >
+        <span className="font-semibold text-primary">{shortLabel}</span>
+        <ChevronDown className="h-3 w-3 text-muted-foreground" aria-hidden="true" />
+      </Button>
+      {open ? (
+        <div
+          ref={menuRef}
+          role="listbox"
+          aria-label={command.label}
+          className="absolute left-0 z-20 mt-2 w-44 rounded-xl border border-border/40 bg-background/95 p-2 text-sm shadow-lg"
+        >
+          {command.options.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              className={cn(
+                "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left font-medium transition",
+                option.value === value ? "bg-primary/10 text-primary" : "hover:bg-muted"
+              )}
+              role="option"
+              aria-selected={option.value === value}
+              onClick={() => handleSelect(option.value)}
+            >
+              <span>{option.label}</span>
+              <span className="text-xs text-muted-foreground">{option.value === value ? "Active" : ""}</span>
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+};
 
 const renderCommand = (
   command: CommandDefinition,
@@ -15,33 +130,7 @@ const renderCommand = (
   disabled: boolean
 ) => {
   if (command.type === "select") {
-    const value = command.getValue?.(context) ?? "";
-    return (
-      <select
-        key={command.id}
-        className="h-9 rounded-md border border-input bg-background px-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-        value={value}
-        aria-label={command.label}
-        disabled={disabled}
-        onChange={(event) => {
-          if (disabled) {
-            return;
-          }
-          command.run(context, event.target.value);
-        }}
-      >
-        {command.placeholder ? (
-          <option value="" disabled hidden>
-            {command.placeholder}
-          </option>
-        ) : null}
-        {command.options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    );
+    return <HeadingSelect key={command.id} command={command} context={context} disabled={disabled} />;
   }
 
   return (
@@ -60,12 +149,12 @@ const renderCommand = (
       }}
       data-state={active ? "on" : "off"}
       title={command.description ?? command.label}
+      className="rounded-full"
     >
       {command.icon ?? <span className="text-xs font-medium">{command.label}</span>}
     </Button>
   );
 };
-import { emitDebugEvent } from "./debug-utils";
 
 interface EditorToolbarProps extends ToolbarRenderProps {
   className?: string;
@@ -122,32 +211,61 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
     };
   }, [commands, context, emit, editor, forceUpdate]);
 
+  const groupedCommands = React.useMemo(() => {
+    const undoRedo: CommandDefinition[] = [];
+    const rest: CommandDefinition[] = [];
+
+    commands.forEach((command) => {
+      if (command.id === "undo" || command.id === "redo") {
+        undoRedo.push(command);
+      } else {
+        rest.push(command);
+      }
+    });
+
+    return { undoRedo, rest };
+  }, [commands]);
+
   return (
     <div
       className={cn(
-        "relative flex flex-wrap items-center gap-1 rounded-full bg-background/40 px-1 py-1 backdrop-blur supports-[backdrop-filter]:bg-background/30",
+        "flex flex-wrap items-center gap-2 rounded-full border border-border/40 bg-background/80 px-3 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/60",
         className
       )}
       aria-label={messages.info}
     >
-      {commands.map((command) => {
-        const active = command.isActive?.(context) === true;
-        const enabled = command.isEnabled?.(context) ?? true;
-        const disabled = normalizedPermissions.readOnly === true || !enabled;
-        return renderCommand(command, context, active, disabled);
-      })}
+      <div className="flex items-center gap-1">
+        {groupedCommands.undoRedo.map((command) => {
+          const active = command.isActive?.(context) === true;
+          const enabled = command.isEnabled?.(context) ?? true;
+          const disabled = normalizedPermissions.readOnly === true || !enabled;
+          return renderCommand(command, context, active, disabled);
+        })}
+      </div>
+      <div className="h-6 w-px bg-border/70" aria-hidden="true" />
+      <div className="flex flex-wrap items-center gap-1">
+        {groupedCommands.rest.map((command) => {
+          const active = command.isActive?.(context) === true;
+          const enabled = command.isEnabled?.(context) ?? true;
+          const disabled = normalizedPermissions.readOnly === true || !enabled;
+          return renderCommand(command, context, active, disabled);
+        })}
+      </div>
       {onToggleDebug ? (
-        <Button
-          type="button"
-          variant="toolbar"
-          size="icon"
-          aria-pressed={debug}
-          onClick={() => onToggleDebug(!debug)}
-          title={debug ? "Disable debug" : "Enable debug"}
-          data-state={debug ? "on" : "off"}
-        >
-          <span className="text-xs font-medium">🐞</span>
-        </Button>
+        <>
+          <div className="h-6 w-px bg-border/70" aria-hidden="true" />
+          <Button
+            type="button"
+            variant="toolbar"
+            size="icon"
+            aria-pressed={debug}
+            onClick={() => onToggleDebug(!debug)}
+            title={debug ? "Disable debug" : "Enable debug"}
+            data-state={debug ? "on" : "off"}
+          >
+            <span className="text-xs font-medium">🐞</span>
+          </Button>
+        </>
       ) : null}
     </div>
   );
