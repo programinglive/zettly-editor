@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.10](https://github.com/programinglive/zettly-editor/compare/v0.2.9...v0.2.10) (2025-10-22)
+
+
+### 🐛 Bug Fixes
+
+* guard heading portal rendering in non-browser environments ([08dc88a](https://github.com/programinglive/zettly-editor/commit/08dc88a12b448ccca7b323abe90543edcd2ef803))
+* render heading menu in fixed layer to bypass parent stacking/overflow ([89096ba](https://github.com/programinglive/zettly-editor/commit/89096ba0b96b36b7b4302cf578eed677e4fdd8fd))
+
 ### [0.2.9](https://github.com/programinglive/zettly-editor/compare/v0.2.8...v0.2.9) (2025-10-22)
 
 
