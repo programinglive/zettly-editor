@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.12](https://github.com/programinglive/zettly-editor/compare/v0.2.11...v0.2.12) (2025-10-23)
+
+
+### 📝 Documentation
+
+* add 0.2.11 changelog entry ([5963bb7](https://github.com/programinglive/zettly-editor/commit/5963bb7958bb3424581790c991500f9664e93a42))
+
+
+### ✨ Features
+
+* add sentry integration ([7a9ed02](https://github.com/programinglive/zettly-editor/commit/7a9ed02d278f8a53e6b3d922c6c78c2d286d9deb))
+
 ### [0.2.11](https://github.com/programinglive/zettly-editor/compare/v0.2.10...v0.2.11) (2025-10-22)
 
 
