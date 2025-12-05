@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+### [0.2.15](https://github.com/programinglive/zettly-editor/compare/v0.2.14...v0.2.15) (2025-12-05)
+
+
+### 🧹 Chores
+
+* separate changelog and release notes structure ([4e17325](https://github.com/programinglive/zettly-editor/commit/4e173251d67196c56c8457494bd0810ef837d08b))
+
+
+### 📝 Documentation
+
+* add initial product requirements document ([166373d](https://github.com/programinglive/zettly-editor/commit/166373d4c33c3e24c208980285d17a185b2b60ec))
+
 ### [0.2.14](https://github.com/programinglive/zettly-editor/compare/v0.2.13...v0.2.14) (2025-12-05)
 
 
