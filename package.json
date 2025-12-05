@@ -49,11 +49,11 @@
     "example:dev": "vite --config example/vite.config.ts",
     "example:build": "vite build --config example/vite.config.ts",
     "example:preview": "vite preview --config example/vite.config.ts",
-    "prepare": "node scripts/prepare.cjs",
-    "release": "standard-version",
-    "release:major": "npm run release -- --release-as major",
-    "release:minor": "npm run release -- --release-as minor",
-    "release:patch": "npm run release -- --release-as patch"
+    "prepare": "husky",
+    "release": "node scripts/release.cjs",
+    "release:major": "node scripts/release.cjs major",
+    "release:minor": "node scripts/release.cjs minor",
+    "release:patch": "node scripts/release.cjs patch"
   },
   "peerDependencies": {
     "react": "^18.2.0",
@@ -80,9 +80,9 @@
     "tailwind-merge": "^2.2.1"
   },
   "devDependencies": {
-    "@commitlint/cli": "^20.1.0",
-    "@commitlint/config-conventional": "^20.0.0",
-    "@programinglive/commiter": "^1.0.1",
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "@programinglive/commiter": "^1.2.8",
     "@testing-library/react": "^14.1.2",
     "@types/node": "^20.12.7",
     "@types/react": "^18.3.26",
@@ -104,56 +104,7 @@
     "tailwindcss": "^3.4.18",
     "tsup": "^8.0.1",
     "typescript": "^5.4.3",
-    "vite": "^5.2.8",
-    "vitest": "^1.5.0"
-  },
-  "standard-version": {
-    "releaseCommitMessageFormat": "chore(release): {{currentTag}} 🚀",
-    "types": [
-      {
-        "type": "feat",
-        "section": "✨ Features"
-      },
-      {
-        "type": "fix",
-        "section": "🐛 Bug Fixes"
-      },
-      {
-        "type": "perf",
-        "section": "⚡ Performance"
-      },
-      {
-        "type": "refactor",
-        "section": "♻️ Refactors"
-      },
-      {
-        "type": "docs",
-        "section": "📝 Documentation"
-      },
-      {
-        "type": "style",
-        "section": "💄 Styles"
-      },
-      {
-        "type": "test",
-        "section": "✅ Tests"
-      },
-      {
-        "type": "build",
-        "section": "🏗️ Build System"
-      },
-      {
-        "type": "ci",
-        "section": "👷 Continuous Integration"
-      },
-      {
-        "type": "chore",
-        "section": "🧹 Chores"
-      },
-      {
-        "type": "revert",
-        "section": "⏪ Reverts"
-      }
-    ]
+    "vite": "^7.2.6",
+    "vitest": "^4.0.15"
   }
 }
