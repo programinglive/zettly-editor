@@ -1,6 +1,22 @@
-# Changelog
+# Release Notes
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+
+### [0.2.14](https://github.com/programinglive/zettly-editor/compare/v0.2.13...v0.2.14) (2025-12-05)
+
+
+### 🏗️ Build System
+
+* configure release notes to generate in docs/release-notes folder ([4767b8c](https://github.com/programinglive/zettly-editor/commit/4767b8c907ca4e89ea0a9781ffe4126aafbd896d))
+
+
+### 🧹 Chores
+
+* update gitignore for netlify ([b1c6668](https://github.com/programinglive/zettly-editor/commit/b1c6668c575139322e74728fcb76357befaed9c3))
 
 ### [0.2.13](https://github.com/programinglive/zettly-editor/compare/v0.2.12...v0.2.13) (2025-10-24)
 
