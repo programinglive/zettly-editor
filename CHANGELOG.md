@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+### [0.2.16](https://github.com/programinglive/zettly-editor/compare/v0.2.15...v0.2.16) (2025-12-09)
+
+
+### 📝 Documentation
+
+* update release notes for v0.2.15 ([d38ccad](https://github.com/programinglive/zettly-editor/commit/d38ccad08ef249b33566989d43a75138db38fa7c))
+
+
+### ✨ Features
+
+* **image-upload:** add image upload, paste, and drag-drop support with toolbar integration ([e311a6e](https://github.com/programinglive/zettly-editor/commit/e311a6efd1346568acc01ff56280056a95879e98))
+
 ### [0.2.15](https://github.com/programinglive/zettly-editor/compare/v0.2.14...v0.2.15) (2025-12-05)
 
 
