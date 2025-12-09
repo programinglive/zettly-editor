@@ -119,32 +119,32 @@ const HeadingSelect: React.FC<{
       </Button>
       {open && typeof window !== "undefined"
         ? createPortal(
-            (
-              <div
-                ref={menuRef}
-                role="listbox"
-                aria-label={command.label}
-                className="z-50 rounded-xl p-2 text-sm shadow-lg"
-                data-zettly-editor-menu=""
-                style={menuStyle}
-              >
-                {command.options.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    className="flex w-full items-center rounded-lg px-3 py-2 text-left font-medium transition"
-                    role="option"
-                    aria-selected={option.value === value}
-                    data-selected={option.value === value}
-                    onClick={() => handleSelect(option.value)}
-                  >
-                    <span>{option.label}</span>
-                  </button>
-                ))}
-              </div>
-            ),
-            document.body
-          )
+          (
+            <div
+              ref={menuRef}
+              role="listbox"
+              aria-label={command.label}
+              className="z-50 rounded-xl p-2 text-sm shadow-lg"
+              data-zettly-editor-menu=""
+              style={menuStyle}
+            >
+              {command.options.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className="flex w-full items-center rounded-lg px-3 py-2 text-left font-medium transition"
+                  role="option"
+                  aria-selected={option.value === value}
+                  data-selected={option.value === value}
+                  onClick={() => handleSelect(option.value)}
+                >
+                  <span>{option.label}</span>
+                </button>
+              ))}
+            </div>
+          ),
+          document.body
+        )
         : null}
     </div>
   );
@@ -196,6 +196,7 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
   debug,
   onDebugEvent,
   onToggleDebug,
+  onImageUpload,
 }) => {
   const [, forceUpdate] = React.useReducer((state) => state + 1, 0);
   const normalizedPermissions = React.useMemo(
@@ -204,8 +205,8 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
   );
 
   const context = React.useMemo<CommandContext>(
-    () => ({ editor, permissions: normalizedPermissions }),
-    [editor, normalizedPermissions]
+    () => ({ editor, permissions: normalizedPermissions, onImageUpload }),
+    [editor, normalizedPermissions, onImageUpload]
   );
 
   const emit = React.useCallback(

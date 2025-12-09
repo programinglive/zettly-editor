@@ -69,6 +69,7 @@
     "@tiptap/extension-character-count": "^2.0.3",
     "@tiptap/extension-code-block-lowlight": "^2.26.3",
     "@tiptap/extension-highlight": "^2.26.3",
+    "@tiptap/extension-image": "^2.27.1",
     "@tiptap/extension-link": "^2.0.3",
     "@tiptap/extension-placeholder": "^2.0.3",
     "@tiptap/react": "^2.0.3",
@@ -106,5 +107,54 @@
     "typescript": "^5.4.3",
     "vite": "^7.2.6",
     "vitest": "^4.0.15"
+  },
+  "standard-version": {
+    "releaseCommitMessageFormat": "chore(release): {{currentTag}} 🚀",
+    "types": [
+      {
+        "type": "feat",
+        "section": "✨ Features"
+      },
+      {
+        "type": "fix",
+        "section": "🐛 Bug Fixes"
+      },
+      {
+        "type": "perf",
+        "section": "⚡ Performance"
+      },
+      {
+        "type": "refactor",
+        "section": "♻️ Refactors"
+      },
+      {
+        "type": "docs",
+        "section": "📝 Documentation"
+      },
+      {
+        "type": "style",
+        "section": "💄 Styles"
+      },
+      {
+        "type": "test",
+        "section": "✅ Tests"
+      },
+      {
+        "type": "build",
+        "section": "🏗️ Build System"
+      },
+      {
+        "type": "ci",
+        "section": "👷 Continuous Integration"
+      },
+      {
+        "type": "chore",
+        "section": "🧹 Chores"
+      },
+      {
+        "type": "revert",
+        "section": "⏪ Reverts"
+      }
+    ]
   }
 }

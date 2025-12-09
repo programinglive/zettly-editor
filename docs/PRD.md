@@ -66,7 +66,7 @@ The editor must include a fixed or sticky toolbar with the following capabilitie
 - **Distribution:** Published to NPM and GitHub Packages.
 
 ## 6. Future Roadmap (Potential)
-- [ ] Image Upload / Drag-and-Drop support.
+- [x] Image Upload / Drag-and-Drop support.
 - [ ] Collaborative editing integration (Hocuspocus/Y.js).
 - [ ] Table support with advanced formatting.
 - [ ] AI-assisted writing features.

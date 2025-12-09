@@ -159,18 +159,6 @@ Styling is handled in `src/components/editor/code-highlight.css`. Override the `
 | `commands` | `CommandDefinition[]` | Custom toolbar commands. |
 | `permissions` | `EditorPermissions` | Control read-only/link behavior. |
 | `messages` | `Partial<EditorMessages>` | Override UI copy. |
-| `toolbar` | `(props: ToolbarRenderProps) => ReactNode` | Custom toolbar renderer. |
-| `className` | `string` | Wrapper class. |
-| `editorClassName` | `string` | Content area class. |
-| `autoFocus` | `boolean` | Focus editor on mount. |
-| `debug` | `boolean` | Enable debug mode (shows console logs and toolbar toggle). |
-| `onDebugEvent` | `(event: DebugEvent) => void` | Receive structured lifecycle/toolbar events for remote logging. |
-| `onDebugToggle` | `(enabled: boolean) => void` | Callback when debug is toggled via toolbar button. |
-
-### Debug logging
-
-Set the `debug` prop to `true` during integration to surface rich console output from the editor. This logs TipTap lifecycle callbacks (`onCreate`, `onUpdate`, `onTransaction`, `onSelectionUpdate`) and the toolbar's active command state, which is especially helpful when diagnosing highlight/selection issues in downstream apps.
-
 #### Debug toolbar toggle
 
 When you provide an `onDebugToggle` callback, a debug button (🐞) appears in the editor toolbar, allowing users to toggle debug mode on/off without code changes:

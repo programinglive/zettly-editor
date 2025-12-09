@@ -41,6 +41,7 @@ interface EditorContextProviderProps extends EditorValueSync {
   commands: CommandDefinition[];
   permissions: EditorPermissions;
   messages: EditorMessages;
+  onImageUpload?: (file: File) => Promise<string>;
   children: React.ReactNode;
 }
 
@@ -51,6 +52,7 @@ export const EditorContextProvider: React.FC<EditorContextProviderProps> = ({
   commands,
   permissions,
   messages,
+  onImageUpload,
 }) => {
   const [meta, setMeta] = React.useState<EditorMeta>({
     characters: value.length,
@@ -67,8 +69,9 @@ export const EditorContextProvider: React.FC<EditorContextProviderProps> = ({
     (editor: CommandContext["editor"]) => ({
       editor,
       permissions: normalizedPermissions,
+      onImageUpload,
     }),
-    [normalizedPermissions]
+    [normalizedPermissions, onImageUpload]
   );
 
   const contextValue = React.useMemo<EditorContextValue>(

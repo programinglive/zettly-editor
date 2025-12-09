@@ -10,6 +10,7 @@ import {
   Code,
   Undo2,
   Redo2,
+  Image as ImageIcon,
 } from "lucide-react";
 import { type CommandDefinition, type CommandContext } from "../../types/editor";
 
@@ -198,5 +199,29 @@ export const defaultCommands: CommandDefinition[] = [
     isActive: ({ editor }) => editor.isActive("link"),
     isEnabled: ({ permissions }) => permissions.allowLinks === true && !permissions.readOnly,
     icon: <Link2 className="h-4 w-4" />,
+  },
+  {
+    id: "image",
+    label: "Image",
+    type: "button",
+    run: ({ editor, onImageUpload }) => {
+      if (!onImageUpload) return;
+
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.onchange = async () => {
+        if (input.files?.length) {
+          const file = input.files[0];
+          const url = await onImageUpload(file);
+          if (url) {
+            editor.chain().focus().setImage({ src: url }).run();
+          }
+        }
+      };
+      input.click();
+    },
+    isEnabled: ({ onImageUpload, permissions }) => !!onImageUpload && !permissions.readOnly,
+    icon: <ImageIcon className="h-4 w-4" />,
   },
 ];

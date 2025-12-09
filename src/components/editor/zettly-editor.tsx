@@ -10,6 +10,7 @@ import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
 import Blockquote from "@tiptap/extension-blockquote";
+import Image from "@tiptap/extension-image";
 
 import { cn } from "../../lib/utils";
 import { CodeBlockWithSyntaxHighlight } from "./code-block-config";
@@ -83,6 +84,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
   debug = false,
   onDebugEvent,
   onDebugToggle,
+  onImageUpload,
 }) => {
   const { setMeta, createCommandContext } = useEditorContext();
   const lastValueRef = React.useRef(value);
@@ -143,6 +145,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
         multicolor: true,
       }),
       Link.configure({ openOnClick: false, autolink: true, HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" } }),
+      Image as any,
       Placeholder.configure({ placeholder: messages.placeholder }),
       CharacterCount.configure({ limit: undefined }),
       ...(extensions ?? []),
@@ -155,6 +158,50 @@ const EditorShell: React.FC<EditorShellProps> = ({
       extensions: mergedExtensions,
       content: value,
       editable: permissions.readOnly !== true,
+      editorProps: {
+        handlePaste: (view, event, slice) => {
+          if (!onImageUpload) return false;
+          const items = Array.from(event.clipboardData?.items || []);
+          const imageItem = items.find((item) => item.type.indexOf("image") === 0);
+
+          if (imageItem) {
+            const file = imageItem.getAsFile();
+            if (file) {
+              event.preventDefault();
+              onImageUpload(file).then((url) => {
+                view.dispatch(view.state.tr.replaceSelectionWith(
+                  view.state.schema.nodes.image.create({ src: url })
+                ));
+              });
+              return true;
+            }
+          }
+          return false;
+        },
+        handleDrop: (view, event, slice, moved) => {
+          if (!onImageUpload || moved) return false;
+          const items = Array.from(event.dataTransfer?.items || []);
+          const imageItem = items.find((item) => item.type.indexOf("image") === 0);
+
+          if (imageItem) {
+            const file = imageItem.getAsFile();
+            if (file) {
+              event.preventDefault();
+              const coordinates = view.posAtCoords({ left: event.clientX, top: event.clientY });
+              onImageUpload(file).then((url) => {
+                if (coordinates) {
+                  view.dispatch(view.state.tr.insert(
+                    coordinates.pos,
+                    view.state.schema.nodes.image.create({ src: url })
+                  ));
+                }
+              });
+              return true;
+            }
+          }
+          return false;
+        }
+      },
       onCreate({ editor: createdEditor }) {
         const meta = computeMeta(createdEditor);
         emit({
@@ -227,7 +274,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
         }
       },
     },
-    [emit, mergedExtensions, permissions.readOnly]
+    [emit, mergedExtensions, permissions.readOnly, onImageUpload]
   );
 
   const handleSurfaceMouseDown = React.useCallback(
@@ -239,8 +286,8 @@ const EditorShell: React.FC<EditorShellProps> = ({
       const insideEditor = Boolean(target.closest(".ProseMirror"));
       if (!insideEditor) {
         event.preventDefault();
+        editor.chain().focus().run();
       }
-      editor.chain().focus().run();
     },
     [editor]
   );
@@ -288,6 +335,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
     debug: effectiveDebug,
     onDebugEvent,
     onToggleDebug: handleToggleDebug,
+    onImageUpload,
   };
 
   return (
@@ -311,7 +359,8 @@ const EditorShell: React.FC<EditorShellProps> = ({
             "[&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-muted [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground",
             "[&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80",
             "[&_.ProseMirror]:min-h-[200px] [&_.ProseMirror]:w-full [&_.ProseMirror]:outline-none [&_.ProseMirror]:border-0 [&_.ProseMirror]:shadow-none",
-            "[&_.ProseMirror-focused]:outline-none [&_.ProseMirror-focused]:border-0 [&_.ProseMirror-focused]:shadow-none"
+            "[&_.ProseMirror-focused]:outline-none [&_.ProseMirror-focused]:border-0 [&_.ProseMirror-focused]:shadow-none",
+            "[&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:border [&_img]:border-border"
           )}
         />
       </div>
@@ -336,6 +385,7 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
     debug = false,
     onDebugEvent,
     onDebugToggle,
+    onImageUpload,
     ...rest
   } = props;
 
@@ -355,6 +405,7 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
       commands={commands}
       permissions={normalizedPermissions}
       messages={mergedMessages}
+      onImageUpload={onImageUpload}
     >
       <EditorShell
         value={value}
@@ -365,6 +416,7 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
         debug={debug}
         onDebugEvent={onDebugEvent}
         onDebugToggle={onDebugToggle}
+        onImageUpload={onImageUpload}
         {...rest}
       />
     </EditorContextProvider>
