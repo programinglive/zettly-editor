@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+### [0.2.17](https://github.com/programinglive/zettly-editor/compare/v0.2.16...v0.2.17) (2025-12-09)
+
+
+### 📝 Documentation
+
+* add release notes for image upload feature ([1ee591d](https://github.com/programinglive/zettly-editor/commit/1ee591d9a1b714c25ee18bc3b7fcdbe7357b059b))
+
+
+### ✅ Tests
+
+* add vitest jsdom dom shims ([3c3a3f9](https://github.com/programinglive/zettly-editor/commit/3c3a3f947b69bd74b802e74dcee132871953b0ec))
+
 ### [0.2.16](https://github.com/programinglive/zettly-editor/compare/v0.2.15...v0.2.16) (2025-12-09)
 
 
