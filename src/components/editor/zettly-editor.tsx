@@ -252,7 +252,10 @@ const EditorShell: React.FC<EditorShellProps> = ({
     const incoming = value;
     if (incoming !== lastValueRef.current) {
       skipNextEmitRef.current = true;
-      editor.commands.setContent(incoming, false, { preserveWhitespace: true });
+      editor.commands.setContent(incoming, {
+        emitUpdate: false,
+        parseOptions: { preserveWhitespace: true },
+      });
       lastValueRef.current = incoming;
       const meta = computeMeta(editor);
       setMeta(meta);

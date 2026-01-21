@@ -1,5 +1,5 @@
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import { lowlight } from "lowlight";
+import { createLowlight } from "lowlight";
 
 // Import common languages
 import javascript from "highlight.js/lib/languages/javascript";
@@ -10,15 +10,16 @@ import xml from "highlight.js/lib/languages/xml";
 import css from "highlight.js/lib/languages/css";
 import markdown from "highlight.js/lib/languages/markdown";
 
-// Register languages with lowlight
-lowlight.registerLanguage("javascript", javascript);
-lowlight.registerLanguage("typescript", typescript);
-lowlight.registerLanguage("bash", bash);
-lowlight.registerLanguage("json", json);
-lowlight.registerLanguage("xml", xml);
-lowlight.registerLanguage("html", xml);
-lowlight.registerLanguage("css", css);
-lowlight.registerLanguage("markdown", markdown);
+// Create lowlight instance and register languages
+const lowlight = createLowlight();
+lowlight.register("javascript", javascript);
+lowlight.register("typescript", typescript);
+lowlight.register("bash", bash);
+lowlight.register("json", json);
+lowlight.register("xml", xml);
+lowlight.register("html", xml);
+lowlight.register("css", css);
+lowlight.register("markdown", markdown);
 
 export const CodeBlockWithSyntaxHighlight = CodeBlockLowlight.extend({
   addKeyboardShortcuts() {
