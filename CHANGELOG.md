@@ -1,6 +1,77 @@
-# Changelog
+# Release Notes
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+
+### [0.2.17](https://github.com/programinglive/zettly-editor/compare/v0.2.16...v0.2.17) (2025-12-09)
+
+
+### 📝 Documentation
+
+* add release notes for image upload feature ([1ee591d](https://github.com/programinglive/zettly-editor/commit/1ee591d9a1b714c25ee18bc3b7fcdbe7357b059b))
+
+
+### ✅ Tests
+
+* add vitest jsdom dom shims ([3c3a3f9](https://github.com/programinglive/zettly-editor/commit/3c3a3f947b69bd74b802e74dcee132871953b0ec))
+
+### [0.2.16](https://github.com/programinglive/zettly-editor/compare/v0.2.15...v0.2.16) (2025-12-09)
+
+
+### 📝 Documentation
+
+* update release notes for v0.2.15 ([d38ccad](https://github.com/programinglive/zettly-editor/commit/d38ccad08ef249b33566989d43a75138db38fa7c))
+
+
+### ✨ Features
+
+* **image-upload:** add image upload, paste, and drag-drop support with toolbar integration ([e311a6e](https://github.com/programinglive/zettly-editor/commit/e311a6efd1346568acc01ff56280056a95879e98))
+
+### [0.2.15](https://github.com/programinglive/zettly-editor/compare/v0.2.14...v0.2.15) (2025-12-05)
+
+
+### 🧹 Chores
+
+* separate changelog and release notes structure ([4e17325](https://github.com/programinglive/zettly-editor/commit/4e173251d67196c56c8457494bd0810ef837d08b))
+
+
+### 📝 Documentation
+
+* add initial product requirements document ([166373d](https://github.com/programinglive/zettly-editor/commit/166373d4c33c3e24c208980285d17a185b2b60ec))
+
+### [0.2.14](https://github.com/programinglive/zettly-editor/compare/v0.2.13...v0.2.14) (2025-12-05)
+
+
+### 🏗️ Build System
+
+* configure release notes to generate in docs/release-notes folder ([4767b8c](https://github.com/programinglive/zettly-editor/commit/4767b8c907ca4e89ea0a9781ffe4126aafbd896d))
+
+
+### 🧹 Chores
+
+* update gitignore for netlify ([b1c6668](https://github.com/programinglive/zettly-editor/commit/b1c6668c575139322e74728fcb76357befaed9c3))
+
+### [0.2.13](https://github.com/programinglive/zettly-editor/compare/v0.2.12...v0.2.13) (2025-10-24)
+
+
+### 🐛 Bug Fixes
+
+* improve toolbar mobile layout and add tests ([696cb57](https://github.com/programinglive/zettly-editor/commit/696cb574f90a62efb06289656e3eb8ac39b68b78))
+
+### [0.2.12](https://github.com/programinglive/zettly-editor/compare/v0.2.11...v0.2.12) (2025-10-23)
+
+
+### 📝 Documentation
+
+* add 0.2.11 changelog entry ([5963bb7](https://github.com/programinglive/zettly-editor/commit/5963bb7958bb3424581790c991500f9664e93a42))
+
+
+### ✨ Features
+
+* add sentry integration ([7a9ed02](https://github.com/programinglive/zettly-editor/commit/7a9ed02d278f8a53e6b3d922c6c78c2d286d9deb))
 
 ### [0.2.11](https://github.com/programinglive/zettly-editor/compare/v0.2.10...v0.2.11) (2025-10-22)
 

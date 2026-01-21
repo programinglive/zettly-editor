@@ -28,41 +28,41 @@ interface DebugEventBase {
 
 export type DebugEvent =
   | (DebugEventBase & {
-      type: "create";
-      selection: EditorSelectionJSON;
-      html: string;
-      meta: EditorMeta;
-    })
+    type: "create";
+    selection: EditorSelectionJSON;
+    html: string;
+    meta: EditorMeta;
+  })
   | (DebugEventBase & {
-      type: "update";
-      selection: EditorSelectionJSON;
-      html: string;
-      meta: EditorMeta;
-      skipped: boolean;
-    })
+    type: "update";
+    selection: EditorSelectionJSON;
+    html: string;
+    meta: EditorMeta;
+    skipped: boolean;
+  })
   | (DebugEventBase & {
-      type: "transaction";
-      selection: EditorSelectionJSON;
-      transaction: {
-        docChanged: boolean;
-        stepCount: number;
-        selectionSet: boolean;
-      };
-    })
+    type: "transaction";
+    selection: EditorSelectionJSON;
+    transaction: {
+      docChanged: boolean;
+      stepCount: number;
+      selectionSet: boolean;
+    };
+  })
   | (DebugEventBase & {
-      type: "selectionUpdate";
-      selection: EditorSelectionJSON;
-    })
+    type: "selectionUpdate";
+    selection: EditorSelectionJSON;
+  })
   | (DebugEventBase & {
-      type: "toolbarUpdate";
-      selection: EditorSelectionJSON;
-      activeCommands: string[];
-    })
+    type: "toolbarUpdate";
+    selection: EditorSelectionJSON;
+    activeCommands: string[];
+  })
   | (DebugEventBase & {
-      type: "error";
-      message: string;
-      context?: string;
-    });
+    type: "error";
+    message: string;
+    context?: string;
+  });
 
 export interface EditorPermissions {
   readOnly?: boolean;
@@ -72,6 +72,7 @@ export interface EditorPermissions {
 export interface CommandContext {
   editor: Editor;
   permissions: EditorPermissions;
+  onImageUpload?: (file: File) => Promise<string>;
 }
 
 export interface CommandSelectOption {
@@ -125,6 +126,7 @@ export interface ToolbarRenderProps {
   debug: boolean;
   onDebugEvent?: (event: DebugEvent) => void;
   onToggleDebug?: (next: boolean) => void;
+  onImageUpload?: (file: File) => Promise<string>;
 }
 
 export interface ZettlyEditorProps extends EditorValueSync {
@@ -139,4 +141,5 @@ export interface ZettlyEditorProps extends EditorValueSync {
   debug?: boolean;
   onDebugEvent?: (event: DebugEvent) => void;
   onDebugToggle?: (next: boolean) => void;
+  onImageUpload?: (file: File) => Promise<string>;
 }

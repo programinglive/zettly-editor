@@ -99,7 +99,7 @@ const HeadingSelect: React.FC<{
         ref={triggerRef}
         type="button"
         variant="toolbar"
-        className="min-w-[72px] justify-between gap-2 rounded-full px-3"
+        className="min-w-[60px] justify-between gap-2 rounded-full px-2 sm:min-w-[72px] sm:px-3"
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={command.label}
@@ -200,6 +200,7 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
   debug,
   onDebugEvent,
   onToggleDebug,
+  onImageUpload,
 }) => {
   const [, forceUpdate] = React.useReducer((state) => state + 1, 0);
   const normalizedPermissions = React.useMemo(
@@ -208,8 +209,8 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
   );
 
   const context = React.useMemo<CommandContext>(
-    () => ({ editor, permissions: normalizedPermissions }),
-    [editor, normalizedPermissions]
+    () => ({ editor, permissions: normalizedPermissions, onImageUpload }),
+    [editor, normalizedPermissions, onImageUpload]
   );
 
   const emit = React.useCallback(
@@ -260,12 +261,12 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-wrap items-center gap-2 rounded-full border border-border/40 bg-background/80 px-3 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "flex w-full flex-nowrap items-center gap-1.5 rounded-full bg-background/80 px-2 py-2 backdrop-blur supports-[backdrop-filter]:bg-background/60 overflow-x-auto sm:w-auto sm:flex-wrap sm:gap-2 sm:overflow-visible sm:px-3",
         className
       )}
       aria-label={messages.info}
     >
-      <div className="flex items-center gap-1">
+      <div className="flex shrink-0 items-center gap-1">
         {groupedCommands.undoRedo.map((command) => {
           const active = command.isActive?.(context) === true;
           const enabled = command.isEnabled?.(context) ?? true;
@@ -273,8 +274,8 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
           return renderCommand(command, context, active, disabled);
         })}
       </div>
-      <div className="h-6 w-px bg-border/70" aria-hidden="true" />
-      <div className="flex flex-wrap items-center gap-1">
+      <div className="hidden h-6 w-px bg-border/70 sm:block" aria-hidden="true" />
+      <div className="flex shrink-0 flex-wrap items-center gap-1">
         {groupedCommands.rest.map((command) => {
           const active = command.isActive?.(context) === true;
           const enabled = command.isEnabled?.(context) ?? true;
@@ -284,7 +285,7 @@ export const DefaultToolbar: React.FC<EditorToolbarProps> = ({
       </div>
       {onToggleDebug ? (
         <>
-          <div className="h-6 w-px bg-border/70" aria-hidden="true" />
+          <div className="hidden h-6 w-px bg-border/70 sm:block" aria-hidden="true" />
           <Button
             type="button"
             variant="toolbar"

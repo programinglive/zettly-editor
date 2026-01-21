@@ -264,6 +264,13 @@ export function App() {
               debug={debugEnabled}
               onDebugEvent={handleDebugEvent}
               onDebugToggle={setDebugEnabled}
+              onImageUpload={async (file) => {
+                return new Promise((resolve) => {
+                  setTimeout(() => {
+                    resolve(URL.createObjectURL(file));
+                  }, 1000);
+                });
+              }}
             />
           ) : (
             <article className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition dark:border-zinc-800 dark:bg-zinc-900">
@@ -305,7 +312,7 @@ export function App() {
             <code className="mx-1 rounded bg-zinc-200 px-1 py-0.5 text-xs dark:bg-zinc-800">value</code> prop.
           </p>
           <pre className="max-h-64 overflow-auto rounded-md bg-zinc-100 p-4 text-xs text-zinc-800 dark:bg-slate-900 dark:text-slate-100">
-{value.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
+            {value.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
           </pre>
         </section>
 
@@ -473,13 +480,13 @@ export async function POST(request: Request) {
   const note = await prisma.note.create({ data: { title, content } });
   return NextResponse.json(note, { status: 201 });
 }`}
-                language="typescript"
-              />
-            </details>
-            <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
-              <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">MySQL (mysql2)</summary>
-              <SyntaxHighlighter
-                code={`import mysql from "mysql2/promise";
+                  language="typescript"
+                />
+              </details>
+              <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+                <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">MySQL (mysql2)</summary>
+                <SyntaxHighlighter
+                  code={`import mysql from "mysql2/promise";
 
 export const pool = mysql.createPool({ uri: process.env.MYSQL_DATABASE_URL! });
 
@@ -488,13 +495,13 @@ export async function POST(request: Request) {
   await pool.execute("INSERT INTO notes (title, content_html) VALUES (?, ?)", [title, content]);
   return Response.json({ ok: true });
 }`}
-                language="typescript"
-              />
-            </details>
-            <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
-              <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">PostgreSQL (pg)</summary>
-              <SyntaxHighlighter
-                code={`import { Pool } from "pg";
+                  language="typescript"
+                />
+              </details>
+              <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+                <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">PostgreSQL (pg)</summary>
+                <SyntaxHighlighter
+                  code={`import { Pool } from "pg";
 
 export const pgPool = new Pool({ connectionString: process.env.POSTGRES_URL });
 
@@ -503,13 +510,13 @@ export async function POST(request: Request) {
   await pgPool.query("INSERT INTO notes (title, content_html) VALUES ($1, $2)", [title, content]);
   return Response.json({ ok: true });
 }`}
-                language="typescript"
-              />
-            </details>
-            <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
-              <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">MongoDB</summary>
-              <SyntaxHighlighter
-                code={`import { MongoClient } from "mongodb";
+                  language="typescript"
+                />
+              </details>
+              <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+                <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">MongoDB</summary>
+                <SyntaxHighlighter
+                  code={`import { MongoClient } from "mongodb";
 
 const client = new MongoClient(process.env.MONGODB_URI!);
 const collection = client.db("zettly").collection("notes");
@@ -519,13 +526,13 @@ export async function POST(request: Request) {
   await collection.insertOne({ title, content, createdAt: new Date() });
   return Response.json({ ok: true });
 }`}
-                language="typescript"
-              />
-            </details>
-            <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
-              <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">Firebase Firestore</summary>
-              <SyntaxHighlighter
-                code={`import { cert, getApps, initializeApp } from "firebase-admin/app";
+                  language="typescript"
+                />
+              </details>
+              <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
+                <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">Firebase Firestore</summary>
+                <SyntaxHighlighter
+                  code={`import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 
 const app = getApps()[0] ?? initializeApp({
@@ -539,21 +546,21 @@ export async function POST(request: Request) {
   await firestore.collection("notes").add({ title, content, createdAt: Date.now() });
   return Response.json({ ok: true });
 }`}
-                language="typescript"
-              />
-            </details>
-          </div>
-          <div>
-            <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">5. Restore saved HTML</h4>
-            <SyntaxHighlighter
-              code={`const note = await fetch("/api/notes/123").then((res) => res.json());
+                  language="typescript"
+                />
+              </details>
+            </div>
+            <div>
+              <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">5. Restore saved HTML</h4>
+              <SyntaxHighlighter
+                code={`const note = await fetch("/api/notes/123").then((res) => res.json());
 
 return <ZettlyEditor value={note.content} onChange={(next) => setValue(next)} />;`}
-              language="typescript"
-            />
+                language="typescript"
+              />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
       </main>
     </div>
   );
