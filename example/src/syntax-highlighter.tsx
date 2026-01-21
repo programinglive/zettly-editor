@@ -5,6 +5,7 @@ import javascript from "highlight.js/lib/languages/javascript";
 import typescript from "highlight.js/lib/languages/typescript";
 import bash from "highlight.js/lib/languages/bash";
 import json from "highlight.js/lib/languages/json";
+import css from "highlight.js/lib/languages/css";
 
 const languageLoaders: Record<string, () => void> = {
   xml: () => hljs.registerLanguage("xml", xml),
@@ -16,6 +17,7 @@ const languageLoaders: Record<string, () => void> = {
   bash: () => hljs.registerLanguage("bash", bash),
   shell: () => hljs.registerLanguage("bash", bash),
   json: () => hljs.registerLanguage("json", json),
+  css: () => hljs.registerLanguage("css", css),
 };
 
 const ensureLanguageRegistered = (lang: string) => {

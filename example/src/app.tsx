@@ -402,39 +402,26 @@ export function App() {
               <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">1. Install dependencies</h4>
               <SyntaxHighlighter
                 code={`npm install @programinglive/zettly-editor @tiptap/react @tiptap/starter-kit lucide-react
-npm install tailwindcss postcss autoprefixer
-npx tailwindcss init -p`}
+npm install tailwindcss @tailwindcss/postcss postcss`}
                 language="bash"
               />
             </div>
             <div>
               <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">2. Tailwind config essentials</h4>
               <SyntaxHighlighter
-                code={`import type { Config } from "tailwindcss";
+                code={`/* style.css */
+@import "tailwindcss";
 
-const config: Config = {
-  darkMode: ["class"],
-  content: ["./src/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}"],
-  theme: {
-    extend: {
-      colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-      },
-    },
-  },
-  plugins: [],
-};
-
-export default config;`}
-                language="typescript"
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+}`}
+                language="css"
               />
             </div>
             <div>
