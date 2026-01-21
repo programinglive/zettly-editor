@@ -349,9 +349,14 @@ const EditorShell: React.FC<EditorShellProps> = ({
       </div>
       <div
         data-zettly-editor-surface=""
-        className={cn("px-4 py-4", editorClassName)}
+        className={cn("relative px-4 py-4", editorClassName)}
         onMouseDown={handleSurfaceMouseDown}
       >
+        {effectiveDebug && (
+          <div className="absolute right-4 top-4 z-10 select-none rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-600 shadow-sm ring-1 ring-red-200 animate-pulse">
+            Debug Mode
+          </div>
+        )}
         <EditorContent
           editor={editor}
           className={cn(

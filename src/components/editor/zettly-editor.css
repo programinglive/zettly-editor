@@ -9,7 +9,8 @@
   --zettly-editor-menu-bg: #ffffff;
   --zettly-editor-menu-border: rgba(148, 163, 184, 0.35);
   --zettly-editor-menu-hover: rgba(15, 23, 42, 0.05);
-  --zettly-editor-menu-selected: rgba(79, 70, 229, 0.14);
+  --zettly-editor-menu-selected: rgba(79, 70, 229, 0.1);
+  --zettly-editor-menu-active: rgba(79, 70, 229, 1);
   --zettly-editor-menu-muted: rgba(15, 23, 42, 0.55);
   --zettly-editor-menu-accent: #4f46e5;
 }
@@ -128,8 +129,8 @@
 
 :root:not(.dark) [data-zettly-editor-toolbar] button[data-state="on"],
 .light [data-zettly-editor-toolbar] button[data-state="on"] {
-  background: var(--zettly-editor-menu-selected) !important;
-  color: var(--zettly-editor-menu-accent) !important;
+  background: var(--zettly-editor-menu-active);
+  color: #ffffff;
 }
 
 .dark [data-zettly-editor-toolbar] {
@@ -137,17 +138,19 @@
   border-bottom-color: var(--zettly-editor-toolbar-border);
 }
 
-.dark [data-zettly-editor-toolbar] > div {
-  background-color: rgba(17, 24, 39, 0.7) !important; /* override inline bg classes */
+.dark [data-zettly-editor-toolbar]>div {
+  background-color: rgba(17, 24, 39, 0.7) !important;
+  /* override inline bg classes */
 }
 
 .dark [data-zettly-editor-toolbar] button {
-  color: #cbd5e1 !important; /* ensure contrast over muted-foreground */
+  color: #cbd5e1 !important;
+  /* ensure contrast over muted-foreground */
 }
 
 .dark [data-zettly-editor-toolbar] button[data-state="on"] {
-  color: #0b1020; /* will be overridden by bg below */
-  background: rgba(99, 102, 241, 0.9) !important; /* primary */
+  color: #ffffff;
+  background: #4f46e5;
 }
 
 [data-zettly-editor-surface] {
@@ -205,7 +208,7 @@
   padding-left: 1.5rem;
 }
 
-[data-zettly-editor-surface] .ProseMirror li + li {
+[data-zettly-editor-surface] .ProseMirror li+li {
   margin-top: 0.35rem;
 }
 
@@ -288,7 +291,8 @@
 /* Highlight mark default styles */
 [data-zettly-editor-surface] .ProseMirror mark,
 [data-zettly-editor-surface] .ProseMirror .hl {
-  background-color: rgba(250, 204, 21, 0.35); /* amber-400 @ 35% */
+  background-color: rgba(250, 204, 21, 0.35);
+  /* amber-400 @ 35% */
   color: inherit;
   padding: 0.05rem 0.15rem;
   border-radius: 0.15rem;
@@ -296,7 +300,8 @@
 
 .dark [data-zettly-editor-surface] .ProseMirror mark,
 .dark [data-zettly-editor-surface] .ProseMirror .hl {
-  background-color: rgba(234, 179, 8, 0.35); /* darker amber in dark */
+  background-color: rgba(234, 179, 8, 0.35);
+  /* darker amber in dark */
 }
 
 [data-zettly-editor-surface] .ProseMirror:focus,
