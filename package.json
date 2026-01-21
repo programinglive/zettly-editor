@@ -49,6 +49,7 @@
     "example:dev": "vite --config example/vite.config.ts",
     "example:build": "vite build --config example/vite.config.ts",
     "example:preview": "vite preview --config example/vite.config.ts",
+    "example:deploy": "npx netlify deploy --site 821407d1-6ae7-499d-9d16-0ca038d7d33e --prod --dir=example/dist --no-build",
     "prepare": "husky",
     "release": "node scripts/release.cjs",
     "release:major": "node scripts/release.cjs major",
