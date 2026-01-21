@@ -6,6 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+### [0.2.18](https://github.com/programinglive/zettly-editor/compare/v0.2.17...v0.2.18) (2026-01-21)
+
+
+### 🧹 Chores
+
+* fix ESLint 9 dependency conflicts and migrate to flat config ([1155a25](https://github.com/programinglive/zettly-editor/commit/1155a251bed038c3d5d116a6553e94d1702dd26a))
+* resolve conflicts in package.json and package-lock.json and integrate remote changes ([7473017](https://github.com/programinglive/zettly-editor/commit/74730179131a4c185cccb56bc59f44d53ef2c0a6))
+* update documentation 0.2.17 ([fa2fc68](https://github.com/programinglive/zettly-editor/commit/fa2fc68548e4805af9e6f40a2a3c1141c9279c17))
+* update package-lock.json after npm update ([46005a6](https://github.com/programinglive/zettly-editor/commit/46005a6272d22595b495ec9e44bdd2a5df886146))
+* upgrade dependencies to React 19, Tiptap 3, and Tailwind CSS 4 ([828889f](https://github.com/programinglive/zettly-editor/commit/828889f2c3168defca220b86b9646bcc4dc5d9eb))
+
+
+### 📝 Documentation
+
+* update integration tutorial for React 19, Tiptap 3, and Tailwind 4 ([340651b](https://github.com/programinglive/zettly-editor/commit/340651bb875d2dc03e70d1b51e4dd474ebc591d1))
+
+
+### 🐛 Bug Fixes
+
+* improve debug toggle visibility and add debug badge ([13d25f4](https://github.com/programinglive/zettly-editor/commit/13d25f4844a6e7b98421b75349f1e7bb0d386c56))
+
 ### [0.2.17](https://github.com/programinglive/zettly-editor/compare/v0.2.16...v0.2.17) (2025-12-09)
 
 
