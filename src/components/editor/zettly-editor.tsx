@@ -48,7 +48,7 @@ const computeMeta = (editor: Editor): EditorMeta => {
   };
 
   const textContent = editor.state.doc.textContent;
-  const sanitizedText = textContent.replace(/[\s\u200b\u200c\u200d\u2060\ufeff]/g, "");
+  const sanitizedText = textContent.replace(/\s/g, "").replace(/\u200b|\u200c|\u200d|\u2060|\ufeff/g, "");
   const empty = sanitizedText.length === 0;
   const characters = empty ? 0 : characterStorage?.characters?.() ?? sanitizedText.length;
   const words = empty
@@ -84,7 +84,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
   onDebugEvent,
   onDebugToggle,
 }) => {
-  const { setMeta, createCommandContext } = useEditorContext();
+  const { setMeta } = useEditorContext();
   const lastValueRef = React.useRef(value);
   const skipNextEmitRef = React.useRef(false);
   const serializationScheduledRef = React.useRef(false);
@@ -279,6 +279,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
     [toolbar]
   );
 
+  // All hooks are called before this early return
   if (!editor) {
     return null;
   }

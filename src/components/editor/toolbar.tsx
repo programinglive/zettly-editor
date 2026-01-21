@@ -8,19 +8,16 @@ import {
   type ToolbarRenderProps,
   type CommandDefinition,
   type CommandContext,
+  type SelectCommandDefinition,
 } from "../../types/editor";
 import { Button } from "../ui/button";
 import { emitDebugEvent } from "./debug-utils";
 
 const HeadingSelect: React.FC<{
-  command: CommandDefinition;
+  command: SelectCommandDefinition;
   context: CommandContext;
   disabled: boolean;
 }> = ({ command, context, disabled }) => {
-  if (command.type !== "select") {
-    return null;
-  }
-
   const [open, setOpen] = React.useState(false);
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const menuRef = React.useRef<HTMLDivElement>(null);
@@ -119,32 +116,32 @@ const HeadingSelect: React.FC<{
       </Button>
       {open && typeof window !== "undefined"
         ? createPortal(
-            (
-              <div
-                ref={menuRef}
-                role="listbox"
-                aria-label={command.label}
-                className="z-50 rounded-xl p-2 text-sm shadow-lg"
-                data-zettly-editor-menu=""
-                style={menuStyle}
-              >
-                {command.options.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    className="flex w-full items-center rounded-lg px-3 py-2 text-left font-medium transition"
-                    role="option"
-                    aria-selected={option.value === value}
-                    data-selected={option.value === value}
-                    onClick={() => handleSelect(option.value)}
-                  >
-                    <span>{option.label}</span>
-                  </button>
-                ))}
-              </div>
-            ),
-            document.body
-          )
+          (
+            <div
+              ref={menuRef}
+              role="listbox"
+              aria-label={command.label}
+              className="z-50 rounded-xl p-2 text-sm shadow-lg"
+              data-zettly-editor-menu=""
+              style={menuStyle}
+            >
+              {command.options.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  className="flex w-full items-center rounded-lg px-3 py-2 text-left font-medium transition"
+                  role="option"
+                  aria-selected={option.value === value}
+                  data-selected={option.value === value}
+                  onClick={() => handleSelect(option.value)}
+                >
+                  <span>{option.label}</span>
+                </button>
+              ))}
+            </div>
+          ),
+          document.body
+        )
         : null}
     </div>
   );
@@ -157,7 +154,14 @@ const renderCommand = (
   disabled: boolean
 ) => {
   if (command.type === "select") {
-    return <HeadingSelect key={command.id} command={command} context={context} disabled={disabled} />;
+    return (
+      <HeadingSelect
+        key={command.id}
+        command={command as SelectCommandDefinition}
+        context={context}
+        disabled={disabled}
+      />
+    );
   }
 
   return (

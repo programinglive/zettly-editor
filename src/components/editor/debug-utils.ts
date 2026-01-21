@@ -27,7 +27,6 @@ export const emitDebugEvent = (
   handler?.(payload);
 
   if (debug) {
-    // eslint-disable-next-line no-console
     console.debug(`[ZettlyEditor][${payload.type}]`, payload);
   }
 };
