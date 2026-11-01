@@ -58,6 +58,17 @@ jobs:
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
       # ---- Publish to npmjs.com ----
+      - name: Check npm token is configured
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::Secret NPM_TOKEN is not set for this repository."
+            echo "Add it in Settings > Secrets and variables > Actions."
+            echo "See docs/publishing.md for how to create the token."
+            exit 1
+          fi
+
       - name: Publish to npm (npmjs.com) with provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # npm Automation token
