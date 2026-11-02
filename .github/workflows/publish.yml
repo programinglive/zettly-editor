@@ -9,10 +9,10 @@ on:
       - 'v*'
 
 permissions:
-  id-token: write     # needed for npm provenance (npmjs.com)
+  id-token: write     # OIDC for npm trusted publishing + provenance
   contents: read
-  packages: write     # needed for GitHub Packages
-  deployments: write  # needed to create deployment records
+  packages: write     # GitHub Packages
+  deployments: write
 
 jobs:
   publish:
@@ -23,12 +23,13 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      # npm trusted publishing needs npm >= 11.5.1, which ships with Node 24.
+      # No registry-url here on purpose: it would write an _authToken
+      # placeholder into .npmrc and defeat the OIDC exchange.
       - name: Set up Node.js (npmjs.com)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          registry-url: https://registry.npmjs.org
-          scope: '@programinglive'
+          node-version: '24'
           cache: npm
 
       - name: Install dependencies
@@ -40,13 +41,12 @@ jobs:
       - name: Test
         run: npm test --if-present
 
-      # Pack once so we publish the same bits to both registries
+      # Pack once so the same bits go to both registries.
       - name: Create tarball
         run: |
           rm -f *.tgz
           npm pack --silent
-      # This outputs something like: programinglive-zettly-editor-0.1.16.tgz
-      # We'll capture the filename for reuse.
+
       - id: tarball
         run: echo "TARBALL=$(ls *.tgz)" >> $GITHUB_ENV
 
@@ -57,37 +57,39 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
-      # ---- Publish to npmjs.com ----
+      # ---- Publish to npmjs.com via OIDC trusted publishing ----
+      # Configured at https://www.npmjs.com/package/@programinglive/zettly-editor/access
+      # Publisher: programinglive/zettly-editor, workflow publish.yml.
+      # There is deliberately no NODE_AUTH_TOKEN: npm exchanges the GitHub OIDC
+      # token for a short-lived credential scoped to this workflow run.
       - name: Publish to npm (npmjs.com) with provenance
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # npm Automation token
           VERSION: ${{ steps.pkg.outputs.version }}
         run: |
+          npm --version
           echo "Registry: $(npm config get registry)"
-          npm whoami || true
           if npm view "@programinglive/zettly-editor@${VERSION}" version >/dev/null 2>&1; then
-            echo "Version ${VERSION} already published on npm, skipping..."
+            echo "Version ${VERSION} is already published on npm, skipping."
           else
             npm publish "${TARBALL}" --provenance --access public
           fi
 
       # ---- Publish to GitHub Packages ----
-      # Switch registry for GitHub Packages
       - name: Set up Node.js (GitHub Packages)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '24'
           registry-url: https://npm.pkg.github.com
           scope: '@programinglive'
 
       - name: Publish to GitHub Packages
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # built-in token
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.pkg.outputs.version }}
         run: |
           echo "Registry: $(npm config get registry)"
           if npm view "@programinglive/zettly-editor@${VERSION}" version >/dev/null 2>&1; then
-            echo "Version ${VERSION} already published on GitHub Packages, skipping..."
+            echo "Version ${VERSION} already published on GitHub Packages, skipping."
           else
             npm publish "${TARBALL}"
           fi
