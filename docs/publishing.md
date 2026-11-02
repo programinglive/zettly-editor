@@ -1,47 +1,55 @@
 # Publishing `@programinglive/zettly-editor`
 
-## Kenapa publish pernah gagal
+Publishing uses **npm trusted publishing (OIDC)**. There is no `NPM_TOKEN` secret and nothing to rotate.
 
-Workflow `Publish package` gagal pada 21 Januari 2026 dan tidak pernah berhasil lagi. Setelah dijalankan ulang, penyebabnya persis satu:
+## Setup (already configured)
 
-```
-npm error code ENEEDAUTH
-npm error need auth This command requires you to be logged in to https://registry.npmjs.org/
-```
+At https://www.npmjs.com/package/@programinglive/zettly-editor/access → Trusted Publisher:
 
-Semua langkah sebelumnya sukses: checkout, install, build, 4 test, tarball 11 file. Yang gagal hanya **autentikasi**, karena secret `NPM_TOKEN` tidak ada di repository ini.
+| Field | Value |
+|---|---|
+| Publisher | GitHub Actions |
+| Organization | `programinglive` |
+| Repository | `zettly-editor` |
+| Workflow filename | `publish.yml` |
+| Allowed actions | npm publish, npm stage publish, npm dist-tag |
 
-`package.json` berada di versi `0.2.18`, sementara npm masih `0.2.17` — versi itu belum pernah berhasil terbit.
+## Why there is no token
 
-## Yang harus dilakukan (sekali saja)
+The workflow requests a GitHub OIDC token (`permissions: id-token: write`) and npm exchanges it for a short-lived credential scoped to that single workflow run. Nothing long-lived is stored in the repository.
 
-### 1. Buat token npm
+That is also why `setup-node` for npmjs.com does **not** set `registry-url`: doing so writes an `_authToken` placeholder into `.npmrc` and the OIDC exchange is skipped.
 
-1. Buka https://www.npmjs.com/settings/~/tokens
-2. **Generate New Token → Granular Access Token** (atau *Automation* untuk token klasik)
-3. Beri akses **Read and write** ke package `@programinglive/zettly-editor`
-4. Salin token-nya (hanya tampil sekali)
+## Requirements
 
-### 2. Simpan sebagai secret repository
+- `npm >= 11.5.1` — the workflow uses Node 24, which bundles it.
+- The workflow file must be named exactly `publish.yml` and live in `.github/workflows/`.
+- Manual runs must use the repository default branch, or a tag/release event.
 
-```bash
-gh secret set NPM_TOKEN --repo programinglive/zettly-editor
-```
-
-Atau lewat UI: **Settings → Secrets and variables → Actions → New repository secret**, nama harus persis `NPM_TOKEN`.
-
-> Untuk organisasi, pastikan secret tidak tertahan di level organisasi dengan nama yang sama dan nilai kosong.
-
-### 3. Jalankan ulang
+## Publishing
 
 ```bash
+# via tag
+git tag v0.2.18 && git push origin v0.2.18
+
+# or manually
 gh workflow run publish.yml --repo programinglive/zettly-editor
 ```
 
-Atau push tag baru: `git tag v0.2.18 && git push origin v0.2.18`.
+Versions already on npm are skipped, so re-running is safe.
 
-## Catatan
+## First-run validation
 
-- Versi yang **sudah ada** di npm akan dilewati otomatis (`npm view ... && skip`), jadi menjalankan ulang tidak akan gagal karena versi duplikat.
-- Workflow juga menerbitkan ke **GitHub Packages** memakai `GITHUB_TOKEN` bawaan — langkah itu tidak butuh secret tambahan.
-- Langkah baru `Check npm token is configured` membuat kegagalan muncul dengan pesan yang jelas, bukan `ENEEDAUTH` yang membingungkan.
+A trusted publisher stays in **Pending validation** until it has completed one successful publish. npm showed a deadline of 4 Nov 2026 06:02 UTC for this package; if it lapses, recreate the trusted publisher and publish again.
+
+## GitHub Packages
+
+The second half of the workflow still publishes to `npm.pkg.github.com` using the built-in `GITHUB_TOKEN`. That needs no secret.
+
+## If it fails
+
+| Error | Cause |
+|---|---|
+| `ENEEDAUTH` | OIDC exchange did not happen: check `id-token: write`, that no `NODE_AUTH_TOKEN` is set for the npm step, and that `setup-node` has no `registry-url` for npmjs.com |
+| `403 ... not authorized` | The trusted publisher entry does not match owner/repo/workflow exactly |
+| `E422` version exists | Expected; the step skips already-published versions |
