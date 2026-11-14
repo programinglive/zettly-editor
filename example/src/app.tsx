@@ -277,6 +277,12 @@ export function App() {
             </div>
           </div>
 
+          {preset === "medium" && (
+            <div className="rounded-xl border border-indigo-100 bg-indigo-50/60 p-3 text-xs text-indigo-900 dark:border-indigo-950 dark:bg-indigo-950/30 dark:text-indigo-200">
+              <span className="font-semibold">💡 Medium writing experience:</span> Highlight text to trigger the floating Bubble Menu, type <kbd className="rounded bg-white px-1.5 py-0.5 font-mono shadow-sm dark:bg-slate-800">/</kbd> on any line to open the Slash Command menu, or click the <kbd className="rounded bg-white px-1.5 py-0.5 font-mono shadow-sm dark:bg-slate-800">+</kbd> button in the margin to insert blocks.
+            </div>
+          )}
+
           {mode === "edit" ? (
             <ZettlyEditor
               preset={preset}
@@ -344,44 +350,24 @@ export function App() {
 
         <section className="rounded-xl border border-zinc-200 bg-white/70 p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/70">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Toolbar quick actions
+            Editor Controls & Presets
           </h3>
-          <ul className="mt-2 space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
-            <li>
-              <strong>Heading select:</strong> Switch between <em>Paragraph</em> and <code>Heading 1-6</code> for structured
-              titles.
-            </li>
-            <li>
-              <strong>Bold:</strong> Highlight a word or phrase and hit the <strong>B</strong> button or press <kbd>Ctrl</kbd>
-              / <kbd>Cmd</kbd> + <kbd>B</kbd>.
-            </li>
-            <li>
-              <strong>Italic:</strong> Emphasize text with <strong>I</strong> or <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> +
-              <kbd>I</kbd>.
-            </li>
-            <li>
-              <strong>Strike:</strong> Mark revisions with the strikethrough toggle (<kbd>Ctrl</kbd> / <kbd>Cmd</kbd> +
-              <kbd>Shift</kbd> + <kbd>X</kbd>).
-            </li>
-            <li>
-              <strong>Bullet list:</strong> Quickly outline ideas using unordered lists.
-            </li>
-            <li>
-              <strong>Ordered list:</strong> Create numbered steps or procedures.
-            </li>
-            <li>
-              <strong>Blockquote:</strong> Call attention to quotes or pull statements.
-            </li>
-            <li>
-              <strong>Code block:</strong> Insert formatted snippets with syntax highlighting.
-            </li>
-            <li>
-              <strong>Link:</strong> Add or remove hyperlinks—prompted input respects permissions.
-            </li>
-            <li>
-              <strong>Debug toggle:</strong> Enable the 🐞 button to stream lifecycle events to the console.
-            </li>
-          </ul>
+          <div className="mt-3 space-y-4 text-sm text-zinc-700 dark:text-zinc-300">
+            <div>
+              <h4 className="font-semibold text-zinc-900 dark:text-zinc-100">Medium Preset (Distraction-Free)</h4>
+              <ul className="mt-1 list-disc space-y-1 pl-5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
+                <li><strong>Contextual Bubble Menu:</strong> Appears when selecting text for bold, italic, strikethrough, code, and links.</li>
+                <li><strong>Slash Command Palette:</strong> Type <kbd className="rounded bg-zinc-100 px-1 py-0.5 dark:bg-zinc-800">/</kbd> to trigger fuzzy search across Headings, Lists, Quotes, Code Blocks, and Dividers with full keyboard navigation (<kbd>↑</kbd>, <kbd>↓</kbd>, <kbd>Enter</kbd>, <kbd>Esc</kbd>).</li>
+                <li><strong>Floating Block Inserter:</strong> Appears in the left margin when focusing on an empty line, offering single-click block additions.</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-zinc-900 dark:text-zinc-100">Classic Preset (Top Toolbar)</h4>
+              <ul className="mt-1 list-disc space-y-1 pl-5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
+                <li>Fixed top toolbar with heading select, text styling, lists, quote, code block, and link controls.</li>
+              </ul>
+            </div>
+          </div>
         </section>
 
         <section

@@ -56,28 +56,16 @@ export default defineConfig(({ mode }) => {
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
         output: {
-          manualChunks: {
-            react: ["react", "react-dom"],
-            tiptap: [
-              "@tiptap/react",
-              "@tiptap/core",
-              "@tiptap/starter-kit",
-              "@tiptap/extension-code-block-lowlight",
-            ],
-            pm: [
-              "prosemirror-state",
-              "prosemirror-view",
-              "prosemirror-model",
-              "prosemirror-transform",
-              "prosemirror-commands",
-              "prosemirror-history",
-              "prosemirror-keymap",
-              "prosemirror-inputrules",
-              "prosemirror-dropcursor",
-              "prosemirror-gapcursor",
-              "prosemirror-schema-list",
-            ],
-            highlight: ["lowlight", "highlight.js/lib/core"],
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              if (id.includes("@tiptap") || id.includes("prosemirror")) {
+                return "tiptap";
+              }
+              if (id.includes("highlight.js") || id.includes("lowlight")) {
+                return "highlight";
+              }
+              return "vendor";
+            }
           },
         },
       },

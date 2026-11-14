@@ -73,6 +73,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
   value,
   onChange,
   preset = "medium",
+  blockRegistry,
   extensions,
   commands,
   permissions,
@@ -242,9 +243,16 @@ const EditorShell: React.FC<EditorShellProps> = ({
             serializationScheduledRef.current = true;
             setTimeout(() => {
               serializationScheduledRef.current = false;
-              const html = updatedEditor.getHTML();
-              lastValueRef.current = html;
-              onChange(html, meta);
+              if (updatedEditor.isDestroyed || !updatedEditor.view) {
+                return;
+              }
+              try {
+                const html = updatedEditor.getHTML();
+                lastValueRef.current = html;
+                onChange(html, meta);
+              } catch {
+                // Gracefully handle concurrent editor destruction during serialization
+              }
             }, 0);
           }
         }
@@ -332,6 +340,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
     <MediumEditor
       editor={editor}
       permissions={permissions}
+      registry={blockRegistry}
       className={className}
       editorClassName={editorClassName}
       debug={effectiveDebug}
@@ -344,6 +353,7 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
     value,
     onChange,
     preset = "medium",
+    blockRegistry,
     commands = defaultCommands,
     permissions = {},
     messages = {},
@@ -376,6 +386,7 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
         value={value}
         onChange={onChange}
         preset={preset}
+        blockRegistry={blockRegistry}
         commands={commands}
         permissions={normalizedPermissions}
         messages={mergedMessages}
