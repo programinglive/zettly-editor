@@ -328,3 +328,60 @@
     padding: 1rem;
   }
 }
+
+/* Medium preset canvas reset */
+[data-zettly-editor-root][data-preset="medium"] {
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+[data-zettly-editor-root][data-preset="medium"] [data-zettly-editor-surface] {
+  padding: 0;
+}
+
+/* Medium preset typography styles */
+[data-preset="medium"] .ProseMirror {
+  line-height: 1.75;
+  color: inherit;
+}
+
+[data-preset="medium"] .ProseMirror p {
+  margin-bottom: 1.5rem;
+}
+
+[data-preset="medium"] .ProseMirror h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+[data-preset="medium"] .ProseMirror h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+[data-preset="medium"] .ProseMirror blockquote {
+  border-left: 3px solid #6366f1;
+  padding-left: 1.25rem;
+  font-style: italic;
+  font-size: 1.15rem;
+  margin: 1.5rem 0;
+  color: #475569;
+}
+
+.dark [data-preset="medium"] .ProseMirror blockquote {
+  color: #cbd5e1;
+}
+
+/* Floating bubble toolbar */
+[data-zettly-bubble-toolbar] {
+  pointer-events: auto;
+  user-select: none;
+}

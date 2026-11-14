@@ -12,6 +12,7 @@ describe("Image Upload", () => {
 
         render(
             <ZettlyEditor
+                preset="classic"
                 value="<p>test</p>"
                 onChange={() => { }}
                 onImageUpload={onImageUpload}

@@ -1,4 +1,9 @@
-import { beforeAll } from "vitest";
+import { beforeAll, afterEach } from "vitest";
+import { cleanup } from "@testing-library/react";
+
+afterEach(() => {
+  cleanup();
+});
 
 beforeAll(() => {
   const globalScope: any = globalThis as any;
