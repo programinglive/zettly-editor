@@ -4,8 +4,6 @@ const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const { updateReleaseNotes } = require('./update-release-notes.cjs');
-
 const fsFokPreloadPath = path.join(__dirname, 'preload', 'fs-f-ok.cjs');
 const FS_FOK_PRELOAD_FLAG = buildPreloadFlag(fsFokPreloadPath);
 
@@ -148,9 +146,10 @@ function runRelease({
     extraArgs
   });
 
+  const isDryRun = extraArgs.includes('--dry-run') || extraArgs.includes('-n');
   const checkWorkingTreeClean = dependencies.isWorkingTreeClean || (() => isWorkingTreeClean({ cwd }));
   const workingTreeClean = checkWorkingTreeClean();
-  if (!workingTreeClean) {
+  if (!workingTreeClean && !isDryRun) {
     throw new Error('Working tree has uncommitted changes. Commit or stash before running release.');
   }
 
@@ -171,23 +170,7 @@ function runRelease({
     return releaseResult;
   }
 
-  const releaseNotesPath = dependencies.releaseNotesPath || path.join('docs', 'release-notes', 'RELEASE_NOTES.md');
-  const updateNotes = dependencies.updateReleaseNotes || ((options = {}) => updateReleaseNotes({ rootDir: cwd, ...options }));
-
-  let notesUpdated = false;
-  try {
-    notesUpdated = updateNotes();
-  } catch (error) {
-    console.warn(`⚠️  Skipping release notes update: ${error.message}`);
-  }
-
-  if (notesUpdated) {
-    const gitAddResult = spawnSync('git', ['add', releaseNotesPath], { stdio: 'inherit', cwd });
-    if (!gitAddResult || typeof gitAddResult.status !== 'number' || gitAddResult.status !== 0) {
-      console.warn('⚠️  Release notes updated but failed to stage. Please add manually: git add ' + releaseNotesPath);
-    }
-  }
-
+  // Release notes update and staging is handled atomically via the standard-version postchangelog hook
   return releaseResult;
 }
 if (require.main === module) {
