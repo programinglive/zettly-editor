@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [1.0.0](https://github.com/programinglive/zettly-editor/compare/v0.4.0...v1.0.0) (2026-11-14)
+
+
+### ♻️ Refactors
+
+* **editor:** remove classic toolbar and make modern contextual UI canonical ([2c57dfa](https://github.com/programinglive/zettly-editor/commit/2c57dfa1f7e13d6dd485560328af49e1132f0857))
+
+
+### ✨ Features
+
+* **m5:** freeze v1.0.0 public API contract, scale guard, and SSR guide ([66b759e](https://github.com/programinglive/zettly-editor/commit/66b759e4b3dced0500281d310dd7ff43e44f418b))
+
+
+### 🐛 Bug Fixes
+
+* **cli,deps:** sync CLI --version, move @sentry/react to devDeps, clean M5 docs ([30b3d90](https://github.com/programinglive/zettly-editor/commit/30b3d90a2ec08d3190cbfdcd5ff5e48c2d502b11))
+* **codemod,editor:** ship codemod binary, fix AST edge cases and eslint errors ([b078017](https://github.com/programinglive/zettly-editor/commit/b078017bbe2c8ec4c7601961ab2eff5d19b1db86))
+* **codemod:** add optional typescript@^5 peerDep, runtime guard, and ESM subprocess test ([b8f67e7](https://github.com/programinglive/zettly-editor/commit/b8f67e74e7c960373b3982f1669100b8efabfa15))
+* **website:** sync example site version badges with ZETTLY_EDITOR_VERSION ([0d5371e](https://github.com/programinglive/zettly-editor/commit/0d5371e2930ba88f2a5889223b5a1f0330645c6c))
+
 ## [0.4.0](https://github.com/programinglive/zettly-editor/compare/v0.3.0...v0.4.0) (2026-11-14)
 
 

@@ -2,6 +2,7 @@
 
 | Version | Release Date | Key Changes |
 |---------|--------------|-------------|
+| 1.0.0 | 2026-11-15 | See CHANGELOG for details. |
 | 0.4.0 | 2026-11-14 | See CHANGELOG for details. |
 | 0.3.0 | 2026-11-14 | See CHANGELOG for details. |
 | 0.2.19 | 2026-11-14 | fail loudly when NPM_TOKEN is missing (5443e14) |
@@ -18,6 +19,13 @@
 
 
 
+
+
+## 1.0.0
+
+Released on **2026-11-15**.
+
+- See CHANGELOG for details.
 
 ## 0.4.0
 
