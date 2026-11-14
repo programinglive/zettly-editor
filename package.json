@@ -23,6 +23,9 @@
     "./dist/index.css"
   ],
   "type": "module",
+  "bin": {
+    "zettly-editor": "./dist/cli.js"
+  },
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -31,6 +34,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "import": "./dist/core.js",
+      "require": "./dist/core.cjs"
     },
     "./styles": "./dist/index.css",
     "./styles.css": "./dist/index.css",
