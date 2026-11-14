@@ -1,5 +1,6 @@
 import React from 'react';
 import { Github, Package, ExternalLink } from 'lucide-react';
+import { ZETTLY_EDITOR_VERSION } from '@programinglive/zettly-editor';
 
 export const Footer: React.FC = () => {
   return (
@@ -10,7 +11,7 @@ export const Footer: React.FC = () => {
           <div className="flex items-center space-x-2">
             <span className="font-semibold text-zinc-900 dark:text-zinc-100 text-sm">Zettly Editor</span>
             <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
-              v0.3.0
+              v{ZETTLY_EDITOR_VERSION}
             </span>
             <span className="text-zinc-300 dark:text-zinc-700">·</span>
             <span className="text-xs text-zinc-500 dark:text-zinc-400">

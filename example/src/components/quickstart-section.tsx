@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Check, Copy, Terminal, Code2 } from 'lucide-react';
+import { ZETTLY_EDITOR_VERSION } from '@programinglive/zettly-editor';
 
 const INSTALL_COMMANDS = {
   npm: 'npm install @programinglive/zettly-editor',
@@ -99,7 +100,7 @@ export const QuickstartSection: React.FC = () => {
               <div className="mt-3 pt-3 border-t border-zinc-200/80 dark:border-zinc-800 text-[11px] text-zinc-500 dark:text-zinc-400 space-y-1">
                 <div className="flex justify-between">
                   <span>Published npm Release:</span>
-                  <span className="font-mono font-medium text-zinc-800 dark:text-zinc-200">v0.3.0</span>
+                  <span className="font-mono font-medium text-zinc-800 dark:text-zinc-200">v{ZETTLY_EDITOR_VERSION}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Bundle Format:</span>

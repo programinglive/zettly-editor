@@ -37,6 +37,7 @@ describe("@programinglive/zettly-editor", () => {
 
     expect(PublicApi.defaultBlockRegistry).toBeDefined();
     expect(Array.isArray(PublicApi.defaultBlockCommands)).toBe(true);
+    expect(PublicApi.ZETTLY_EDITOR_VERSION).toBe(pkg.version);
 
     const apiRecord = PublicApi as Record<string, unknown>;
     expect(apiRecord.ClassicEditor).toBeUndefined();
