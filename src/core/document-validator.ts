@@ -261,7 +261,7 @@ export function sanitizeDocument(
     if (node.attrs && typeof node.attrs === "object") {
       const cleanAttrs: Record<string, unknown> = {};
       for (const [key, val] of Object.entries(node.attrs)) {
-        if (key === "__proto__" || key === "constructor") continue;
+        if (key === "__proto__" || key === "constructor" || key === "prototype") continue;
         cleanAttrs[key] = val;
       }
 
