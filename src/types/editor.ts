@@ -1,6 +1,7 @@
 import { type AnyExtension, type Editor } from "@tiptap/core";
 import type { EditorState } from "@tiptap/pm/state";
 import { type ReactNode } from "react";
+import type { BlockCommandRegistry } from "../commands/block-command-registry";
 
 export type EditorFlowState = "idle" | "loading" | "success" | "warning" | "error" | "info";
 
@@ -133,6 +134,7 @@ export interface ToolbarRenderProps {
 
 export interface ZettlyEditorProps extends EditorValueSync {
   preset?: EditorPreset;
+  blockRegistry?: BlockCommandRegistry;
   extensions?: AnyExtension[];
   commands?: CommandDefinition[];
   permissions?: EditorPermissions;

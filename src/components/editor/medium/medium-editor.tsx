@@ -5,10 +5,14 @@ import { EditorContent } from "@tiptap/react";
 import { cn } from "../../../lib/utils";
 import type { EditorPermissions } from "../../../types/editor";
 import { BubbleToolbar } from "./bubble-toolbar";
+import { SlashCommandMenu } from "./slash-command-menu";
+import { FloatingBlockInserter } from "./floating-block-inserter";
+import type { BlockCommandRegistry } from "../../../commands/block-command-registry";
 
 export interface MediumEditorProps {
   editor: Editor;
   permissions?: EditorPermissions;
+  registry?: BlockCommandRegistry;
   className?: string;
   editorClassName?: string;
   debug?: boolean;
@@ -17,6 +21,7 @@ export interface MediumEditorProps {
 export const MediumEditor: React.FC<MediumEditorProps> = ({
   editor,
   permissions = {},
+  registry,
   className,
   editorClassName,
   debug,
@@ -42,6 +47,16 @@ export const MediumEditor: React.FC<MediumEditorProps> = ({
         editor={editor}
         allowLinks={permissions.allowLinks !== false && !permissions.readOnly}
       />
+
+      {/* Floating '+' Inserter on Empty Lines */}
+      {!permissions.readOnly && (
+        <FloatingBlockInserter editor={editor} registry={registry} />
+      )}
+
+      {/* Slash Command Popover ('/' trigger) */}
+      {!permissions.readOnly && (
+        <SlashCommandMenu editor={editor} registry={registry} />
+      )}
 
       {/* Content Area */}
       <div

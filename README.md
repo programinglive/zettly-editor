@@ -109,11 +109,14 @@ The editable surface uses the full container width and a comfortable minimum hei
 
 Zettly Editor provides two built-in presets:
 
-1. **`medium` (Default)**: A clean, distraction-free writing experience inspired by Medium. The editor renders on a borderless, centered reading canvas (`max-w-2xl`) with comfortable prose typography. Formatting controls float contextually in a bubble toolbar directly above highlighted text, and dismiss automatically on empty selection or `Escape`.
+1. **`medium` (Default)**: A clean, distraction-free writing experience inspired by Medium. The editor renders on a borderless, centered reading canvas (`max-w-2xl`) with comfortable prose typography.
+   - **Floating Bubble Toolbar**: Contextually floats directly above highlighted text for inline formatting (bold, italic, strike, link, code).
+   - **Slash Command Palette (`/`)**: Type `/` on any line to open an accessible block insertion palette with real-time fuzzy search, keyboard navigation (`↑`, `↓`, `Enter`, `Esc`), and ARIA listbox semantics.
+   - **Floating Block Inserter (`+`)**: Hover or place cursor on an empty line to reveal a minimal `+` button in the left margin, allowing instant one-click block insertion without cluttering the screen.
 2. **`classic`**: Preserves the complete boxed editor container with the fixed top toolbar for 100% backward compatibility with earlier versions.
 
 ```tsx
-// Medium preset (default)
+// Medium preset (default) with contextual block controls
 <ZettlyEditor
   value={content}
   onChange={setContent}
@@ -126,6 +129,45 @@ Zettly Editor provides two built-in presets:
   onChange={setContent}
   preset="classic"
 />
+```
+
+### Customizing Block Commands
+
+You can customize or extend the available block commands using `BlockCommandRegistry`:
+
+```tsx
+import {
+  ZettlyEditor,
+  BlockCommandRegistry,
+  defaultBlockCommands,
+  type BlockCommandItem,
+} from "@programinglive/zettly-editor";
+
+const customRegistry = new BlockCommandRegistry(defaultBlockCommands);
+
+// Add custom callout block command
+customRegistry.register({
+  id: "callout",
+  title: "Callout Box",
+  description: "Highlight an important tip or warning.",
+  searchTerms: ["callout", "note", "alert", "box"],
+  iconName: "Info",
+  category: "advanced",
+  execute: (editor) => {
+    editor.chain().focus().setBlockquote().run();
+  },
+});
+
+export function EditorWithCustomBlocks() {
+  return (
+    <ZettlyEditor
+      value={content}
+      onChange={setContent}
+      preset="medium"
+      blockRegistry={customRegistry}
+    />
+  );
+}
 ```
 
 ### Toolbar defaults (Classic preset)
@@ -174,6 +216,7 @@ Styling is handled in `src/components/editor/code-highlight.css`. Override the `
 | `value` | `string` | Controlled HTML content. |
 | `onChange` | `(value: string, meta: EditorMeta) => void` | Receive updates plus meta information. |
 | `preset` | `"medium" \| "classic"` | Writing preset (defaults to `"medium"` for clean borderless canvas with floating bubble toolbar; `"classic"` preserves the boxed layout with top toolbar). |
+| `blockRegistry` | `BlockCommandRegistry` | Optional custom registry for contextual slash commands and block inserter. |
 | `extensions` | `AnyExtension[]` | Additional TipTap extensions. |
 | `commands` | `CommandDefinition[]` | Custom toolbar commands. |
 | `permissions` | `EditorPermissions` | Control read-only/link behavior. |
