@@ -3,39 +3,51 @@ import { Layers, ShieldCheck, Cpu, Feather, MessageSquareQuote, Slash, Table, Bo
 
 const API_PROPS = [
   {
+    name: 'value',
+    type: 'string',
+    default: 'required',
+    description: 'Controlled document HTML markup string passed to the editor.',
+  },
+  {
+    name: 'onChange',
+    type: '(value: string, meta: EditorMeta) => void',
+    default: 'required',
+    description: 'Callback invoked on content changes with updated HTML and word/character telemetry.',
+  },
+  {
     name: 'preset',
     type: "'medium' | 'classic'",
     default: "'medium'",
     description: "Distraction-free contextual writing UI ('medium') or traditional fixed top toolbar ('classic').",
   },
   {
-    name: 'content',
-    type: 'string',
-    default: "''",
-    description: 'Initial document HTML markup string.',
+    name: 'messages',
+    type: 'Partial<EditorMessages>',
+    default: "{ placeholder: 'Start typing...' }",
+    description: 'Customizable UI copy and empty-document placeholder text.',
   },
   {
-    name: 'onChange',
-    type: '(html: string) => void',
+    name: 'permissions',
+    type: 'EditorPermissions',
+    default: '{ readOnly: false, allowLinks: true }',
+    description: 'Controls read-only viewer state and link creation permissions.',
+  },
+  {
+    name: 'blockRegistry',
+    type: 'BlockCommandRegistry',
+    default: 'defaultBlockRegistry',
+    description: "Custom block command registry for '/' slash commands and '+' gutter insertion.",
+  },
+  {
+    name: 'onImageUpload',
+    type: '(file: File) => Promise<string>',
     default: 'undefined',
-    description: 'Callback invoked when document content changes, returning the updated HTML markup.',
-  },
-  {
-    name: 'placeholder',
-    type: 'string',
-    default: "'Type something...'",
-    description: 'Placeholder text displayed when the document is empty.',
-  },
-  {
-    name: 'editable',
-    type: 'boolean',
-    default: 'true',
-    description: 'Whether the editor allows editing or functions as a read-only viewer.',
+    description: 'Async handler for image uploads returning the resolved image URL.',
   },
   {
     name: 'className',
     type: 'string',
-    default: "''",
+    default: 'undefined',
     description: 'Custom CSS class string applied to the root editor wrapper container.',
   },
 ];
@@ -64,9 +76,9 @@ const FEATURES = [
   },
   {
     icon: Cpu,
-    title: 'TipTap 2 & ProseMirror Foundation',
+    title: 'TipTap 3 & ProseMirror Foundation',
     description:
-      'Built on battle-tested ProseMirror primitives. Strict TypeScript types, React 18 & 19 peer support, and clean semantic HTML/JSON serialization.',
+      'Built on battle-tested ProseMirror primitives. Strict TypeScript types, React 18 & 19 peer support, and clean semantic HTML serialization.',
     badge: 'Extensible Core',
   },
 ];

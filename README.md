@@ -1,6 +1,6 @@
 # @programinglive/zettly-editor
 
-Distraction-free, Medium-inspired rich text editor for React and Zettly apps. Built on TipTap 2 & ProseMirror with full TypeScript support, dual ESM/CJS packaging, and zero runtime vulnerabilities.
+Distraction-free, Medium-inspired rich text editor for React and Zettly apps. Built on TipTap 3 & ProseMirror with full TypeScript support, dual ESM/CJS packaging, and zero runtime vulnerabilities.
 
 [**Live Interactive Demo & Documentation →**](https://zettly-editor.programinglive.com/)
 
