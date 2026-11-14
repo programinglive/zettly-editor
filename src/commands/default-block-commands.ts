@@ -8,6 +8,9 @@ export const defaultBlockCommands: BlockCommandItem[] = [
     searchTerms: ["text", "paragraph", "p", "plain", "normal"],
     iconName: "Type",
     category: "basic",
+    schemaNode: {
+      type: "paragraph",
+    },
     execute: (editor) => {
       editor.chain().focus().setParagraph().run();
     },
@@ -20,6 +23,10 @@ export const defaultBlockCommands: BlockCommandItem[] = [
     iconName: "Heading1",
     category: "basic",
     shortcut: "#",
+    schemaNode: {
+      type: "heading",
+      attrs: { level: 1 },
+    },
     execute: (editor) => {
       editor.chain().focus().toggleHeading({ level: 1 }).run();
     },
@@ -32,6 +39,10 @@ export const defaultBlockCommands: BlockCommandItem[] = [
     iconName: "Heading2",
     category: "basic",
     shortcut: "##",
+    schemaNode: {
+      type: "heading",
+      attrs: { level: 2 },
+    },
     execute: (editor) => {
       editor.chain().focus().toggleHeading({ level: 2 }).run();
     },
@@ -44,6 +55,10 @@ export const defaultBlockCommands: BlockCommandItem[] = [
     iconName: "Heading3",
     category: "basic",
     shortcut: "###",
+    schemaNode: {
+      type: "heading",
+      attrs: { level: 3 },
+    },
     execute: (editor) => {
       editor.chain().focus().toggleHeading({ level: 3 }).run();
     },
@@ -56,6 +71,9 @@ export const defaultBlockCommands: BlockCommandItem[] = [
     iconName: "List",
     category: "lists",
     shortcut: "-",
+    schemaNode: {
+      type: "bulletList",
+    },
     execute: (editor) => {
       editor.chain().focus().toggleBulletList().run();
     },
@@ -68,6 +86,9 @@ export const defaultBlockCommands: BlockCommandItem[] = [
     iconName: "ListOrdered",
     category: "lists",
     shortcut: "1.",
+    schemaNode: {
+      type: "orderedList",
+    },
     execute: (editor) => {
       editor.chain().focus().toggleOrderedList().run();
     },
@@ -80,6 +101,9 @@ export const defaultBlockCommands: BlockCommandItem[] = [
     iconName: "Quote",
     category: "advanced",
     shortcut: ">",
+    schemaNode: {
+      type: "blockquote",
+    },
     execute: (editor) => {
       editor.chain().focus().toggleBlockquote().run();
     },
@@ -92,6 +116,9 @@ export const defaultBlockCommands: BlockCommandItem[] = [
     iconName: "Code",
     category: "advanced",
     shortcut: "```",
+    schemaNode: {
+      type: "codeBlock",
+    },
     execute: (editor) => {
       editor.chain().focus().toggleCodeBlock().run();
     },
@@ -104,6 +131,9 @@ export const defaultBlockCommands: BlockCommandItem[] = [
     iconName: "Minus",
     category: "advanced",
     shortcut: "---",
+    schemaNode: {
+      type: "horizontalRule",
+    },
     execute: (editor) => {
       editor.chain().focus().setHorizontalRule().run();
     },
