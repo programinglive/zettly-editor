@@ -1,90 +1,39 @@
-import React from "react";
-import { Github, Star } from "lucide-react";
-
-import { ZettlyEditor, type DebugEvent, type EditorPreset } from "@programinglive/zettly-editor";
-import { SyntaxHighlighter } from "./syntax-highlighter";
-import Logo from "./assets/logo_zettly_editor.png";
-
-const initialContent = `<h1>Zettly Editor</h1>
-<p>
-  This playground showcases every toolbar button. Try toggling each option below to see how the editor responds.
-</p>
-<p>
-  <strong>Bold example</strong> • <em>Italic example</em> • <span style="text-decoration: line-through;">Strike example</span> •
-  <a href="https://programinglive.com" target="_blank" rel="noopener noreferrer">Link example</a>
-</p>
-<blockquote>
-  “This blockquote is ready for inspiration. Edit it or add your own quote to see the formatting update in preview mode.”
-</blockquote>
-<h2>Code Block with Syntax Highlighting</h2>
-<p>The editor now supports syntax highlighting for code blocks. Try the code block button in the toolbar!</p>
-<pre><code class="language-javascript">// Example JavaScript code
-function greet(name) {
-  console.log(\`Hello, \${name}!\`);
-  return true;
-}
-
-const user = "Developer";
-greet(user);</code></pre>
-<pre><code class="language-typescript">// TypeScript example
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
-
-const createUser = (data: User): User => {
-  return { ...data };
-};</code></pre>
-<ul>
-  <li>Bullet list item one</li>
-  <li>Bullet list item two</li>
-  <li>Bullet list item three</li>
-</ul>
-<ol>
-  <li>Ordered list item one</li>
-  <li>Ordered list item two</li>
-  <li>Ordered list item three</li>
-</ol>`;
+import React, { useState, useEffect } from 'react';
+import { Navbar } from './components/navbar';
+import { Hero } from './components/hero';
+import { PlaygroundShell } from './components/playground-shell';
+import { QuickstartSection } from './components/quickstart-section';
+import { DeveloperGuide } from './components/developer-guide';
+import { Footer } from './components/footer';
 
 export function App() {
-  const [value, setValue] = React.useState(initialContent);
-  const [words, setWords] = React.useState(0);
-  const [characters, setCharacters] = React.useState(0);
-  const [mode, setMode] = React.useState<"edit" | "preview">("edit");
-  const [preset, setPreset] = React.useState<EditorPreset>("medium");
-  const [theme, setTheme] = React.useState<"light" | "dark">(() => {
-    if (typeof window === "undefined") {
-      return "light";
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window === 'undefined') {
+      return 'light';
     }
-    const stored = window.localStorage.getItem("zettly-theme");
-    if (stored === "light" || stored === "dark") {
+    const stored = window.localStorage.getItem('zettly-theme');
+    if (stored === 'light' || stored === 'dark') {
       return stored;
     }
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
-  const [debugEnabled, setDebugEnabled] = React.useState(false);
-  const [githubStars, setGithubStars] = React.useState<number | null>(null);
 
-  const handleDebugEvent = React.useCallback((event: DebugEvent) => {
-    if (!debugEnabled) {
-      return;
-    }
-    console.log("zettly debug event", event);
-  }, [debugEnabled]);
+  const [githubStars, setGithubStars] = useState<number | null>(null);
 
-  React.useEffect(() => {
-    if (typeof document === "undefined") {
+  // Sync theme with document element and localStorage
+  useEffect(() => {
+    if (typeof document === 'undefined') {
       return;
     }
     const root = document.documentElement;
-    root.classList.remove("light", "dark");
+    root.classList.remove('light', 'dark');
     root.classList.add(theme);
-    window.localStorage.setItem("zettly-theme", theme);
+    window.localStorage.setItem('zettly-theme', theme);
   }, [theme]);
 
-  React.useEffect(() => {
-    if (typeof window === "undefined") {
+  // Fetch GitHub stars asynchronously with abort controller
+  useEffect(() => {
+    if (typeof window === 'undefined') {
       return () => undefined;
     }
 
@@ -93,30 +42,22 @@ export function App() {
 
     const fetchStars = async () => {
       try {
-        const response = await fetch("https://api.github.com/repos/programinglive/zettly-editor", {
+        const response = await fetch('https://api.github.com/repos/programinglive/zettly-editor', {
           signal: controller.signal,
           headers: {
-            "Accept": "application/vnd.github+json",
-            "X-GitHub-Api-Version": "2022-11-28",
-            "User-Agent": "zettly-editor-example",
+            Accept: 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
           },
-          cache: "no-store",
         });
         if (!response.ok) {
           return;
         }
-        const data: { stargazers_count?: number; watchers_count?: number } = await response.json();
-        if (!active) {
-          return;
+        const data = (await response.json()) as { stargazers_count?: number };
+        if (active && typeof data.stargazers_count === 'number') {
+          setGithubStars(data.stargazers_count);
         }
-        const stargazers = typeof data.stargazers_count === "number" ? data.stargazers_count : null;
-        const watchers = typeof data.watchers_count === "number" ? data.watchers_count : null;
-        const stars = stargazers ?? watchers;
-        setGithubStars(typeof stars === "number" ? stars : null);
-      } catch (error: unknown) {
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
+      } catch {
+        // Fall back gracefully on network or rate limit errors
       }
     };
 
@@ -128,439 +69,35 @@ export function App() {
     };
   }, []);
 
-  const githubStarsLabel = React.useMemo(() => {
-    if (githubStars === null) {
-      return "—";
-    }
-    if (githubStars >= 1000) {
-      const valueInThousands = githubStars / 1000;
-      const formatted = valueInThousands.toFixed(valueInThousands >= 10 ? 0 : 1);
-      return `${formatted}k`;
-    }
-    return githubStars.toString();
-  }, [githubStars]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
-  const menuItems = React.useMemo(
-    () => [
-      { id: "playground", label: "Playground" },
-      { id: "metadata", label: "Metadata" },
-      { id: "output", label: "Output" },
-      { id: "integration", label: "Integration" },
-    ],
-    []
-  );
-
-  const handleNavClick = React.useCallback((sectionId: string) => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    const target = document.getElementById(sectionId);
-    if (!target) {
-      return;
-    }
-    const headerOffset = 120;
-    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
-    window.scrollTo({ top, behavior: "smooth" });
-  }, []);
-
-  const navButtonClass =
-    "rounded-full px-3 py-1 text-sm font-medium text-zinc-600 transition hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 dark:text-zinc-300";
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-sky-50 to-indigo-50 pb-20 text-zinc-900 transition-colors duration-300 dark:from-slate-950 dark:via-slate-950 dark:to-black dark:text-zinc-100">
-      <header className="sticky top-0 z-20 border-b border-white/30 bg-white/70 backdrop-blur transition-colors duration-200 supports-[backdrop-filter]:bg-white/40 dark:border-zinc-800/60 dark:bg-zinc-950/70 dark:supports-[backdrop-filter]:bg-zinc-900/60">
-        <nav className="mx-auto flex max-w-4xl flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <img src={Logo} alt="Zettly Editor logo" className="h-10 w-auto rounded" />
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {menuItems.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => handleNavClick(item.id)}
-                className={navButtonClass}
-              >
-                {item.label}
-              </button>
-            ))}
-            <a
-              href="https://github.com/programinglive/zettly-editor"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${navButtonClass} inline-flex items-center gap-2 font-semibold`}
-              aria-label="View the Zettly Editor repository on GitHub"
-              title={
-                githubStars !== null
-                  ? `${githubStars.toLocaleString()} stars on GitHub`
-                  : "View the Zettly Editor repository on GitHub"
-              }
-            >
-              <Github className="h-4 w-4" aria-hidden="true" />
-              <span className="hidden sm:inline">GitHub</span>
-              <span className="flex items-center gap-1 rounded-full border border-zinc-200 bg-white/80 px-2 py-0.5 text-xs font-medium text-zinc-600 transition dark:border-zinc-700 dark:bg-zinc-900/70 dark:text-zinc-300">
-                <Star className="h-3 w-3" aria-hidden="true" fill="currentColor" />
-                {githubStarsLabel}
-              </span>
-            </a>
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className={`${navButtonClass} font-semibold`}
-            >
-              {theme === "light" ? "☀️ Light" : "🌙 Dark"}
-            </button>
-          </div>
-        </nav>
-      </header>
+    <div className="min-h-screen bg-white text-zinc-900 antialiased selection:bg-indigo-500 selection:text-white dark:bg-zinc-950 dark:text-zinc-100 transition-colors duration-200 font-sans">
+      {/* 1. Global Navigation Bar (Text-Only Wordmark) */}
+      <Navbar
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
+        githubStars={githubStars}
+      />
 
-      <main className="mx-auto flex max-w-3xl flex-col gap-8 px-6 py-10" id="playground">
-        <section className="space-y-2">
-          <span className="inline-flex w-fit items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wide text-zinc-600 shadow-sm dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
-            <Github className="h-3.5 w-3.5" aria-hidden="true" />
-            Open source · MIT licensed
-          </span>
-          <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-100">Zettly Editor Playground</h2>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            Explore the production-ready toolkit behind Zettly—this playground runs on the published
-            <code className="mx-1">@programinglive/zettly-editor</code> package so you can prototype, preview, and ship rich text flows fast.
-          </p>
-        </section>
+      {/* 2. Concise Hero Section */}
+      <Hero />
 
-        <section className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="inline-flex w-fit items-center gap-1 rounded-full border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-              <button
-                type="button"
-                onClick={() => setMode("edit")}
-                className="rounded-full px-4 py-1 text-sm font-medium transition data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                data-state={mode === "edit" ? "on" : "off"}
-                aria-pressed={mode === "edit"}
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode("preview")}
-                className="rounded-full px-4 py-1 text-sm font-medium transition data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-                data-state={mode === "preview" ? "on" : "off"}
-                aria-pressed={mode === "preview"}
-              >
-                Preview
-              </button>
-            </div>
+      {/* 3. Live Playground Shell (Centerpiece) */}
+      <PlaygroundShell />
 
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white p-1 text-xs shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-              <span className="px-2 font-medium text-zinc-500 dark:text-zinc-400">Preset:</span>
-              <button
-                type="button"
-                onClick={() => setPreset("medium")}
-                className="rounded-full px-3 py-1 font-medium transition data-[state=on]:bg-indigo-600 data-[state=on]:text-white dark:data-[state=on]:bg-indigo-500"
-                data-state={preset === "medium" ? "on" : "off"}
-                aria-pressed={preset === "medium"}
-              >
-                Medium (Clean)
-              </button>
-              <button
-                type="button"
-                onClick={() => setPreset("classic")}
-                className="rounded-full px-3 py-1 font-medium transition data-[state=on]:bg-indigo-600 data-[state=on]:text-white dark:data-[state=on]:bg-indigo-500"
-                data-state={preset === "classic" ? "on" : "off"}
-                aria-pressed={preset === "classic"}
-              >
-                Classic (Toolbar)
-              </button>
-            </div>
-          </div>
+      {/* 4. Quickstart Installation Guide */}
+      <QuickstartSection />
 
-          {preset === "medium" && (
-            <div className="rounded-xl border border-indigo-100 bg-indigo-50/60 p-3 text-xs text-indigo-900 dark:border-indigo-950 dark:bg-indigo-950/30 dark:text-indigo-200">
-              <span className="font-semibold">💡 Medium writing experience:</span> Highlight text to trigger the floating Bubble Menu, type <kbd className="rounded bg-white px-1.5 py-0.5 font-mono shadow-sm dark:bg-slate-800">/</kbd> on any line to open the Slash Command menu, or click the <kbd className="rounded bg-white px-1.5 py-0.5 font-mono shadow-sm dark:bg-slate-800">+</kbd> button in the margin to insert blocks.
-            </div>
-          )}
+      {/* 5. Consolidated Developer Reference & Features (Tabbed) */}
+      <DeveloperGuide />
 
-          {mode === "edit" ? (
-            <ZettlyEditor
-              preset={preset}
-              value={value}
-              onChange={(nextValue, meta) => {
-                setValue(nextValue);
-                setWords(meta.words);
-                setCharacters(meta.characters);
-              }}
-              messages={{ placeholder: "Start jotting your notes..." }}
-              debug={debugEnabled}
-              onDebugEvent={handleDebugEvent}
-              onDebugToggle={setDebugEnabled}
-              onImageUpload={async (file) => {
-                return new Promise((resolve) => {
-                  setTimeout(() => {
-                    resolve(URL.createObjectURL(file));
-                  }, 1000);
-                });
-              }}
-            />
-          ) : (
-            <article className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition dark:border-zinc-800 dark:bg-zinc-900">
-              <header className="mb-4 flex items-center justify-between text-xs uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                <span>Preview</span>
-                <span className="font-medium text-zinc-700 dark:text-zinc-300">Read only</span>
-              </header>
-              <div
-                className="space-y-4 text-base leading-relaxed text-zinc-800 dark:text-zinc-100 [&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80 [&_blockquote]:border-l-4 [&_blockquote]:border-zinc-200 [&_blockquote]:pl-4 [&_blockquote]:italic [&_h1]:text-3xl [&_h1]:font-semibold [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:text-xl [&_h3]:font-semibold [&_li]:marker:text-primary [&_ol]:ml-6 [&_ol]:list-decimal [&_ul]:ml-6 [&_ul]:list-disc [&_pre]:rounded-lg [&_pre]:bg-zinc-100 [&_pre]:text-zinc-900 dark:[&_pre]:bg-slate-900 dark:[&_pre]:text-slate-100 [&_pre]:p-4 [&_pre]:overflow-x-auto [&_code]:font-mono [&_code]:text-sm"
-                dangerouslySetInnerHTML={{ __html: value }}
-              />
-            </article>
-          )}
-        </section>
-
-        <section
-          className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
-          id="metadata"
-        >
-          <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">Metadata</h3>
-          <p className="text-sm text-zinc-700 dark:text-zinc-300">Characters: {characters}</p>
-          <p className="text-sm text-zinc-700 dark:text-zinc-300">Words: {words}</p>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            Value length: {value.length} characters.
-          </p>
-        </section>
-
-        <section
-          className="space-y-3 rounded-lg border border-dashed border-zinc-300 bg-zinc-50/60 p-4 dark:border-zinc-700 dark:bg-zinc-900/50"
-          id="output"
-        >
-          <header className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">Editor Output</h3>
-            <span className="text-xs uppercase tracking-wide text-zinc-500">HTML stored in DB</span>
-          </header>
-          <p className="text-sm text-zinc-600 dark:text-zinc-300">
-            Persist the string below to your backend. When you need to display the note again, pass it back into
-            <code className="mx-1 rounded bg-zinc-200 px-1 py-0.5 text-xs dark:bg-zinc-800">ZettlyEditor</code> as the
-            <code className="mx-1 rounded bg-zinc-200 px-1 py-0.5 text-xs dark:bg-zinc-800">value</code> prop.
-          </p>
-          <pre className="max-h-64 overflow-auto rounded-md bg-zinc-100 p-4 text-xs text-zinc-800 dark:bg-slate-900 dark:text-slate-100">
-            {value.replace(/</g, "&lt;").replace(/>/g, "&gt;")}
-          </pre>
-        </section>
-
-        <section className="rounded-xl border border-zinc-200 bg-white/70 p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/70">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-            Editor Controls & Presets
-          </h3>
-          <div className="mt-3 space-y-4 text-sm text-zinc-700 dark:text-zinc-300">
-            <div>
-              <h4 className="font-semibold text-zinc-900 dark:text-zinc-100">Medium Preset (Distraction-Free)</h4>
-              <ul className="mt-1 list-disc space-y-1 pl-5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
-                <li><strong>Contextual Bubble Menu:</strong> Appears when selecting text for bold, italic, strikethrough, code, and links.</li>
-                <li><strong>Slash Command Palette:</strong> Type <kbd className="rounded bg-zinc-100 px-1 py-0.5 dark:bg-zinc-800">/</kbd> to trigger fuzzy search across Headings, Lists, Quotes, Code Blocks, and Dividers with full keyboard navigation (<kbd>↑</kbd>, <kbd>↓</kbd>, <kbd>Enter</kbd>, <kbd>Esc</kbd>).</li>
-                <li><strong>Floating Block Inserter:</strong> Appears in the left margin when focusing on an empty line, offering single-click block additions.</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-zinc-900 dark:text-zinc-100">Classic Preset (Top Toolbar)</h4>
-              <ul className="mt-1 list-disc space-y-1 pl-5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
-                <li>Fixed top toolbar with heading select, text styling, lists, quote, code block, and link controls.</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className="space-y-6 rounded-lg border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
-          id="integration"
-        >
-          <h3 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Integration Tutorial</h3>
-          <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-            Store the editor output as a <strong>string</strong> or <strong>text/blob</strong> column in your database. Use
-            the largest text type available to avoid truncation:
-          </p>
-          <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-            Explore the full example source on
-            {" "}
-            <a
-              href="https://github.com/programinglive/zettly-editor"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-primary hover:text-primary/80"
-            >
-              GitHub
-            </a>
-            .
-          </p>
-          <ul className="grid gap-3 rounded-md border border-zinc-100 bg-zinc-50 p-4 text-sm text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-300 sm:grid-cols-2">
-            <li>
-              <strong>MySQL:</strong> <code>LONGTEXT</code> or <code>TEXT</code>
-            </li>
-            <li>
-              <strong>PostgreSQL:</strong> <code>TEXT</code>
-            </li>
-            <li>
-              <strong>MongoDB:</strong> <code>string</code> field (BSON)
-            </li>
-            <li>
-              <strong>Firebase Firestore:</strong> <code>string</code> field
-            </li>
-            <li>
-              <strong>Prisma:</strong> <code>String @db.LongText</code> (MySQL) or plain <code>String</code> (PostgreSQL)
-            </li>
-          </ul>
-          <div className="space-y-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-            <div>
-              <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">1. Install dependencies</h4>
-              <SyntaxHighlighter
-                code={`npm install @programinglive/zettly-editor @tiptap/react @tiptap/starter-kit lucide-react
-npm install tailwindcss @tailwindcss/postcss postcss`}
-                language="bash"
-              />
-            </div>
-            <div>
-              <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">2. Tailwind config essentials</h4>
-              <SyntaxHighlighter
-                code={`/* style.css */
-@import "tailwindcss";
-
-@theme {
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-}`}
-                language="css"
-              />
-            </div>
-            <div>
-              <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">3. Render with single data flow</h4>
-              <SyntaxHighlighter
-                code={`import { useState } from "react";
-import { ZettlyEditor } from "@programinglive/zettly-editor";
-
-export function NoteEditor() {
-  const [value, setValue] = useState("<p>Start writing...</p>");
-
-  return (
-    <ZettlyEditor
-      value={value}
-      onChange={(next) => setValue(next)}
-    />
-  );
-}`}
-                language="typescript"
-              />
-            </div>
-            <div className="space-y-3">
-              <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">4. Save HTML to your database</h4>
-              <p>Pick the backend stack that matches your project. Each snippet expects <code>content</code> to be the editor output.</p>
-              <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
-                <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">Prisma (MySQL/PostgreSQL)</summary>
-                <SyntaxHighlighter
-                  code={`// prisma/schema.prisma
-model Note {
-  id        String   @id @default(cuid())
-  title     String
-  content   String   @db.LongText
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-// app/api/notes/route.ts
-import { NextResponse } from "next/server";
-import { prisma } from "~/lib/prisma";
-
-export async function POST(request: Request) {
-  const { title, content } = await request.json();
-  const note = await prisma.note.create({ data: { title, content } });
-  return NextResponse.json(note, { status: 201 });
-}`}
-                  language="typescript"
-                />
-              </details>
-              <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
-                <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">MySQL (mysql2)</summary>
-                <SyntaxHighlighter
-                  code={`import mysql from "mysql2/promise";
-
-export const pool = mysql.createPool({ uri: process.env.MYSQL_DATABASE_URL! });
-
-export async function POST(request: Request) {
-  const { title, content } = await request.json();
-  await pool.execute("INSERT INTO notes (title, content_html) VALUES (?, ?)", [title, content]);
-  return Response.json({ ok: true });
-}`}
-                  language="typescript"
-                />
-              </details>
-              <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
-                <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">PostgreSQL (pg)</summary>
-                <SyntaxHighlighter
-                  code={`import { Pool } from "pg";
-
-export const pgPool = new Pool({ connectionString: process.env.POSTGRES_URL });
-
-export async function POST(request: Request) {
-  const { title, content } = await request.json();
-  await pgPool.query("INSERT INTO notes (title, content_html) VALUES ($1, $2)", [title, content]);
-  return Response.json({ ok: true });
-}`}
-                  language="typescript"
-                />
-              </details>
-              <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
-                <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">MongoDB</summary>
-                <SyntaxHighlighter
-                  code={`import { MongoClient } from "mongodb";
-
-const client = new MongoClient(process.env.MONGODB_URI!);
-const collection = client.db("zettly").collection("notes");
-
-export async function POST(request: Request) {
-  const { title, content } = await request.json();
-  await collection.insertOne({ title, content, createdAt: new Date() });
-  return Response.json({ ok: true });
-}`}
-                  language="typescript"
-                />
-              </details>
-              <details className="rounded-md border border-zinc-200 bg-zinc-100/40 p-3 dark:border-zinc-800 dark:bg-zinc-900/50">
-                <summary className="cursor-pointer text-sm font-semibold text-zinc-800 dark:text-zinc-200">Firebase Firestore</summary>
-                <SyntaxHighlighter
-                  code={`import { cert, getApps, initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-
-const app = getApps()[0] ?? initializeApp({
-  credential: cert(JSON.parse(process.env.FIREBASE_ADMIN_KEY!)),
-});
-
-export const firestore = getFirestore(app);
-
-export async function POST(request: Request) {
-  const { title, content } = await request.json();
-  await firestore.collection("notes").add({ title, content, createdAt: Date.now() });
-  return Response.json({ ok: true });
-}`}
-                  language="typescript"
-                />
-              </details>
-            </div>
-            <div>
-              <h4 className="text-base font-medium text-zinc-900 dark:text-zinc-100">5. Restore saved HTML</h4>
-              <SyntaxHighlighter
-                code={`const note = await fetch("/api/notes/123").then((res) => res.json());
-
-return <ZettlyEditor value={note.content} onChange={(next) => setValue(next)} />;`}
-                language="typescript"
-              />
-            </div>
-          </div>
-        </section>
-      </main>
+      {/* 6. Minimal Footer (Text-Only Wordmark) */}
+      <Footer />
     </div>
   );
 }
+
+export default App;
