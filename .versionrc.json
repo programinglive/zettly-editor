@@ -47,6 +47,7 @@
         }
     ],
     "infile": "CHANGELOG.md",
+    "commitAll": true,
     "scripts": {
         "postchangelog": "node scripts/update-release-notes.cjs && git add docs/release-notes/RELEASE_NOTES.md"
     },

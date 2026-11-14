@@ -11,6 +11,7 @@ describe("@programinglive/zettly-editor", () => {
 
   test("maintains valid package identity and release lifecycle hooks", () => {
     expect(pkg.name).toBe("@programinglive/zettly-editor");
+    expect(versionrc.commitAll).toBe(true);
     expect(versionrc.scripts?.postchangelog).toBe(
       "node scripts/update-release-notes.cjs && git add docs/release-notes/RELEASE_NOTES.md"
     );
