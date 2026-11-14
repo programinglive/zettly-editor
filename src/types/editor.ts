@@ -116,9 +116,18 @@ export interface EditorValueSync {
   onChange: (value: string, meta: EditorMeta) => void;
 }
 
+/**
+ * Canonical props contract for `ZettlyEditor` (Modern-Only v1.0.0 Public API).
+ */
 export interface ZettlyEditorProps extends EditorValueSync {
+  /** Custom block command registry for the contextual slash menu and floating `+` inserter. */
   blockRegistry?: BlockCommandRegistry;
+  /** Additional TipTap extensions appended to the Modern-Only editor instance. */
   extensions?: AnyExtension[];
+  /**
+   * @deprecated Legacy Classic toolbar prop retained as a no-op compile-time shim in v1.0.0.
+   * Use `blockRegistry` for custom contextual block commands instead. Scheduled for removal in v2.0.0.
+   */
   commands?: CommandDefinition[];
   permissions?: EditorPermissions;
   messages?: Partial<EditorMessages>;
@@ -127,7 +136,12 @@ export interface ZettlyEditorProps extends EditorValueSync {
   autoFocus?: boolean;
   debug?: boolean;
   onDebugEvent?: (event: DebugEvent) => void;
+  /**
+   * @deprecated Legacy Classic toolbar toggle callback retained as a no-op shim in v1.0.0.
+   * Scheduled for removal in v2.0.0.
+   */
   onDebugToggle?: (next: boolean) => void;
   onImageUpload?: (file: File) => Promise<string>;
+  /** Callback receiving a normalized `ZettlyDocumentV1` JSON AST on every document change. */
   onJsonChange?: (doc: ZettlyDocumentV1) => void;
 }
