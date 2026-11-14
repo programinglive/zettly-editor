@@ -238,47 +238,9 @@ Styling is handled in `src/components/editor/code-highlight.css`. Override the `
 | `onJsonChange` | `(doc: ZettlyDocumentV1) => void` | Optional callback receiving normalized ZettlyDocumentV1 AST on document changes. |
 | `blockRegistry` | `BlockCommandRegistry` | Optional custom registry for contextual slash commands and block inserter. |
 | `extensions` | `AnyExtension[]` | Additional TipTap extensions. |
-| `commands` | `CommandDefinition[]` | Custom toolbar commands. |
+| `commands` | `CommandDefinition[]` | _(Deprecated in v1.0.0)_ Legacy custom command prop kept as a no-op compatibility shim; use `blockRegistry` for contextual slash commands and block inserters. |
 | `permissions` | `EditorPermissions` | Control read-only/link behavior. |
 | `messages` | `Partial<EditorMessages>` | Override UI copy. |
-#### Debug toolbar toggle
-
-When you provide an `onDebugToggle` callback, a debug button (🐞) appears in the editor toolbar, allowing users to toggle debug mode on/off without code changes:
-
-```tsx
-import { useState } from "react";
-import { ZettlyEditor, type DebugEvent } from "@programinglive/zettly-editor";
-
-export function MyEditor() {
-  const [value, setValue] = useState("<p>Hello</p>");
-  const [debugEnabled, setDebugEnabled] = useState(false);
-
-  const handleDebugEvent = (event: DebugEvent) => {
-    if (!debugEnabled) return;
-    console.log("zettly debug event", event);
-  };
-
-  return (
-    <ZettlyEditor
-      value={value}
-      onChange={setValue}
-      debug={debugEnabled}
-      onDebugEvent={handleDebugEvent}
-      onDebugToggle={setDebugEnabled}
-    />
-  );
-}
-```
-
-The debug toggle button appears at the end of the toolbar and shows the current debug state visually.
-
-#### Editor footer
-
-The editor includes a footer that displays:
-- **Version**: Shows the current `@programinglive/zettly-editor` version (e.g., "Zettly Editor v0.1.9")
-- **Debug status**: Indicates whether debug mode is "Enabled" or "Disabled"
-
-This footer helps you verify which version is running and monitor debug state at a glance.
 
 #### Forwarding debug events to a backend
 

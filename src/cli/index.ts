@@ -15,8 +15,7 @@ import {
 } from "../core";
 import { defaultBlockCommands } from "../commands/default-block-commands";
 import type { ZettlyDocumentV1 } from "../types/document";
-
-const VERSION = "0.3.0";
+import { ZETTLY_EDITOR_VERSION } from "../version";
 
 interface ParsedArgs {
   command?: string;
@@ -186,7 +185,7 @@ export async function runCli(argv: string[] = process.argv.slice(2)): Promise<nu
   }
 
   if (parsed.version) {
-    process.stdout.write(`zettly-editor v${VERSION}\n`);
+    process.stdout.write(`zettly-editor v${ZETTLY_EDITOR_VERSION}\n`);
     return 0;
   }
 
