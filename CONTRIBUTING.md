@@ -12,7 +12,22 @@ Thanks for your interest in contributing! We welcome pull requests and issues th
 
 ## Commit Convention
 
-This project uses [@programinglive/commiter](https://github.com/programinglive/commiter) for conventional commits. Run `npx commiter commit` to create commits that pass linting.
+This project enforces [Conventional Commits](https://www.conventionalcommits.org/) via Husky and Commitlint.
+Create commits using standard git commands:
+
+```bash
+git add .
+git commit -m "feat(editor): add bubble toolbar"
+```
+
+Common commit types:
+- `feat:` New features
+- `fix:` Bug fixes
+- `docs:` Documentation changes
+- `refactor:` Code restructuring
+- `test:` Test additions or updates
+- `chore:` Maintenance tasks
+- `perf:` Performance improvements
 
 ## Pull Requests
 
