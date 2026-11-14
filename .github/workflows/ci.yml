@@ -37,11 +37,11 @@ jobs:
       - name: Typecheck
         run: npx tsc --noEmit
 
-      - name: Test
-        run: npm test
-
       - name: Build library
         run: npm run build
+
+      - name: Test
+        run: npm test
 
       - name: Build example playground
         run: npm run example:build
