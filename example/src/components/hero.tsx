@@ -1,9 +1,9 @@
-import React from "react";
-import { Terminal, Copy, Check, ArrowDown, Sparkles } from "lucide-react";
+import React, { useState } from "react";
+import { Terminal, Copy, Check, ArrowRight, BookOpen } from "lucide-react";
 
 export const Hero: React.FC = () => {
-  const [copied, setCopied] = React.useState(false);
-  const installCmd = "npm install @programinglive/zettly-editor";
+  const [copied, setCopied] = useState(false);
+  const installCmd = "npm i @programinglive/zettly-editor";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(installCmd);
@@ -15,83 +15,79 @@ export const Hero: React.FC = () => {
     document.querySelector("#playground")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const scrollToDocs = () => {
+    document.querySelector("#docs")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <section className="relative overflow-hidden pt-8 pb-10 sm:pt-12 sm:pb-14">
+    <section className="relative pt-6 pb-6 sm:pt-8 sm:pb-8">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center text-center">
           {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200/60 bg-indigo-50/80 px-3 py-1 text-xs font-semibold text-indigo-700 shadow-2xs backdrop-blur-xs transition dark:border-indigo-900/60 dark:bg-indigo-950/40 dark:text-indigo-300">
-            <Sparkles className="h-3.5 w-3.5 text-indigo-500" />
-            <span>Open Source · MIT Licensed · React 18 & 19 Compatible</span>
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-0.5 text-xs font-medium text-zinc-700 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300">
+            <span>React 18 &amp; 19</span>
+            <span className="text-zinc-300 dark:text-zinc-700">·</span>
+            <span>TypeScript Strict</span>
+            <span className="text-zinc-300 dark:text-zinc-700">·</span>
+            <span>Zero Vulnerability</span>
           </div>
 
-          {/* Headline */}
-          <h1 className="mt-4 max-w-3xl text-3xl font-extrabold tracking-tight text-zinc-950 sm:text-5xl lg:text-5xl dark:text-zinc-50 leading-[1.12]">
-            Writing should feel <span className="bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">effortless.</span>
+          {/* Primary Heading */}
+          <h1 className="mt-3 max-w-3xl text-2xl font-bold tracking-tight text-zinc-950 sm:text-4xl lg:text-4xl dark:text-zinc-50">
+            Write beautifully. Build effortlessly.
           </h1>
 
-          {/* Subtitle */}
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-zinc-600 sm:text-base dark:text-zinc-400">
-            A distraction-free, customizable WYSIWYG rich text editor for React.
-            Combines the clean elegance of Medium with the headless extensibility of TipTap.
+          {/* Supporting Description */}
+          <p className="mt-2.5 max-w-2xl text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            A clean, powerful rich-text editor for React. Inspired by Medium, built for developers.
           </p>
 
-          {/* Copyable Installation & Actions */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <div className="flex items-center rounded-xl border border-zinc-200/90 bg-zinc-900 text-zinc-100 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/90">
-              <div className="flex items-center gap-2 px-3 py-2 text-xs font-mono">
-                <Terminal className="h-3.5 w-3.5 text-zinc-400" />
+          {/* Compact Actions & Install */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5">
+            <button
+              type="button"
+              onClick={scrollToPlayground}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-3.5 py-1.5 text-xs font-medium text-white shadow-xs transition hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-white cursor-pointer"
+            >
+              <span>Try Playground</span>
+              <ArrowRight className="h-3 w-3" />
+            </button>
+
+            <button
+              type="button"
+              onClick={scrollToDocs}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-200 bg-white px-3.5 py-1.5 text-xs font-medium text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 cursor-pointer"
+            >
+              <BookOpen className="h-3 w-3 text-zinc-400" />
+              <span>Documentation</span>
+            </button>
+
+            {/* Quick Copy Command */}
+            <div className="flex items-center rounded-lg border border-zinc-200 bg-zinc-50 text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200">
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-mono">
+                <Terminal className="h-3 w-3 text-zinc-400" />
                 <span>{installCmd}</span>
               </div>
               <button
                 type="button"
                 onClick={handleCopy}
-                className="flex items-center gap-1 border-l border-zinc-800 px-3 py-2 text-xs font-medium text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+                className="flex items-center gap-1 border-l border-zinc-200 dark:border-zinc-800 px-2.5 py-1.5 text-[11px] font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors cursor-pointer"
                 title="Copy installation command"
                 aria-label="Copy installation command"
               >
                 {copied ? (
                   <>
-                    <Check className="h-3.5 w-3.5 text-emerald-400" />
-                    <span className="text-emerald-400">Copied</span>
+                    <Check className="h-3 w-3 text-emerald-500" />
+                    <span className="text-emerald-600 dark:text-emerald-400 font-sans">Copied</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="h-3.5 w-3.5" />
-                    <span>Copy</span>
+                    <Copy className="h-3 w-3" />
+                    <span className="font-sans">Copy</span>
                   </>
                 )}
               </button>
             </div>
-
-            <button
-              type="button"
-              onClick={scrollToPlayground}
-              className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-xs transition hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer"
-            >
-              <span>Try Playground</span>
-              <ArrowDown className="h-3.5 w-3.5" />
-            </button>
-          </div>
-
-          {/* Micro capability badges */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-zinc-500 dark:text-zinc-400">
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" />
-              Contextual Bubble Toolbar
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-violet-500" />
-              Slash Commands Palette (<kbd className="rounded bg-zinc-100 px-1 py-0.2 font-mono dark:bg-zinc-800">/</kbd>)
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-sky-500" />
-              Margin Inserter (<kbd className="rounded bg-zinc-100 px-1 py-0.2 font-mono dark:bg-zinc-800">+</kbd>)
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              Zero CSS Framework Leakage
-            </span>
           </div>
         </div>
       </div>

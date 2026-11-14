@@ -3,7 +3,6 @@ import { Navbar } from './components/navbar';
 import { Hero } from './components/hero';
 import { PlaygroundShell } from './components/playground-shell';
 import { QuickstartSection } from './components/quickstart-section';
-import { FeaturesSection } from './components/features-section';
 import { DeveloperGuide } from './components/developer-guide';
 import { Footer } from './components/footer';
 
@@ -32,7 +31,7 @@ export function App() {
     window.localStorage.setItem('zettly-theme', theme);
   }, [theme]);
 
-  // Fetch GitHub stars asynchronously
+  // Fetch GitHub stars asynchronously with abort controller
   useEffect(() => {
     if (typeof window === 'undefined') {
       return () => undefined;
@@ -76,29 +75,26 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 antialiased selection:bg-indigo-500 selection:text-white dark:bg-zinc-950 dark:text-zinc-100 transition-colors duration-200 font-sans">
-      {/* 1. Global Navigation Bar */}
+      {/* 1. Global Navigation Bar (Text-Only Wordmark) */}
       <Navbar
         theme={theme}
         onToggleTheme={handleToggleTheme}
         githubStars={githubStars}
       />
 
-      {/* 2. Hero Section */}
+      {/* 2. Concise Hero Section */}
       <Hero />
 
-      {/* 3. Interactive Playground Shell (Centerpiece) */}
+      {/* 3. Live Playground Shell (Centerpiece) */}
       <PlaygroundShell />
 
-      {/* 4. Quickstart / Installation Guide */}
+      {/* 4. Quickstart Installation Guide */}
       <QuickstartSection />
 
-      {/* 5. Feature Architecture Highlights */}
-      <FeaturesSection />
-
-      {/* 6. Comprehensive Developer Guide & API Reference */}
+      {/* 5. Consolidated Developer Reference & Features (Tabbed) */}
       <DeveloperGuide />
 
-      {/* 7. Footer */}
+      {/* 6. Minimal Footer (Text-Only Wordmark) */}
       <Footer />
     </div>
   );
