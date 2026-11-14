@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { describe, expect, test } from "vitest";
 import { migrateFileToModern } from "../codemod/migrate-v1";
 import { runCodemod } from "../codemod/runner";
@@ -288,6 +289,29 @@ export function Broken() {
       expect(fs.readFileSync(writableFile, "utf8")).toContain("<ZettlyEditor");
     } finally {
       fs.chmodSync(readonlyFile, 0o644);
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  });
+
+  test("22. executes compiled ESM dist/codemod.js subprocess cleanly", () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "zettly-codemod-bin-"));
+    const targetFile = path.join(tmpDir, "LegacyApp.tsx");
+    const codemodBin = path.resolve(__dirname, "../../dist/codemod.js");
+
+    try {
+      fs.writeFileSync(
+        targetFile,
+        `import { ClassicEditor } from "@programinglive/zettly-editor";\nexport const App = () => <ClassicEditor value="<p>Hi</p>" onChange={() => {}} />;`,
+        "utf8"
+      );
+
+      const res = spawnSync("node", [codemodBin, targetFile, "--dry-run"], {
+        encoding: "utf8",
+      });
+      expect(res.status, res.stderr).toBe(0);
+      expect(res.stdout).toContain("[MODIFIED]");
+      expect(res.stdout).toContain("LegacyApp.tsx");
+    } finally {
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
   });

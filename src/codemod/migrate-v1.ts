@@ -1,4 +1,4 @@
-import ts from "typescript";
+import * as ts from "typescript";
 
 export interface CodemodFileResult {
   filePath: string;
@@ -63,6 +63,13 @@ export function migrateFileToModern(
   _options: CodemodOptions = {}
 ): CodemodFileResult {
   void _options;
+
+  if (typeof ts.createSourceFile !== "function" || !ts.ScriptTarget) {
+    throw new Error(
+      "zettly-editor-migrate requires TypeScript 5.x JS AST APIs (typescript@^5.0.0). " +
+        "Run with: npx -p typescript@^5.0.0 -p @programinglive/zettly-editor zettly-editor-migrate <paths>"
+    );
+  }
 
   const sourceFile = ts.createSourceFile(
     filePath,

@@ -293,5 +293,22 @@ describe("Headless Document Engine (Milestone M4.2)", () => {
         { level: 3, text: "Validation" },
       ]);
     });
+
+    test("processes 1,000-paragraph document within 500ms budget", () => {
+      const blocks = Array.from({ length: 1000 }, (_, i) => `<p>Paragraph ${i} with <strong>bold</strong> text.</p>`);
+      const largeHtml = blocks.join("");
+
+      const start = performance.now();
+      const doc = htmlToDocument(largeHtml);
+      const validation = validateDocument(doc);
+      const sanitized = sanitizeDocument(doc);
+      const htmlOut = documentToHtml(sanitized);
+      const elapsedMs = performance.now() - start;
+
+      expect(validation.valid).toBe(true);
+      expect(doc.doc.content).toHaveLength(1000);
+      expect(htmlOut.length).toBeGreaterThan(10000);
+      expect(elapsedMs).toBeLessThan(500);
+    });
   });
 });
