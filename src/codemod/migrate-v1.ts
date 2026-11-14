@@ -18,28 +18,10 @@ interface TextReplacement {
   newText: string;
 }
 
+const OBSOLETE_SYMBOLS = new Set(["EditorPreset", "ToolbarRenderProps", "DefaultToolbar"]);
+
 function getLineNumber(sourceFile: ts.SourceFile, node: ts.Node): number {
   return sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1;
-}
-
-function removeSpecifierFromList<T extends ts.ImportSpecifier | ts.ExportSpecifier>(
-  sourceFile: ts.SourceFile,
-  elements: ts.NodeArray<T>,
-  target: T
-): TextReplacement {
-  const index = elements.indexOf(target);
-  let start = target.getStart(sourceFile);
-  let end = target.getEnd();
-
-  if (index < elements.length - 1) {
-    const nextEl = elements[index + 1];
-    end = nextEl.getStart(sourceFile);
-  } else if (index > 0) {
-    const prevEl = elements[index - 1];
-    start = prevEl.getEnd();
-  }
-
-  return { start, end, newText: "" };
 }
 
 function getStatementRemovalRange(
@@ -55,6 +37,18 @@ function getStatementRemovalRange(
     end += 1;
   }
   return { start, end, newText: "" };
+}
+
+function formatNamedSpecifier(
+  sourceFile: ts.SourceFile,
+  el: ts.ImportSpecifier | ts.ExportSpecifier,
+  overrideText?: string
+): string {
+  if (overrideText) {
+    const isTypeOnly = ts.isImportSpecifier(el) ? el.isTypeOnly : el.isTypeOnly;
+    return isTypeOnly ? `type ${overrideText}` : overrideText;
+  }
+  return el.getText(sourceFile);
 }
 
 export function migrateFileToModern(
@@ -101,9 +95,10 @@ export function migrateFileToModern(
 
   let importedClassicEditor = false;
   let importedZettlyEditor = false;
-  let importedEditorPreset = false;
+  let importedObsoleteSymbol = false;
   let classicEditorLocalName = "ClassicEditor";
   let zettlyEditorLocalName = "ZettlyEditor";
+  const removedObsoleteLocalNames = new Set<string>();
 
   // Step 1: Detect and transform @programinglive/zettly-editor imports and re-exports
   ts.forEachChild(sourceFile, (node) => {
@@ -116,51 +111,61 @@ export function migrateFileToModern(
         const namedBindings = node.importClause?.namedBindings;
         if (namedBindings && ts.isNamedImports(namedBindings)) {
           const elements = namedBindings.elements;
-          let classicElement: ts.ImportSpecifier | null = null;
-          let presetElement: ts.ImportSpecifier | null = null;
+          let hasZettly = false;
 
           for (const el of elements) {
             const importedName = el.propertyName ? el.propertyName.text : el.name.text;
             if (importedName === "ClassicEditor") {
               importedClassicEditor = true;
               classicEditorLocalName = el.name.text;
-              classicElement = el;
             } else if (importedName === "ZettlyEditor") {
+              hasZettly = true;
               importedZettlyEditor = true;
               zettlyEditorLocalName = el.name.text;
-            } else if (importedName === "EditorPreset") {
-              importedEditorPreset = true;
-              presetElement = el;
+            } else if (OBSOLETE_SYMBOLS.has(importedName)) {
+              importedObsoleteSymbol = true;
+              removedObsoleteLocalNames.add(el.name.text);
             }
           }
 
-          // If EditorPreset is the only specifier in this import declaration, remove the entire import
-          if (presetElement && elements.length === 1) {
-            replacements.push(getStatementRemovalRange(sourceFile, sourceCode, node));
-            changes.push(`Removed obsolete EditorPreset import declaration`);
-            return;
+          const kept: string[] = [];
+          let declModified = false;
+
+          for (const el of elements) {
+            const importedName = el.propertyName ? el.propertyName.text : el.name.text;
+            if (importedName === "ClassicEditor") {
+              declModified = true;
+              if (!hasZettly) {
+                kept.push(formatNamedSpecifier(sourceFile, el, "ZettlyEditor"));
+                changes.push(`Updated import: ClassicEditor -> ZettlyEditor`);
+                importedZettlyEditor = true;
+                zettlyEditorLocalName = "ZettlyEditor";
+              } else {
+                changes.push(`Removed redundant ClassicEditor from imports`);
+              }
+            } else if (OBSOLETE_SYMBOLS.has(importedName)) {
+              declModified = true;
+              changes.push(`Removed obsolete ${importedName} from imports`);
+              if (importedName === "DefaultToolbar") {
+                warnings.push(
+                  `Removed obsolete DefaultToolbar import at line ${getLineNumber(sourceFile, el)}. Top static toolbar is removed in v1.0.0.`
+                );
+              }
+            } else {
+              kept.push(formatNamedSpecifier(sourceFile, el));
+            }
           }
 
-          // Case: ClassicEditor imported without ZettlyEditor -> rewrite ClassicEditor to ZettlyEditor
-          if (classicElement && !importedZettlyEditor) {
-            replacements.push({
-              start: classicElement.getStart(sourceFile),
-              end: classicElement.getEnd(),
-              newText: "ZettlyEditor",
-            });
-            changes.push(`Updated import: ClassicEditor -> ZettlyEditor`);
-            importedZettlyEditor = true;
-            zettlyEditorLocalName = "ZettlyEditor";
-          } else if (classicElement && importedZettlyEditor) {
-            // Both imported -> remove ClassicEditor from import list
-            replacements.push(removeSpecifierFromList(sourceFile, elements, classicElement));
-            changes.push(`Removed redundant ClassicEditor from imports`);
-          }
-
-          // Remove obsolete EditorPreset import if present alongside other specifiers
-          if (presetElement) {
-            replacements.push(removeSpecifierFromList(sourceFile, elements, presetElement));
-            changes.push(`Removed obsolete EditorPreset from imports`);
+          if (declModified) {
+            if (kept.length === 0 && !node.importClause?.name) {
+              replacements.push(getStatementRemovalRange(sourceFile, sourceCode, node));
+            } else {
+              replacements.push({
+                start: namedBindings.getStart(sourceFile),
+                end: namedBindings.getEnd(),
+                newText: `{ ${kept.join(", ")} }`,
+              });
+            }
           }
         }
       }
@@ -173,48 +178,52 @@ export function migrateFileToModern(
       ts.isNamedExports(node.exportClause)
     ) {
       const elements = node.exportClause.elements;
-      let classicExport: ts.ExportSpecifier | null = null;
       let hasZettlyExport = false;
-      let presetExport: ts.ExportSpecifier | null = null;
+
+      for (const el of elements) {
+        const origName = el.propertyName ? el.propertyName.text : el.name.text;
+        if (origName === "ZettlyEditor") {
+          hasZettlyExport = true;
+        }
+      }
+
+      const kept: string[] = [];
+      let declModified = false;
 
       for (const el of elements) {
         const origName = el.propertyName ? el.propertyName.text : el.name.text;
         if (origName === "ClassicEditor") {
-          classicExport = el;
-        } else if (origName === "ZettlyEditor") {
-          hasZettlyExport = true;
-        } else if (origName === "EditorPreset") {
-          presetExport = el;
+          declModified = true;
+          if (!hasZettlyExport) {
+            kept.push(formatNamedSpecifier(sourceFile, el, "ZettlyEditor"));
+            changes.push(`Updated re-export: ClassicEditor -> ZettlyEditor`);
+          } else {
+            changes.push(`Removed redundant ClassicEditor from re-exports`);
+          }
+        } else if (OBSOLETE_SYMBOLS.has(origName)) {
+          declModified = true;
+          changes.push(`Removed obsolete ${origName} from re-exports`);
+        } else {
+          kept.push(formatNamedSpecifier(sourceFile, el));
         }
       }
 
-      if (presetExport && elements.length === 1) {
-        replacements.push(getStatementRemovalRange(sourceFile, sourceCode, node));
-        changes.push(`Removed obsolete EditorPreset re-export declaration`);
-        return;
-      }
-
-      if (classicExport && !hasZettlyExport) {
-        replacements.push({
-          start: classicExport.getStart(sourceFile),
-          end: classicExport.getEnd(),
-          newText: "ZettlyEditor",
-        });
-        changes.push(`Updated re-export: ClassicEditor -> ZettlyEditor`);
-      } else if (classicExport && hasZettlyExport) {
-        replacements.push(removeSpecifierFromList(sourceFile, elements, classicExport));
-        changes.push(`Removed redundant ClassicEditor from re-exports`);
-      }
-
-      if (presetExport) {
-        replacements.push(removeSpecifierFromList(sourceFile, elements, presetExport));
-        changes.push(`Removed obsolete EditorPreset from re-exports`);
+      if (declModified) {
+        if (kept.length === 0) {
+          replacements.push(getStatementRemovalRange(sourceFile, sourceCode, node));
+        } else {
+          replacements.push({
+            start: node.exportClause.getStart(sourceFile),
+            end: node.exportClause.getEnd(),
+            newText: `{ ${kept.join(", ")} }`,
+          });
+        }
       }
     }
   });
 
-  // If Zettly Editor is not imported in this file (and no EditorPreset/re-export replacements), skip JSX scan
-  if (!importedClassicEditor && !importedZettlyEditor && !importedEditorPreset && replacements.length === 0) {
+  // If Zettly Editor is not imported in this file (and no obsolete/re-export replacements), skip JSX scan
+  if (!importedClassicEditor && !importedZettlyEditor && !importedObsoleteSymbol && replacements.length === 0) {
     return {
       filePath,
       modified: false,
@@ -267,13 +276,35 @@ export function migrateFileToModern(
 
     // Inspect attributes
     for (const attr of element.attributes.properties) {
+      if (ts.isJsxSpreadAttribute(attr)) {
+        warnings.push(
+          `Spread attribute detected on <${tagName}> at line ${getLineNumber(
+            sourceFile,
+            attr
+          )}. Verify the spread object does not pass obsolete "preset" or "toolbar" props.`
+        );
+        continue;
+      }
+
       if (ts.isJsxAttribute(attr) && ts.isIdentifier(attr.name)) {
         const attrName = attr.name.text;
         if (attrName === "preset") {
           const init = attr.initializer;
+          let staticPresetVal: string | null = null;
           if (init && ts.isStringLiteral(init)) {
-            const presetVal = init.text;
-            if (presetVal === "classic" || presetVal === "medium") {
+            staticPresetVal = init.text;
+          } else if (
+            init &&
+            ts.isJsxExpression(init) &&
+            init.expression &&
+            (ts.isStringLiteral(init.expression) ||
+              ts.isNoSubstitutionTemplateLiteral(init.expression))
+          ) {
+            staticPresetVal = init.expression.text;
+          }
+
+          if (staticPresetVal !== null) {
+            if (staticPresetVal === "classic" || staticPresetVal === "medium") {
               let start = attr.getStart(sourceFile);
               const end = attr.getEnd();
 
@@ -287,10 +318,10 @@ export function migrateFileToModern(
                 end,
                 newText: "",
               });
-              changes.push(`Removed obsolete preset="${presetVal}" attribute`);
+              changes.push(`Removed obsolete preset="${staticPresetVal}" attribute`);
             } else {
               warnings.push(
-                `Unrecognized preset="${presetVal}" attribute at line ${getLineNumber(
+                `Unrecognized preset="${staticPresetVal}" attribute at line ${getLineNumber(
                   sourceFile,
                   attr
                 )}. Manual review required.`
@@ -318,6 +349,25 @@ export function migrateFileToModern(
 
   if (importedClassicEditor || importedZettlyEditor) {
     visit(sourceFile);
+  }
+
+  if (removedObsoleteLocalNames.size > 0) {
+    const checkDanglingRefs = (node: ts.Node) => {
+      if (
+        ts.isIdentifier(node) &&
+        removedObsoleteLocalNames.has(node.text) &&
+        !ts.isImportSpecifier(node.parent)
+      ) {
+        warnings.push(
+          `Dangling reference to removed symbol "${node.text}" at line ${getLineNumber(
+            sourceFile,
+            node
+          )}. Manual cleanup required.`
+        );
+      }
+      ts.forEachChild(node, checkDanglingRefs);
+    };
+    ts.forEachChild(sourceFile, checkDanglingRefs);
   }
 
   if (replacements.length === 0) {

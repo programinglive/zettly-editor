@@ -291,4 +291,47 @@ export function Broken() {
       fs.rmSync(tmpDir, { recursive: true, force: true });
     }
   });
+
+  test("21. removes static JSX expression preset={'classic'} and template preset={`medium`} idempotently", () => {
+    const input = `import { ZettlyEditor } from '@programinglive/zettly-editor';
+
+export function Expressions() {
+  return (
+    <>
+      <ZettlyEditor preset={'classic'} value="a" onChange={() => {}} />
+      <ZettlyEditor preset={\`medium\`} value="b" onChange={() => {}} />
+    </>
+  );
+}`;
+    const res1 = migrateFileToModern("expr.tsx", input);
+    expect(res1.modified).toBe(true);
+    expect(res1.warnings.length).toBe(0);
+    expect(res1.outputCode).not.toContain("preset=");
+    expect(migrateFileToModern("expr.tsx", res1.outputCode).modified).toBe(false);
+  });
+
+  test("22. removes ToolbarRenderProps and DefaultToolbar imports and emits diagnostics", () => {
+    const input = `import { ZettlyEditor, ToolbarRenderProps, DefaultToolbar } from '@programinglive/zettly-editor';
+
+export function Legacy(p: ToolbarRenderProps) {
+  return <><DefaultToolbar /><ZettlyEditor value="" onChange={() => {}} /></>;
+}`;
+    const res = migrateFileToModern("legacy-toolbar.tsx", input);
+    expect(res.modified).toBe(true);
+    expect(res.outputCode).toContain("import { ZettlyEditor } from '@programinglive/zettly-editor'");
+    expect(res.outputCode).not.toContain("import { ZettlyEditor, ToolbarRenderProps");
+    expect(res.warnings.some((w) => w.includes("DefaultToolbar"))).toBe(true);
+    expect(res.warnings.some((w) => w.includes('Dangling reference to removed symbol "ToolbarRenderProps"'))).toBe(true);
+  });
+
+  test("23. emits spread attribute diagnostic on <ZettlyEditor {...props} />", () => {
+    const input = `import { ZettlyEditor } from '@programinglive/zettly-editor';
+
+export function Spreaded(props: any) {
+  return <ZettlyEditor {...props} value="" onChange={() => {}} />;
+}`;
+    const res = migrateFileToModern("spread.tsx", input);
+    expect(res.modified).toBe(false);
+    expect(res.warnings.some((w) => w.includes("Spread attribute detected on <ZettlyEditor>"))).toBe(true);
+  });
 });

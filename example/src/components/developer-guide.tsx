@@ -58,7 +58,7 @@ const FEATURES = [
     title: 'Distraction-Free Editorial Flow',
     description:
       'Inspired by Medium. Typography takes center stage with balanced line heights, comfortable line length, and an interface that fades away while writing.',
-    badge: 'Medium Preset',
+    badge: 'Modern Contextual',
   },
   {
     icon: MessageSquareQuote,
@@ -111,7 +111,7 @@ export const DeveloperGuide: React.FC = () => {
               }`}
             >
               <Table className="w-3.5 h-3.5" />
-              <span>API &amp; Presets</span>
+              <span>API Props</span>
             </button>
             <button
               type="button"
@@ -140,7 +140,7 @@ export const DeveloperGuide: React.FC = () => {
           </div>
         </div>
 
-        {/* Tab 1: API Props & Presets */}
+        {/* Tab 1: API Props */}
         {activeTab === 'api' && (
           <div className="space-y-6">
             {/* Props Table */}

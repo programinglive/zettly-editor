@@ -9,10 +9,10 @@ Welcome, AI Engineer! This document provides authoritative development instructi
 Zettly Editor is an open-source, reusable WYSIWYG editor designed for modern React applications, offering an immersive, minimalist writing experience inspired by **Medium**.
 
 ### Primary Tenets
-1. **Clean by Default:** Distraction-free canvas (`max-w-[740px]`), elegant typography, consistent vertical rhythm, zero permanent top toolbar in default `medium` preset.
+1. **Clean by Default:** Distraction-free canvas (`max-w-[740px]`), elegant typography, consistent vertical rhythm, zero permanent top toolbar.
 2. **Contextual on Demand:** Floating bubble toolbar on text selection, floating `+` block inserter on empty lines, searchable slash commands (`/`).
 3. **Command-First & Headless:** Business and document operations are headless domain logic first, testable without browser DOM dependencies.
-4. **Backward Compatibility:** Existing consumers can use `preset="classic"` to retain the top sticky toolbar.
+4. **Modern-Only Architecture:** Classic Toolbar and preset switching are permanently discontinued; `ZettlyEditor` renders the single canonical modern contextual editing interface.
 
 ---
 
@@ -99,7 +99,7 @@ src/
 ├── core/                # Pure headless domain logic (schema, AST, serializers)
 ├── extensions/          # TipTap extension modules (code-block, image, link, slash-menu)
 ├── ui/                  # UI components (bubble-menu, link-popover, floating-inserter)
-├── presets/             # Composed layouts (medium.tsx, classic.tsx, bare.tsx)
+├── components/editor/   # Canonical modern contextual editor (MediumEditor, BubbleToolbar, SlashCommandMenu, FloatingBlockInserter)
 ├── react/               # React wrappers and context hooks
 ├── styles/              # Scoped CSS with custom properties (--ze-*)
 ├── index.ts             # Main package entrypoint

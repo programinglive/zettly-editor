@@ -16,7 +16,37 @@ import {
 import { defaultBlockCommands } from "../commands/default-block-commands";
 import type { ZettlyDocumentV1 } from "../types/document";
 
-const VERSION = "0.3.0";
+function resolvePackageVersion(): string {
+  const candidates: string[] = [];
+  if (typeof process !== "undefined" && Array.isArray(process.argv) && process.argv[1]) {
+    try {
+      const entryDir = path.dirname(fs.realpathSync(process.argv[1]));
+      candidates.push(path.resolve(entryDir, "../package.json"));
+      candidates.push(path.resolve(entryDir, "../../package.json"));
+    } catch {
+      // Ignore unresolvable argv[1]
+    }
+  }
+  if (typeof __dirname !== "undefined") {
+    candidates.push(path.resolve(__dirname, "../package.json"));
+  }
+  candidates.push(path.resolve(process.cwd(), "package.json"));
+
+  for (const candidate of candidates) {
+    try {
+      const raw = fs.readFileSync(candidate, "utf-8");
+      const parsed = JSON.parse(raw) as { name?: string; version?: string };
+      if (parsed.name === "@programinglive/zettly-editor" && typeof parsed.version === "string") {
+        return parsed.version;
+      }
+    } catch {
+      // Try next candidate
+    }
+  }
+  return "0.0.0";
+}
+
+const VERSION = resolvePackageVersion();
 
 interface ParsedArgs {
   command?: string;
