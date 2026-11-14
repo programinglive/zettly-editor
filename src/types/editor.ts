@@ -4,6 +4,8 @@ import { type ReactNode } from "react";
 
 export type EditorFlowState = "idle" | "loading" | "success" | "warning" | "error" | "info";
 
+export type EditorPreset = "medium" | "classic";
+
 export interface EditorMeta {
   characters: number;
   words: number;
@@ -130,6 +132,7 @@ export interface ToolbarRenderProps {
 }
 
 export interface ZettlyEditorProps extends EditorValueSync {
+  preset?: EditorPreset;
   extensions?: AnyExtension[];
   commands?: CommandDefinition[];
   permissions?: EditorPermissions;

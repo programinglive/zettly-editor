@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Editor } from "@tiptap/core";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { Placeholder } from "@tiptap/extension-placeholder";
 import { Link } from "@tiptap/extension-link";
@@ -12,14 +12,12 @@ import { ListItem } from "@tiptap/extension-list-item";
 import { Blockquote } from "@tiptap/extension-blockquote";
 import { Image } from "@tiptap/extension-image";
 
-import { cn } from "../../lib/utils";
 import { CodeBlockWithSyntaxHighlight } from "./code-block-config";
 import "./code-highlight.css";
 import "./zettly-editor.css";
 import {
   type EditorMessages,
   type EditorMeta,
-  type ToolbarRenderProps,
   type ZettlyEditorProps,
 } from "../../types/editor";
 import { defaultCommands } from "./default-commands";
@@ -28,7 +26,8 @@ import {
   useEditorContext,
   defaultMessages,
 } from "./editor-context";
-import { DefaultToolbar } from "./toolbar";
+import { MediumEditor } from "./medium/medium-editor";
+import { ClassicEditor } from "./classic/classic-editor";
 import { emitDebugEvent, type DebugEventInput } from "./debug-utils";
 import { ZETTLY_EDITOR_VERSION } from "../../version";
 
@@ -73,6 +72,7 @@ interface EditorShellProps extends ZettlyEditorProps {
 const EditorShell: React.FC<EditorShellProps> = ({
   value,
   onChange,
+  preset = "medium",
   extensions,
   commands,
   permissions,
@@ -278,21 +278,6 @@ const EditorShell: React.FC<EditorShellProps> = ({
     [emit, mergedExtensions, permissions.readOnly, onImageUpload]
   );
 
-  const handleSurfaceMouseDown = React.useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      if (!editor) {
-        return;
-      }
-      const target = event.target as HTMLElement;
-      const insideEditor = Boolean(target.closest(".ProseMirror"));
-      if (!insideEditor) {
-        event.preventDefault();
-        editor.chain().focus().run();
-      }
-    },
-    [editor]
-  );
-
   React.useEffect(() => {
     if (!editor) {
       return;
@@ -317,71 +302,40 @@ const EditorShell: React.FC<EditorShellProps> = ({
     editor.setEditable(permissions.readOnly !== true);
   }, [editor, permissions.readOnly]);
 
-  const renderToolbar = React.useCallback(
-    (props: ToolbarRenderProps) => {
-      if (toolbar) {
-        return toolbar(props);
-      }
-      return <DefaultToolbar {...props} />;
-    },
-    [toolbar]
-  );
-
   // All hooks are called before this early return
   if (!editor) {
     return null;
   }
 
-  const toolbarProps: ToolbarRenderProps = {
-    editor,
-    commands,
-    permissions,
-    messages,
-    debug: effectiveDebug,
-    onDebugEvent,
-    onToggleDebug: handleToggleDebug,
-    onImageUpload,
-  };
+  const isClassic = preset === "classic";
+
+  if (isClassic) {
+    return (
+      <ClassicEditor
+        editor={editor}
+        commands={commands}
+        permissions={permissions}
+        messages={messages}
+        toolbar={toolbar}
+        className={className}
+        editorClassName={editorClassName}
+        debug={effectiveDebug}
+        onDebugEvent={onDebugEvent}
+        onToggleDebug={handleToggleDebug}
+        onImageUpload={onImageUpload}
+        version={ZETTLY_EDITOR_VERSION}
+      />
+    );
+  }
 
   return (
-    <div data-zettly-editor-root="" className={cn("overflow-hidden", className)}>
-      <div data-zettly-editor-toolbar="" className="px-3 py-2">
-        {renderToolbar(toolbarProps)}
-      </div>
-      <div
-        data-zettly-editor-surface=""
-        className={cn("relative px-4 py-4", editorClassName)}
-        onMouseDown={handleSurfaceMouseDown}
-      >
-        {effectiveDebug && (
-          <div className="absolute right-4 top-4 z-10 select-none rounded bg-red-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-600 shadow-sm ring-1 ring-red-200 animate-pulse">
-            Debug Mode
-          </div>
-        )}
-        <EditorContent
-          editor={editor}
-          className={cn(
-            "min-h-[200px] w-full text-base leading-relaxed focus:outline-none",
-            "[&_p]:mb-4 [&_p:last-child]:mb-0 [&_h1]:mb-4 [&_h2]:mb-4 [&_h3]:mb-3",
-            "[&_ul]:ml-6 [&_ul]:list-disc [&_ul]:space-y-1",
-            "[&_ol]:ml-6 [&_ol]:list-decimal [&_ol]:space-y-1",
-            "[&_li]:marker:text-muted-foreground",
-            "[&_blockquote]:my-4 [&_blockquote]:border-l-4 [&_blockquote]:border-muted [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-muted-foreground",
-            "[&_a]:text-primary [&_a]:underline [&_a:hover]:text-primary/80",
-            "[&_.ProseMirror]:min-h-[200px] [&_.ProseMirror]:w-full [&_.ProseMirror]:outline-none [&_.ProseMirror]:border-0 [&_.ProseMirror]:shadow-none",
-            "[&_.ProseMirror-focused]:outline-none [&_.ProseMirror-focused]:border-0 [&_.ProseMirror-focused]:shadow-none",
-            "[&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:border [&_img]:border-border"
-          )}
-        />
-      </div>
-      <div
-        data-zettly-editor-footer=""
-        className="flex items-center justify-between border-t border-border/60 bg-background/70 px-3 py-2 text-xs text-muted-foreground"
-      >
-        <span>Zettly Editor v{ZETTLY_EDITOR_VERSION}</span>
-        <span>Debug {effectiveDebug ? "Enabled" : "Disabled"}</span>
-      </div>
-    </div>
+    <MediumEditor
+      editor={editor}
+      permissions={permissions}
+      className={className}
+      editorClassName={editorClassName}
+      debug={effectiveDebug}
+    />
   );
 }
 
@@ -389,6 +343,7 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
   const {
     value,
     onChange,
+    preset = "medium",
     commands = defaultCommands,
     permissions = {},
     messages = {},
@@ -420,6 +375,7 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
       <EditorShell
         value={value}
         onChange={onChange}
+        preset={preset}
         commands={commands}
         permissions={normalizedPermissions}
         messages={mergedMessages}

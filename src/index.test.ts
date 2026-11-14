@@ -2,11 +2,14 @@ import { describe, expect, test } from "vitest";
 import pkg from "../package.json";
 import versionrc from "../.versionrc.json";
 
-import { ZettlyEditor } from "./index";
+import { ZettlyEditor, MediumEditor, ClassicEditor, BubbleToolbar } from "./index";
 
 describe("@programinglive/zettly-editor", () => {
-  test("exports ZettlyEditor component", () => {
+  test("exports ZettlyEditor and preset components", () => {
     expect(ZettlyEditor).toBeTypeOf("function");
+    expect(MediumEditor).toBeTypeOf("function");
+    expect(ClassicEditor).toBeTypeOf("function");
+    expect(BubbleToolbar).toBeTypeOf("function");
   });
 
   test("maintains valid package identity and release lifecycle hooks", () => {

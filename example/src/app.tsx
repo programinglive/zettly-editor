@@ -1,7 +1,7 @@
 import React from "react";
 import { Github, Star } from "lucide-react";
 
-import { ZettlyEditor, type DebugEvent } from "@programinglive/zettly-editor";
+import { ZettlyEditor, type DebugEvent, type EditorPreset } from "@programinglive/zettly-editor";
 import { SyntaxHighlighter } from "./syntax-highlighter";
 import Logo from "./assets/logo_zettly_editor.png";
 
@@ -52,6 +52,7 @@ export function App() {
   const [words, setWords] = React.useState(0);
   const [characters, setCharacters] = React.useState(0);
   const [mode, setMode] = React.useState<"edit" | "preview">("edit");
+  const [preset, setPreset] = React.useState<EditorPreset>("medium");
   const [theme, setTheme] = React.useState<"light" | "dark">(() => {
     if (typeof window === "undefined") {
       return "light";
@@ -231,29 +232,54 @@ export function App() {
         </section>
 
         <section className="flex flex-col gap-4">
-          <div className="inline-flex w-fit items-center gap-1 rounded-full border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-            <button
-              type="button"
-              onClick={() => setMode("edit")}
-              className="rounded-full px-4 py-1 text-sm font-medium transition data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-              data-state={mode === "edit" ? "on" : "off"}
-              aria-pressed={mode === "edit"}
-            >
-              Edit
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode("preview")}
-              className="rounded-full px-4 py-1 text-sm font-medium transition data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
-              data-state={mode === "preview" ? "on" : "off"}
-              aria-pressed={mode === "preview"}
-            >
-              Preview
-            </button>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="inline-flex w-fit items-center gap-1 rounded-full border border-zinc-200 bg-white p-1 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+              <button
+                type="button"
+                onClick={() => setMode("edit")}
+                className="rounded-full px-4 py-1 text-sm font-medium transition data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                data-state={mode === "edit" ? "on" : "off"}
+                aria-pressed={mode === "edit"}
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode("preview")}
+                className="rounded-full px-4 py-1 text-sm font-medium transition data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                data-state={mode === "preview" ? "on" : "off"}
+                aria-pressed={mode === "preview"}
+              >
+                Preview
+              </button>
+            </div>
+
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white p-1 text-xs shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+              <span className="px-2 font-medium text-zinc-500 dark:text-zinc-400">Preset:</span>
+              <button
+                type="button"
+                onClick={() => setPreset("medium")}
+                className="rounded-full px-3 py-1 font-medium transition data-[state=on]:bg-indigo-600 data-[state=on]:text-white dark:data-[state=on]:bg-indigo-500"
+                data-state={preset === "medium" ? "on" : "off"}
+                aria-pressed={preset === "medium"}
+              >
+                Medium (Clean)
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreset("classic")}
+                className="rounded-full px-3 py-1 font-medium transition data-[state=on]:bg-indigo-600 data-[state=on]:text-white dark:data-[state=on]:bg-indigo-500"
+                data-state={preset === "classic" ? "on" : "off"}
+                aria-pressed={preset === "classic"}
+              >
+                Classic (Toolbar)
+              </button>
+            </div>
           </div>
 
           {mode === "edit" ? (
             <ZettlyEditor
+              preset={preset}
               value={value}
               onChange={(nextValue, meta) => {
                 setValue(nextValue);

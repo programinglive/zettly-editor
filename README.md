@@ -105,7 +105,30 @@ The editor ships with opinionated defaults that match the example playground. Bo
 
 The editable surface uses the full container width and a comfortable minimum height, matching the mockups shown in the docs.
 
-### Toolbar defaults
+### Presets: Medium vs Classic
+
+Zettly Editor provides two built-in presets:
+
+1. **`medium` (Default)**: A clean, distraction-free writing experience inspired by Medium. The editor renders on a borderless, centered reading canvas (`max-w-2xl`) with comfortable prose typography. Formatting controls float contextually in a bubble toolbar directly above highlighted text, and dismiss automatically on empty selection or `Escape`.
+2. **`classic`**: Preserves the complete boxed editor container with the fixed top toolbar for 100% backward compatibility with earlier versions.
+
+```tsx
+// Medium preset (default)
+<ZettlyEditor
+  value={content}
+  onChange={setContent}
+  preset="medium"
+/>
+
+// Classic preset (full top toolbar)
+<ZettlyEditor
+  value={content}
+  onChange={setContent}
+  preset="classic"
+/>
+```
+
+### Toolbar defaults (Classic preset)
 
 - **Heading select**: Switch between `Paragraph` and `Heading 1-6` for structured titles.
 - **Bold / Italic / Strike**: Toggle inline emphasis with buttons or keyboard shortcuts (`Mod+B`, `Mod+I`, `Mod+Shift+X`).
@@ -150,6 +173,7 @@ Styling is handled in `src/components/editor/code-highlight.css`. Override the `
 | --- | --- | --- |
 | `value` | `string` | Controlled HTML content. |
 | `onChange` | `(value: string, meta: EditorMeta) => void` | Receive updates plus meta information. |
+| `preset` | `"medium" \| "classic"` | Writing preset (defaults to `"medium"` for clean borderless canvas with floating bubble toolbar; `"classic"` preserves the boxed layout with top toolbar). |
 | `extensions` | `AnyExtension[]` | Additional TipTap extensions. |
 | `commands` | `CommandDefinition[]` | Custom toolbar commands. |
 | `permissions` | `EditorPermissions` | Control read-only/link behavior. |
