@@ -33,6 +33,15 @@ describe("Headless CLI Binary (Milestone M4.3)", () => {
   });
 
   describe("Subprocess CLI Execution (Exit Codes & Commands)", () => {
+    test("prints package.json version with --version flag", () => {
+      const pkg = JSON.parse(
+        fs.readFileSync(path.resolve(__dirname, "../../package.json"), "utf-8")
+      ) as { version: string };
+      const res = runSubprocess(["--version"]);
+      expect(res.status).toBe(0);
+      expect(res.stdout.trim()).toBe(`zettly-editor v${pkg.version}`);
+    });
+
     test("blocks subcommand lists 9 block items in json format", () => {
       const res = runSubprocess(["blocks", "--json"]);
       expect(res.status).toBe(0);
