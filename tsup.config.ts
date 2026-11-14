@@ -5,6 +5,7 @@ export default defineConfig({
     index: "src/index.ts",
     core: "src/core/index.ts",
     cli: "src/cli/index.ts",
+    codemod: "src/codemod/cli.ts",
   },
   format: ["cjs", "esm"],
   sourcemap: true,
@@ -12,5 +13,5 @@ export default defineConfig({
   dts: true,
   target: "es2019",
   minify: false,
-  external: ["react", "react-dom"],
+  external: ["react", "react-dom", "typescript"],
 });

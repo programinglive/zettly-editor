@@ -171,14 +171,14 @@ The legacy Classic top toolbar and `preset="classic"` have been removed in favor
 
 #### Automatic Migration via AST Codemod
 
-Run the provided migration script on your repository to automatically update imports and JSX elements:
+Run the shipped migration executable on your repository to automatically update imports and JSX elements (requires `typescript` installed in your project):
 
 ```bash
 # Dry run to inspect planned changes without altering files:
-node node_modules/@programinglive/zettly-editor/scripts/run-codemod.ts src/ --dry-run
+npx zettly-editor-migrate src/ --dry-run
 
 # Apply migration:
-node node_modules/@programinglive/zettly-editor/scripts/run-codemod.ts src/
+npx zettly-editor-migrate src/
 ```
 
 The codemod safely:

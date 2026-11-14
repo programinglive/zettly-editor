@@ -18,11 +18,52 @@ interface TextReplacement {
   newText: string;
 }
 
+function getLineNumber(sourceFile: ts.SourceFile, node: ts.Node): number {
+  return sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1;
+}
+
+function removeSpecifierFromList<T extends ts.ImportSpecifier | ts.ExportSpecifier>(
+  sourceFile: ts.SourceFile,
+  elements: ts.NodeArray<T>,
+  target: T
+): TextReplacement {
+  const index = elements.indexOf(target);
+  let start = target.getStart(sourceFile);
+  let end = target.getEnd();
+
+  if (index < elements.length - 1) {
+    const nextEl = elements[index + 1];
+    end = nextEl.getStart(sourceFile);
+  } else if (index > 0) {
+    const prevEl = elements[index - 1];
+    start = prevEl.getEnd();
+  }
+
+  return { start, end, newText: "" };
+}
+
+function getStatementRemovalRange(
+  sourceFile: ts.SourceFile,
+  sourceCode: string,
+  node: ts.Node
+): TextReplacement {
+  const start = node.getStart(sourceFile);
+  let end = node.getEnd();
+  if (sourceCode[end] === "\r" && sourceCode[end + 1] === "\n") {
+    end += 2;
+  } else if (sourceCode[end] === "\n") {
+    end += 1;
+  }
+  return { start, end, newText: "" };
+}
+
 export function migrateFileToModern(
   filePath: string,
   sourceCode: string,
-  options: CodemodOptions = {}
+  _options: CodemodOptions = {}
 ): CodemodFileResult {
+  void _options;
+
   const sourceFile = ts.createSourceFile(
     filePath,
     sourceCode,
@@ -32,6 +73,27 @@ export function migrateFileToModern(
       ? ts.ScriptKind.TSX
       : ts.ScriptKind.TS
   );
+
+  // Refuse to transform files with syntax errors
+  const parseDiagnostics = (
+    sourceFile as ts.SourceFile & { parseDiagnostics?: readonly ts.Diagnostic[] }
+  ).parseDiagnostics;
+  if (parseDiagnostics && parseDiagnostics.length > 0) {
+    const firstDiag = parseDiagnostics[0];
+    const line =
+      firstDiag.start !== undefined
+        ? sourceFile.getLineAndCharacterOfPosition(firstDiag.start).line + 1
+        : 1;
+    return {
+      filePath,
+      modified: false,
+      changes: [],
+      warnings: [
+        `Syntax error detected at line ${line}. Skipping transformation to prevent corrupting invalid source.`,
+      ],
+      outputCode: sourceCode,
+    };
+  }
 
   const changes: string[] = [];
   const warnings: string[] = [];
@@ -43,11 +105,14 @@ export function migrateFileToModern(
   let classicEditorLocalName = "ClassicEditor";
   let zettlyEditorLocalName = "ZettlyEditor";
 
-  // Step 1: Detect and transform @programinglive/zettly-editor imports
+  // Step 1: Detect and transform @programinglive/zettly-editor imports and re-exports
   ts.forEachChild(sourceFile, (node) => {
     if (ts.isImportDeclaration(node)) {
       const moduleSpecifier = node.moduleSpecifier;
-      if (ts.isStringLiteral(moduleSpecifier) && moduleSpecifier.text === "@programinglive/zettly-editor") {
+      if (
+        ts.isStringLiteral(moduleSpecifier) &&
+        moduleSpecifier.text === "@programinglive/zettly-editor"
+      ) {
         const namedBindings = node.importClause?.namedBindings;
         if (namedBindings && ts.isNamedImports(namedBindings)) {
           const elements = namedBindings.elements;
@@ -69,6 +134,13 @@ export function migrateFileToModern(
             }
           }
 
+          // If EditorPreset is the only specifier in this import declaration, remove the entire import
+          if (presetElement && elements.length === 1) {
+            replacements.push(getStatementRemovalRange(sourceFile, sourceCode, node));
+            changes.push(`Removed obsolete EditorPreset import declaration`);
+            return;
+          }
+
           // Case: ClassicEditor imported without ZettlyEditor -> rewrite ClassicEditor to ZettlyEditor
           if (classicElement && !importedZettlyEditor) {
             replacements.push({
@@ -81,47 +153,68 @@ export function migrateFileToModern(
             zettlyEditorLocalName = "ZettlyEditor";
           } else if (classicElement && importedZettlyEditor) {
             // Both imported -> remove ClassicEditor from import list
-            const index = elements.indexOf(classicElement);
-            let start = classicElement.getStart(sourceFile);
-            let end = classicElement.getEnd();
-
-            // Include trailing or leading comma
-            if (index < elements.length - 1) {
-              const nextEl = elements[index + 1];
-              end = nextEl.getStart(sourceFile);
-            } else if (index > 0) {
-              const prevEl = elements[index - 1];
-              start = prevEl.getEnd();
-            }
-
-            replacements.push({ start, end, newText: "" });
+            replacements.push(removeSpecifierFromList(sourceFile, elements, classicElement));
             changes.push(`Removed redundant ClassicEditor from imports`);
           }
 
-          // Remove obsolete EditorPreset import if present
+          // Remove obsolete EditorPreset import if present alongside other specifiers
           if (presetElement) {
-            const index = elements.indexOf(presetElement);
-            let start = presetElement.getStart(sourceFile);
-            let end = presetElement.getEnd();
-
-            if (index < elements.length - 1) {
-              const nextEl = elements[index + 1];
-              end = nextEl.getStart(sourceFile);
-            } else if (index > 0) {
-              const prevEl = elements[index - 1];
-              start = prevEl.getEnd();
-            }
-
-            replacements.push({ start, end, newText: "" });
+            replacements.push(removeSpecifierFromList(sourceFile, elements, presetElement));
             changes.push(`Removed obsolete EditorPreset from imports`);
           }
         }
       }
+    } else if (
+      ts.isExportDeclaration(node) &&
+      node.moduleSpecifier &&
+      ts.isStringLiteral(node.moduleSpecifier) &&
+      node.moduleSpecifier.text === "@programinglive/zettly-editor" &&
+      node.exportClause &&
+      ts.isNamedExports(node.exportClause)
+    ) {
+      const elements = node.exportClause.elements;
+      let classicExport: ts.ExportSpecifier | null = null;
+      let hasZettlyExport = false;
+      let presetExport: ts.ExportSpecifier | null = null;
+
+      for (const el of elements) {
+        const origName = el.propertyName ? el.propertyName.text : el.name.text;
+        if (origName === "ClassicEditor") {
+          classicExport = el;
+        } else if (origName === "ZettlyEditor") {
+          hasZettlyExport = true;
+        } else if (origName === "EditorPreset") {
+          presetExport = el;
+        }
+      }
+
+      if (presetExport && elements.length === 1) {
+        replacements.push(getStatementRemovalRange(sourceFile, sourceCode, node));
+        changes.push(`Removed obsolete EditorPreset re-export declaration`);
+        return;
+      }
+
+      if (classicExport && !hasZettlyExport) {
+        replacements.push({
+          start: classicExport.getStart(sourceFile),
+          end: classicExport.getEnd(),
+          newText: "ZettlyEditor",
+        });
+        changes.push(`Updated re-export: ClassicEditor -> ZettlyEditor`);
+      } else if (classicExport && hasZettlyExport) {
+        replacements.push(removeSpecifierFromList(sourceFile, elements, classicExport));
+        changes.push(`Removed redundant ClassicEditor from re-exports`);
+      }
+
+      if (presetExport) {
+        replacements.push(removeSpecifierFromList(sourceFile, elements, presetExport));
+        changes.push(`Removed obsolete EditorPreset from re-exports`);
+      }
     }
   });
 
-  // If Zettly Editor is not imported in this file, avoid touching any JSX
-  if (!importedClassicEditor && !importedZettlyEditor) {
+  // If Zettly Editor is not imported in this file (and no EditorPreset/re-export replacements), skip JSX scan
+  if (!importedClassicEditor && !importedZettlyEditor && !importedEditorPreset && replacements.length === 0) {
     return {
       filePath,
       modified: false,
@@ -131,13 +224,13 @@ export function migrateFileToModern(
     };
   }
 
-  // Step 2: Visit JSX elements for ClassicEditor and ZettlyEditor
+  // Step 2: Visit JSX elements for ClassicEditor and ZettlyEditor (only when imported)
   function visit(node: ts.Node) {
     if (ts.isJsxElement(node)) {
       handleOpeningLikeElement(node.openingElement);
       if (ts.isIdentifier(node.closingElement.tagName)) {
         const closingTag = node.closingElement.tagName.text;
-        if (closingTag === classicEditorLocalName) {
+        if (importedClassicEditor && closingTag === classicEditorLocalName) {
           replacements.push({
             start: node.closingElement.tagName.getStart(sourceFile),
             end: node.closingElement.tagName.getEnd(),
@@ -156,8 +249,8 @@ export function migrateFileToModern(
     if (!ts.isIdentifier(tagNameNode)) return;
 
     const tagName = tagNameNode.text;
-    const isClassic = tagName === classicEditorLocalName;
-    const isZettly = tagName === zettlyEditorLocalName;
+    const isClassic = importedClassicEditor && tagName === classicEditorLocalName;
+    const isZettly = importedZettlyEditor && tagName === zettlyEditorLocalName;
 
     if (!isClassic && !isZettly) {
       return; // Do not touch unrelated JSX elements
@@ -182,7 +275,7 @@ export function migrateFileToModern(
             const presetVal = init.text;
             if (presetVal === "classic" || presetVal === "medium") {
               let start = attr.getStart(sourceFile);
-              let end = attr.getEnd();
+              const end = attr.getEnd();
 
               // Clean up leading whitespace if preceded by space
               if (start > 0 && /\s/.test(sourceCode[start - 1])) {
@@ -197,30 +290,35 @@ export function migrateFileToModern(
               changes.push(`Removed obsolete preset="${presetVal}" attribute`);
             } else {
               warnings.push(
-                `Unrecognized preset="${presetVal}" attribute at line ${
-                  sourceFile.getLineAndCharacterOfPosition(attr.getStart(sourceFile)).line + 1
-                }. Manual review required.`
+                `Unrecognized preset="${presetVal}" attribute at line ${getLineNumber(
+                  sourceFile,
+                  attr
+                )}. Manual review required.`
               );
             }
           } else if (init && ts.isJsxExpression(init)) {
             warnings.push(
-              `Dynamic preset expression detected at line ${
-                sourceFile.getLineAndCharacterOfPosition(attr.getStart(sourceFile)).line + 1
-              }. Preserved to prevent ambiguous modification.`
+              `Dynamic preset expression detected at line ${getLineNumber(
+                sourceFile,
+                attr
+              )}. Preserved to prevent ambiguous modification.`
             );
           }
         } else if (attrName === "toolbar") {
           warnings.push(
-            `Obsolete toolbar prop detected on <${tagName}> at line ${
-              sourceFile.getLineAndCharacterOfPosition(attr.getStart(sourceFile)).line + 1
-            }. Top static toolbar is removed in modern architecture.`
+            `Obsolete toolbar prop detected on <${tagName}> at line ${getLineNumber(
+              sourceFile,
+              attr
+            )}. Top static toolbar is removed in modern architecture.`
           );
         }
       }
     }
   }
 
-  visit(sourceFile);
+  if (importedClassicEditor || importedZettlyEditor) {
+    visit(sourceFile);
+  }
 
   if (replacements.length === 0) {
     return {

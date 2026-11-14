@@ -24,7 +24,8 @@
   ],
   "type": "module",
   "bin": {
-    "zettly-editor": "./dist/cli.js"
+    "zettly-editor": "./dist/cli.js",
+    "zettly-editor-migrate": "./dist/codemod.js"
   },
   "main": "dist/index.cjs",
   "module": "dist/index.js",

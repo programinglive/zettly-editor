@@ -63,7 +63,6 @@ const computeMeta = (editor: Editor): EditorMeta => {
 };
 
 interface EditorShellProps extends ZettlyEditorProps {
-  commands: Required<ZettlyEditorProps>["commands"];
   permissions: NonNullable<ZettlyEditorProps["permissions"]>;
   messages: EditorMessages;
 }
@@ -73,7 +72,6 @@ const EditorShell: React.FC<EditorShellProps> = ({
   onChange,
   blockRegistry,
   extensions,
-  commands,
   permissions,
   messages,
   className,
@@ -81,7 +79,6 @@ const EditorShell: React.FC<EditorShellProps> = ({
   autoFocus = false,
   debug = false,
   onDebugEvent,
-  onDebugToggle,
   onImageUpload,
   onJsonChange,
 }) => {
@@ -90,22 +87,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
   const skipNextEmitRef = React.useRef(false);
   const serializationScheduledRef = React.useRef(false);
 
-  // Allow toolbar to toggle debug even if consumer didn't provide onDebugToggle
-  const [internalDebug, setInternalDebug] = React.useState(debug);
-  React.useEffect(() => {
-    setInternalDebug(debug);
-  }, [debug]);
-  const effectiveDebug = onDebugToggle ? debug : internalDebug;
-  const handleToggleDebug = React.useCallback(
-    (next: boolean) => {
-      if (onDebugToggle) {
-        onDebugToggle(next);
-      } else {
-        setInternalDebug(next);
-      }
-    },
-    [onDebugToggle]
-  );
+  const effectiveDebug = debug;
 
   const emit = React.useCallback(
     (event: DebugEventInput) => {
@@ -345,10 +327,11 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
     messages = {},
     debug = false,
     onDebugEvent,
-    onDebugToggle,
+    onDebugToggle: _onDebugToggle,
     onImageUpload,
     ...rest
   } = props;
+  void _onDebugToggle;
 
   const mergedMessages = React.useMemo<EditorMessages>(
     () => ({ ...defaultMessages, ...messages }),
@@ -372,12 +355,10 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
         value={value}
         onChange={onChange}
         blockRegistry={blockRegistry}
-        commands={commands}
         permissions={normalizedPermissions}
         messages={mergedMessages}
         debug={debug}
         onDebugEvent={onDebugEvent}
-        onDebugToggle={onDebugToggle}
         onImageUpload={onImageUpload}
         {...rest}
       />
