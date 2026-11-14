@@ -20,3 +20,14 @@ export type {
   ToolbarRenderProps,
   ZettlyEditorProps,
 } from "./types/editor";
+export type {
+  ZettlyNodeType,
+  ZettlyMarkType,
+  ZettlyMark,
+  ZettlyDocumentNode,
+  ZettlyDocumentV1,
+  DocumentValidationIssue,
+  DocumentValidationResult,
+  DocumentStats,
+  DocumentInspectionReport,
+} from "./types/document";
