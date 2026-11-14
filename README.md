@@ -4,13 +4,13 @@ Shadcn-styled TipTap editor for Zettly todo/notes apps.
 
 ## Installation
 
-### 1. Grab the package and peer dependencies
+### 1. Grab the package
 
 ```bash
-npm install @programinglive/zettly-editor @tiptap/react @tiptap/starter-kit react react-dom
+npm install @programinglive/zettly-editor
 ```
 
-`@programinglive/zettly-editor` bundles every required TipTap extension except the peers above. Install them once in your consumer app—no local linking needed.
+Peer dependencies: `react` (`^18.2.0 || ^19.0.0`) and `react-dom` (`^18.2.0 || ^19.0.0`). All required TipTap 3 extensions are managed directly by the library.
 
 ### 2. Import the polished styles
 
@@ -18,13 +18,8 @@ The toolbar and surface rely on the published CSS bundle. Import it near the top
 
 ```tsx
 // main.tsx / app.jsx
+import { ZettlyEditor } from "@programinglive/zettly-editor";
 import "@programinglive/zettly-editor/styles";
-```
-
-Prefer a single import? Use the helper that pulls in CSS automatically:
-
-```tsx
-import { ZettlyEditor } from "@programinglive/zettly-editor/dist/with-styles.js";
 ```
 
 > **Tip**: When using frameworks with SSR (Next.js, Remix), place the import in your global layout so both client and server renders stay in sync. The `with-styles` helper works in SSR because it only adds side-effect CSS once per bundle.
@@ -56,7 +51,7 @@ export default defineConfig({
     alias: {
       "@programinglive/zettly-editor": path.resolve(
         __dirname,
-        "node_modules/@programinglive/zettly-editor/dist/index.mjs"
+        "node_modules/@programinglive/zettly-editor/dist/index.js"
       ),
       "@programinglive/zettly-editor/styles": path.resolve(
         __dirname,

@@ -1,4 +1,4 @@
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import { CodeBlockLowlight } from "@tiptap/extension-code-block-lowlight";
 import { createLowlight } from "lowlight";
 
 // Import common languages

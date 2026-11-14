@@ -1,16 +1,16 @@
 import * as React from "react";
 import type { Editor } from "@tiptap/core";
 import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
-import Link from "@tiptap/extension-link";
-import Highlight from "@tiptap/extension-highlight";
-import CharacterCount from "@tiptap/extension-character-count";
-import BulletList from "@tiptap/extension-bullet-list";
-import OrderedList from "@tiptap/extension-ordered-list";
-import ListItem from "@tiptap/extension-list-item";
-import Blockquote from "@tiptap/extension-blockquote";
-import Image from "@tiptap/extension-image";
+import { StarterKit } from "@tiptap/starter-kit";
+import { Placeholder } from "@tiptap/extension-placeholder";
+import { Link } from "@tiptap/extension-link";
+import { Highlight } from "@tiptap/extension-highlight";
+import { CharacterCount } from "@tiptap/extension-character-count";
+import { BulletList } from "@tiptap/extension-bullet-list";
+import { OrderedList } from "@tiptap/extension-ordered-list";
+import { ListItem } from "@tiptap/extension-list-item";
+import { Blockquote } from "@tiptap/extension-blockquote";
+import { Image } from "@tiptap/extension-image";
 
 import { cn } from "../../lib/utils";
 import { CodeBlockWithSyntaxHighlight } from "./code-block-config";
@@ -135,6 +135,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
         orderedList: false,
         listItem: false,
         blockquote: false,
+        link: false,
       }),
       BulletList,
       OrderedList,
@@ -145,7 +146,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
         multicolor: true,
       }),
       Link.configure({ openOnClick: false, autolink: true, HTMLAttributes: { rel: "noopener noreferrer", target: "_blank" } }),
-      Image as any,
+      Image,
       Placeholder.configure({ placeholder: messages.placeholder }),
       CharacterCount.configure({ limit: undefined }),
       ...(extensions ?? []),
@@ -159,7 +160,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
       content: value,
       editable: permissions.readOnly !== true,
       editorProps: {
-        handlePaste: (view, event, slice) => {
+        handlePaste: (view, event) => {
           if (!onImageUpload) return false;
           const items = Array.from(event.clipboardData?.items || []);
           const imageItem = items.find((item) => item.type.indexOf("image") === 0);
