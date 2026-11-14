@@ -2,6 +2,7 @@
 
 | Version | Release Date | Key Changes |
 |---------|--------------|-------------|
+| 0.3.0 | 2026-11-14 | See CHANGELOG for details. |
 | 0.2.19 | 2026-11-14 | fail loudly when NPM_TOKEN is missing (5443e14) |
 | 0.2.18 | 2026-01-21 | fix ESLint 9 dependency conflicts and migrate to flat config (1155a25) |
 | 0.2.17 | 2025-12-09 | add release notes for image upload feature (1ee591d) |
@@ -14,6 +15,13 @@
 
 
 
+
+
+## 0.3.0
+
+Released on **2026-11-14**.
+
+- See CHANGELOG for details.
 
 ## 0.2.19 – 👷 Continuous Integration
 

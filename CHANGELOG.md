@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.3.0](https://github.com/programinglive/zettly-editor/compare/v0.2.19...v0.3.0) (2026-11-14)
+
+
+### ✨ Features
+
+* **m2:** implement medium-like clean writing experience and preset architecture ([52976fe](https://github.com/programinglive/zettly-editor/commit/52976febacc85ad6907f1e5c7eb2738e88a8c28c))
+
 ### [0.2.19](https://github.com/programinglive/zettly-editor/compare/v0.2.18...v0.2.19) (2026-11-14)
 
 
