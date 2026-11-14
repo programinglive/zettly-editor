@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Github, Star, Sun, Moon, Menu, X, ExternalLink } from "lucide-react";
+import { ZETTLY_EDITOR_VERSION } from "@programinglive/zettly-editor";
 
 export interface NavbarProps {
   theme: "light" | "dark";
@@ -44,7 +45,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             Zettly Editor
           </span>
           <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-            v0.3.0
+            v{ZETTLY_EDITOR_VERSION}
           </span>
         </a>
 
