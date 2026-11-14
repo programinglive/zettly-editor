@@ -70,6 +70,7 @@ export type DebugEvent =
 export interface EditorPermissions {
   readOnly?: boolean;
   allowLinks?: boolean;
+  allowImages?: boolean;
 }
 
 export interface CommandContext {
