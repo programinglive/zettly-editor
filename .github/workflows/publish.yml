@@ -2,11 +2,13 @@ name: Publish package
 
 on:
   workflow_dispatch:
-  release:
-    types: [published]
   push:
     tags:
       - 'v*'
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   id-token: write     # OIDC for npm trusted publishing + provenance
@@ -34,6 +36,12 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npx tsc --noEmit
 
       - name: Build
         run: npm run build --if-present

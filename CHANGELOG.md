@@ -6,6 +6,39 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.4.0](https://github.com/programinglive/zettly-editor/compare/v0.3.0...v0.4.0) (2026-11-14)
+
+
+### ✅ Tests
+
+* update README.md, example/src/app.tsx, example/vite.config.ts +13 more ([7649092](https://github.com/programinglive/zettly-editor/commit/7649092f0eabd2067c3e0c2efde8428c185760d1))
+
+
+### ♻️ Refactors
+
+* **website:** text-only branding, page height reduction, and layout consolidation ([2b4a336](https://github.com/programinglive/zettly-editor/commit/2b4a336913dc404782a0ff69ff4f78fadc83e138))
+
+
+### ✨ Features
+
+* **m4:** headless document validator, ast codec, and analytics engine ([4086baa](https://github.com/programinglive/zettly-editor/commit/4086baaa8ba9a1df84e0407d63f8b2e977e64b8b))
+* **m4:** react editor json interop and comprehensive documentation ([31fbfc7](https://github.com/programinglive/zettly-editor/commit/31fbfc7c092c3284281a3e2fb9c8d5f1b5a8fe3d))
+* **m4:** standalone headless cli binary and multi-entry distribution ([c50a81e](https://github.com/programinglive/zettly-editor/commit/c50a81ef00c787673e02246803e1e06907287b15))
+* **m4:** structured document schema types and declarative block descriptors ([5fdfd53](https://github.com/programinglive/zettly-editor/commit/5fdfd534e8ac9bee27b848101f1ffd19f536d3a7))
+* **website:** professional compact interactive developer website revamp ([0542623](https://github.com/programinglive/zettly-editor/commit/0542623402488b71512983d879cf7cdb2c6fd575))
+
+
+### 🧹 Chores
+
+* **security,ci:** harden publish trigger, add PR CI, and remediate dev dependencies ([c44d83e](https://github.com/programinglive/zettly-editor/commit/c44d83ec9d5ecadccf834a5c923bc58e50ab908a))
+
+
+### 🐛 Bug Fixes
+
+* **ci:** build library before running CLI tests ([e96345a](https://github.com/programinglive/zettly-editor/commit/e96345ad38dc4ad7b99e917036d4474f835c60a7))
+* **security:** sanitize prototype pollution keys in document attributes ([4c2afe6](https://github.com/programinglive/zettly-editor/commit/4c2afe64be7699dec91b05d0deaf918e5b909a96))
+* **website:** align quickstart snippet and API props table with ZettlyEditorProps ([ee35f27](https://github.com/programinglive/zettly-editor/commit/ee35f275dd0e5c4419f02ee523e01e8dee81ace1))
+
 ## [0.3.0](https://github.com/programinglive/zettly-editor/compare/v0.2.19...v0.3.0) (2026-11-14)
 
 
