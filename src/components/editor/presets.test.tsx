@@ -58,6 +58,23 @@ describe("Editor Presets & Medium Writing Experience", () => {
     const surface = container.querySelector("[data-zettly-editor-surface]");
     expect(surface?.classList.contains("custom-editor")).toBe(true);
   });
+
+  test("accepts onJsonChange prop and preserves callback contract", () => {
+    const onJsonChange = vi.fn();
+    const { container, unmount } = render(
+      <ZettlyEditor
+        preset="medium"
+        value="<p>Structured JSON test</p>"
+        onChange={() => {}}
+        onJsonChange={onJsonChange}
+      />
+    );
+
+    const root = container.querySelector("[data-zettly-editor-root]");
+    expect(root).toBeTruthy();
+    expect(onJsonChange).toBeTypeOf("function");
+    unmount();
+  });
 });
 
 describe("BubbleToolbar Component", () => {

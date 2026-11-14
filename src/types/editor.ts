@@ -2,6 +2,7 @@ import { type AnyExtension, type Editor } from "@tiptap/core";
 import type { EditorState } from "@tiptap/pm/state";
 import { type ReactNode } from "react";
 import type { BlockCommandRegistry } from "../commands/block-command-registry";
+import type { ZettlyDocumentV1 } from "./document";
 
 export type EditorFlowState = "idle" | "loading" | "success" | "warning" | "error" | "info";
 
@@ -148,4 +149,5 @@ export interface ZettlyEditorProps extends EditorValueSync {
   onDebugEvent?: (event: DebugEvent) => void;
   onDebugToggle?: (next: boolean) => void;
   onImageUpload?: (file: File) => Promise<string>;
+  onJsonChange?: (doc: ZettlyDocumentV1) => void;
 }

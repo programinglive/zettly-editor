@@ -30,6 +30,7 @@ import { MediumEditor } from "./medium/medium-editor";
 import { ClassicEditor } from "./classic/classic-editor";
 import { emitDebugEvent, type DebugEventInput } from "./debug-utils";
 import { ZETTLY_EDITOR_VERSION } from "../../version";
+import { normalizeToDocumentV1, createEmptyDocument } from "../../core/document-validator";
 
 const computeMeta = (editor: Editor): EditorMeta => {
   // Fast path: check TipTap's built-in isEmpty first to avoid DOM access
@@ -86,6 +87,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
   onDebugEvent,
   onDebugToggle,
   onImageUpload,
+  onJsonChange,
 }) => {
   const { setMeta } = useEditorContext();
   const lastValueRef = React.useRef(value);
@@ -126,7 +128,14 @@ const EditorShell: React.FC<EditorShellProps> = ({
     lastValueRef.current = "";
     setMeta(meta);
     onChange("", meta);
-  }, [onChange, setMeta]);
+    if (onJsonChange) {
+      try {
+        onJsonChange(normalizeToDocumentV1(ed.getJSON()) ?? createEmptyDocument());
+      } catch {
+        // Safe fallback
+      }
+    }
+  }, [onChange, onJsonChange, setMeta]);
 
   const mergedExtensions = React.useMemo(
     () => [
@@ -250,6 +259,9 @@ const EditorShell: React.FC<EditorShellProps> = ({
                 const html = updatedEditor.getHTML();
                 lastValueRef.current = html;
                 onChange(html, meta);
+                if (onJsonChange) {
+                  onJsonChange(normalizeToDocumentV1(updatedEditor.getJSON()) ?? createEmptyDocument());
+                }
               } catch {
                 // Gracefully handle concurrent editor destruction during serialization
               }
