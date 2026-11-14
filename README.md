@@ -219,6 +219,7 @@ Styling is handled in `src/components/editor/code-highlight.css`. Override the `
 | --- | --- | --- |
 | `value` | `string` | Controlled HTML content. |
 | `onChange` | `(value: string, meta: EditorMeta) => void` | Receive updates plus meta information. |
+| `onJsonChange` | `(doc: ZettlyDocumentV1) => void` | Optional callback receiving normalized ZettlyDocumentV1 AST on document changes. |
 | `preset` | `"medium" \| "classic"` | Writing preset (defaults to `"medium"` for clean borderless canvas with floating bubble toolbar; `"classic"` preserves the boxed layout with top toolbar). |
 | `blockRegistry` | `BlockCommandRegistry` | Optional custom registry for contextual slash commands and block inserter. |
 | `extensions` | `AnyExtension[]` | Additional TipTap extensions. |
@@ -552,6 +553,72 @@ const note = await fetch("/api/notes/123").then((res) => res.json());
 
 return <ZettlyEditor value={note.content} onChange={handleChange} />;
 ```
+
+## Headless Core Engine (`@programinglive/zettly-editor/core`)
+
+For backend workflows, server-side rendering, and Node.js microservices, the headless core engine provides pure TypeScript utilities without any DOM globals or browser window dependencies:
+
+```ts
+import {
+  validateDocument,
+  sanitizeDocument,
+  htmlToDocument,
+  documentToHtml,
+  documentToMarkdown,
+  documentToPlainText,
+  getDocumentStats,
+  inspectDocument,
+} from "@programinglive/zettly-editor/core";
+
+// Parse HTML into a validated ZettlyDocumentV1 AST
+const doc = htmlToDocument("<p>Hello <strong>World</strong></p>");
+
+// Validate AST against schema and security rules
+const validation = validateDocument(doc);
+console.log(validation.valid); // true
+
+// Sanitize AST, stripping script tags and neutralizing unsafe URL protocols
+const cleanDoc = sanitizeDocument(doc);
+
+// Losslessly convert AST to CommonMark Markdown or clean HTML
+const markdown = documentToMarkdown(cleanDoc);
+const html = documentToHtml(cleanDoc);
+
+// Compute document statistics (word count, reading time, block breakdown)
+const stats = getDocumentStats(cleanDoc);
+console.log(stats.words, stats.readingTimeMinutes);
+```
+
+## Command Line Interface (CLI)
+
+The package ships with a standalone, zero-dependency executable binary: `zettly-editor` (or via `npx @programinglive/zettly-editor`):
+
+```bash
+# Validate documents with strict mode
+zettly-editor validate document.html
+zettly-editor validate --strict --from=json document.json
+
+# Sanitize dirty HTML from stdin pipe
+cat dirty.html | zettly-editor sanitize -
+
+# Convert between formats
+zettly-editor convert input.html --to=markdown
+zettly-editor convert input.html --to=json
+
+# Inspect outline and block tree
+zettly-editor inspect document.html --json
+
+# Calculate analytics and word count
+zettly-editor stats document.html
+
+# List registered block commands
+zettly-editor blocks --json
+```
+
+### Deterministic Exit Codes
+- `0`: Success / Document is valid
+- `1`: Document validation failed (schema violation or `--strict` warning)
+- `2`: Command line error, invalid options, or file error
 
 ## Development
 
