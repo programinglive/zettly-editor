@@ -15,10 +15,10 @@ const API_PROPS = [
     description: 'Callback invoked on content changes with updated HTML and word/character telemetry.',
   },
   {
-    name: 'preset',
-    type: "'medium' | 'classic'",
-    default: "'medium'",
-    description: "Distraction-free contextual writing UI ('medium') or traditional fixed top toolbar ('classic').",
+    name: 'onJsonChange',
+    type: '(doc: ZettlyDocumentV1) => void',
+    default: 'undefined',
+    description: 'Optional callback invoked with structured Zettly Document AST JSON on content changes.',
   },
   {
     name: 'messages',
@@ -95,7 +95,7 @@ export const DeveloperGuide: React.FC = () => {
               Developer Documentation
             </h2>
             <p className="mt-1 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
-              API props reference, preset comparison, and core architectural features.
+              API props reference, core architectural features, and headless document engine.
             </p>
           </div>
 
@@ -167,41 +167,6 @@ export const DeveloperGuide: React.FC = () => {
                         <td className="py-2.5 px-3.5 font-sans text-xs text-zinc-600 dark:text-zinc-400">{prop.description}</td>
                       </tr>
                     ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Presets Table */}
-            <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 overflow-hidden shadow-2xs">
-              <div className="px-4 py-2.5 bg-zinc-50 dark:bg-zinc-950/60 border-b border-zinc-200 dark:border-zinc-800 text-xs font-semibold text-zinc-900 dark:text-zinc-100">
-                Preset Comparison: Medium vs Classic
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-zinc-50/50 dark:bg-zinc-900/60 text-zinc-700 dark:text-zinc-300 font-semibold border-b border-zinc-200 dark:border-zinc-800">
-                    <tr>
-                      <th className="py-2.5 px-3.5">Capability</th>
-                      <th className="py-2.5 px-3.5">Medium Preset (Default)</th>
-                      <th className="py-2.5 px-3.5">Classic Preset</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
-                    <tr>
-                      <td className="py-2.5 px-3.5 font-medium text-zinc-900 dark:text-zinc-100">Toolbar Interface</td>
-                      <td className="py-2.5 px-3.5 text-emerald-600 dark:text-emerald-400 font-medium">Contextual Floating Bubble Menu</td>
-                      <td className="py-2.5 px-3.5">Static Top Toolbar</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-3.5 font-medium text-zinc-900 dark:text-zinc-100">Block Inserter</td>
-                      <td className="py-2.5 px-3.5 text-emerald-600 dark:text-emerald-400 font-medium">Gutter '+' Button &amp; '/' Slash Palette</td>
-                      <td className="py-2.5 px-3.5">Static Toolbar Dropdown</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2.5 px-3.5 font-medium text-zinc-900 dark:text-zinc-100">Layout &amp; Styling</td>
-                      <td className="py-2.5 px-3.5">Distraction-free prose typography</td>
-                      <td className="py-2.5 px-3.5">Standard document editing box</td>
-                    </tr>
                   </tbody>
                 </table>
               </div>

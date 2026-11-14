@@ -3,8 +3,6 @@
   --zettly-editor-border-strong: rgba(99, 102, 241, 0.45);
   --zettly-editor-shadow: rgba(15, 23, 42, 0.04);
   --zettly-editor-bg: #ffffff;
-  --zettly-editor-toolbar-bg: rgba(248, 250, 252, 0.93);
-  --zettly-editor-toolbar-border: rgba(148, 163, 184, 0.3);
   --zettly-editor-text: #0f172a;
   --zettly-editor-menu-bg: #ffffff;
   --zettly-editor-menu-border: rgba(148, 163, 184, 0.35);
@@ -20,8 +18,6 @@
   --zettly-editor-border-strong: rgba(99, 102, 241, 0.45);
   --zettly-editor-shadow: rgba(0, 0, 0, 0.35);
   --zettly-editor-bg: #0f172a;
-  --zettly-editor-toolbar-bg: rgba(17, 24, 39, 0.7);
-  --zettly-editor-toolbar-border: rgba(148, 163, 184, 0.25);
   --zettly-editor-text: #e5e7eb;
   --zettly-editor-menu-bg: rgba(17, 24, 39, 0.95);
   --zettly-editor-menu-border: rgba(51, 65, 85, 0.6);
@@ -32,12 +28,9 @@
 }
 
 [data-zettly-editor-root] {
-  border-radius: 16px;
-  border: 1px solid var(--zettly-editor-border);
-  background: var(--zettly-editor-bg);
-  box-shadow: 0 12px 24px -8px var(--zettly-editor-shadow);
+  position: relative;
+  width: 100%;
   color: var(--zettly-editor-text);
-  transition: box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
 [data-zettly-editor-menu] {
@@ -100,62 +93,9 @@
   color: #d6bcfa;
 }
 
-.dark [data-zettly-editor-root] {
-  background: var(--zettly-editor-bg);
-  color: var(--zettly-editor-text);
-  border-color: var(--zettly-editor-border);
-  box-shadow: 0 16px 28px -10px rgba(0, 0, 0, 0.6);
-  background-color: var(--zettly-editor-bg) !important;
-  color: var(--zettly-editor-text) !important;
-}
-
-[data-zettly-editor-root]:focus-within {
-  border-color: var(--zettly-editor-border-strong);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-}
-
-[data-zettly-editor-toolbar] {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  padding: 0.5rem;
-  border-bottom: 1px solid var(--zettly-editor-toolbar-border);
-  background: var(--zettly-editor-toolbar-bg);
-  backdrop-filter: blur(12px);
-}
-
-:root:not(.dark) [data-zettly-editor-toolbar] button[data-state="on"],
-.light [data-zettly-editor-toolbar] button[data-state="on"] {
-  background: var(--zettly-editor-menu-active);
-  color: #ffffff;
-}
-
-.dark [data-zettly-editor-toolbar] {
-  background: var(--zettly-editor-toolbar-bg);
-  border-bottom-color: var(--zettly-editor-toolbar-border);
-}
-
-.dark [data-zettly-editor-toolbar]>div {
-  background-color: rgba(17, 24, 39, 0.7) !important;
-  /* override inline bg classes */
-}
-
-.dark [data-zettly-editor-toolbar] button {
-  color: #cbd5e1 !important;
-  /* ensure contrast over muted-foreground */
-}
-
-.dark [data-zettly-editor-toolbar] button[data-state="on"] {
-  color: #ffffff;
-  background: #4f46e5;
-}
-
 [data-zettly-editor-surface] {
-  background: var(--zettly-editor-bg);
-  padding: 1.25rem 1.5rem;
+  background: transparent;
+  padding: 0;
   cursor: text;
 }
 
@@ -329,29 +269,17 @@
   }
 }
 
-/* Medium preset canvas reset */
-[data-zettly-editor-root][data-preset="medium"] {
-  border-radius: 0;
-  border: none;
-  background: transparent;
-  box-shadow: none;
-}
-
-[data-zettly-editor-root][data-preset="medium"] [data-zettly-editor-surface] {
-  padding: 0;
-}
-
-/* Medium preset typography styles */
-[data-preset="medium"] .ProseMirror {
+/* Modern typography styles */
+[data-zettly-editor-root] .ProseMirror {
   line-height: 1.75;
   color: inherit;
 }
 
-[data-preset="medium"] .ProseMirror p {
+[data-zettly-editor-root] .ProseMirror p {
   margin-bottom: 1.5rem;
 }
 
-[data-preset="medium"] .ProseMirror h1 {
+[data-zettly-editor-root] .ProseMirror h1 {
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: -0.025em;
@@ -359,7 +287,7 @@
   margin-bottom: 1rem;
 }
 
-[data-preset="medium"] .ProseMirror h2 {
+[data-zettly-editor-root] .ProseMirror h2 {
   font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -367,7 +295,7 @@
   margin-bottom: 0.75rem;
 }
 
-[data-preset="medium"] .ProseMirror blockquote {
+[data-zettly-editor-root] .ProseMirror blockquote {
   border-left: 3px solid #6366f1;
   padding-left: 1.25rem;
   font-style: italic;
@@ -376,7 +304,7 @@
   color: #475569;
 }
 
-.dark [data-preset="medium"] .ProseMirror blockquote {
+.dark [data-zettly-editor-root] .ProseMirror blockquote {
   color: #cbd5e1;
 }
 

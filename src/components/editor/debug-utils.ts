@@ -7,7 +7,6 @@ export type DebugEventInput =
   | OptionalTimestamp<Extract<DebugEvent, { type: "update" }>>
   | OptionalTimestamp<Extract<DebugEvent, { type: "transaction" }>>
   | OptionalTimestamp<Extract<DebugEvent, { type: "selectionUpdate" }>>
-  | OptionalTimestamp<Extract<DebugEvent, { type: "toolbarUpdate" }>>
   | OptionalTimestamp<Extract<DebugEvent, { type: "error" }>>;
 
 export const emitDebugEvent = (

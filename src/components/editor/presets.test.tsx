@@ -5,46 +5,26 @@ import type { Editor } from "@tiptap/core";
 import { ZettlyEditor } from "./zettly-editor";
 import { BubbleToolbar } from "./medium/bubble-toolbar";
 
-describe("Editor Presets & Medium Writing Experience", () => {
-  test("defaults to preset='medium' and renders borderless layout without top toolbar", () => {
+describe("Modern Canonical Writing Experience", () => {
+  test("renders borderless modern layout without static top toolbar", () => {
     const { container } = render(
       <ZettlyEditor
-        value="<p>Welcome to Medium style</p>"
+        value="<p>Welcome to modern contextual editing</p>"
         onChange={() => {}}
       />
     );
 
     const root = container.querySelector("[data-zettly-editor-root]");
     expect(root).toBeTruthy();
-    expect(root?.getAttribute("data-preset")).toBe("medium");
 
-    // Medium preset does NOT render static top toolbar
+    // Canonical modern editor does NOT render static top toolbar
     const toolbar = container.querySelector("[data-zettly-editor-toolbar]");
     expect(toolbar).toBeNull();
   });
 
-  test("preset='classic' renders boxed layout with top toolbar for backward compatibility", () => {
+  test("supports custom className and editorClassName", () => {
     const { container } = render(
       <ZettlyEditor
-        preset="classic"
-        value="<p>Classic with toolbar</p>"
-        onChange={() => {}}
-      />
-    );
-
-    const root = container.querySelector("[data-zettly-editor-root]");
-    expect(root).toBeTruthy();
-    expect(root?.getAttribute("data-preset")).toBe("classic");
-
-    // Classic preset MUST render top toolbar
-    const toolbar = container.querySelector("[data-zettly-editor-toolbar]");
-    expect(toolbar).toBeTruthy();
-  });
-
-  test("Medium preset supports custom className and editorClassName", () => {
-    const { container } = render(
-      <ZettlyEditor
-        preset="medium"
         value="<p>Custom styled</p>"
         onChange={() => {}}
         className="custom-container"
@@ -63,7 +43,6 @@ describe("Editor Presets & Medium Writing Experience", () => {
     const onJsonChange = vi.fn();
     const { container, unmount } = render(
       <ZettlyEditor
-        preset="medium"
         value="<p>Structured JSON test</p>"
         onChange={() => {}}
         onJsonChange={onJsonChange}

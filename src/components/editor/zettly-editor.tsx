@@ -27,9 +27,7 @@ import {
   defaultMessages,
 } from "./editor-context";
 import { MediumEditor } from "./medium/medium-editor";
-import { ClassicEditor } from "./classic/classic-editor";
 import { emitDebugEvent, type DebugEventInput } from "./debug-utils";
-import { ZETTLY_EDITOR_VERSION } from "../../version";
 import { normalizeToDocumentV1, createEmptyDocument } from "../../core/document-validator";
 
 const computeMeta = (editor: Editor): EditorMeta => {
@@ -73,13 +71,11 @@ interface EditorShellProps extends ZettlyEditorProps {
 const EditorShell: React.FC<EditorShellProps> = ({
   value,
   onChange,
-  preset = "medium",
   blockRegistry,
   extensions,
   commands,
   permissions,
   messages,
-  toolbar,
   className,
   editorClassName,
   autoFocus = false,
@@ -327,27 +323,6 @@ const EditorShell: React.FC<EditorShellProps> = ({
     return null;
   }
 
-  const isClassic = preset === "classic";
-
-  if (isClassic) {
-    return (
-      <ClassicEditor
-        editor={editor}
-        commands={commands}
-        permissions={permissions}
-        messages={messages}
-        toolbar={toolbar}
-        className={className}
-        editorClassName={editorClassName}
-        debug={effectiveDebug}
-        onDebugEvent={onDebugEvent}
-        onToggleDebug={handleToggleDebug}
-        onImageUpload={onImageUpload}
-        version={ZETTLY_EDITOR_VERSION}
-      />
-    );
-  }
-
   return (
     <MediumEditor
       editor={editor}
@@ -364,7 +339,6 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
   const {
     value,
     onChange,
-    preset = "medium",
     blockRegistry,
     commands = defaultCommands,
     permissions = {},
@@ -397,7 +371,6 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
       <EditorShell
         value={value}
         onChange={onChange}
-        preset={preset}
         blockRegistry={blockRegistry}
         commands={commands}
         permissions={normalizedPermissions}
