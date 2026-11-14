@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+### [0.2.19](https://github.com/programinglive/zettly-editor/compare/v0.2.18...v0.2.19) (2026-11-14)
+
+
+### 👷 Continuous Integration
+
+* fail loudly when NPM_TOKEN is missing ([5443e14](https://github.com/programinglive/zettly-editor/commit/5443e143ff7489588a4a94dafcb5f3a0788ea1f4))
+* publish with npm trusted publishing (OIDC), no token ([a4d4bb4](https://github.com/programinglive/zettly-editor/commit/a4d4bb40610d3cdae9bb09df9fd7f2332a53a122))
+
+
+### 🧹 Chores
+
+* add example:deploy script ([40bb82d](https://github.com/programinglive/zettly-editor/commit/40bb82d0cba4f7c74a73599610d69c8a3624fc41))
+* cleanup post release ([ef0632b](https://github.com/programinglive/zettly-editor/commit/ef0632bcafcd2a6820022bb98dff035bc1422474))
+* **governance:** add commitAll to versionrc to include release notes in release commit ([828626f](https://github.com/programinglive/zettly-editor/commit/828626f1c3598dcc1886494e698bfd214a462a64))
+* **governance:** integrate M0 release lifecycle hook, fix contributing docs, and add AGENTS.md ([734e082](https://github.com/programinglive/zettly-editor/commit/734e082c2fe57e2c59821e4227750b7a0abc160e))
+* **m1:** upgrade TipTap 3.34.0, resolve CVEs, add security regression tests, and fix packaging ([376de5d](https://github.com/programinglive/zettly-editor/commit/376de5d86b9ec3cf86edac22c5b7bf080b4d9441))
+
 ### [0.2.18](https://github.com/programinglive/zettly-editor/compare/v0.2.17...v0.2.18) (2026-01-21)
 
 

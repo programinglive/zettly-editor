@@ -2,6 +2,7 @@
 
 | Version | Release Date | Key Changes |
 |---------|--------------|-------------|
+| 0.2.19 | 2026-11-14 | fail loudly when NPM_TOKEN is missing (5443e14) |
 | 0.2.18 | 2026-01-21 | fix ESLint 9 dependency conflicts and migrate to flat config (1155a25) |
 | 0.2.17 | 2025-12-09 | add release notes for image upload feature (1ee591d) |
 | 0.2.16 | 2025-12-09 | update release notes for v0.2.15 (d38ccad) |
@@ -12,6 +13,19 @@
 
 
 
+
+
+## 0.2.19 – 👷 Continuous Integration
+
+Released on **2026-11-14**.
+
+- fail loudly when NPM_TOKEN is missing (5443e14)
+- publish with npm trusted publishing (OIDC), no token (a4d4bb4)
+- add example:deploy script (40bb82d)
+- cleanup post release (ef0632b)
+- **governance:** add commitAll to versionrc to include release notes in release commit (828626f)
+- **governance:** integrate M0 release lifecycle hook, fix contributing docs, and add AGENTS.md (734e082)
+- **m1:** upgrade TipTap 3.34.0, resolve CVEs, add security regression tests, and fix packaging (376de5d)
 
 ## 0.2.18 – 🧹 Chores
 
