@@ -29,7 +29,6 @@ export const MediumEditor: React.FC<MediumEditorProps> = ({
   return (
     <div
       data-zettly-editor-root=""
-      data-preset="medium"
       className={cn(
         "relative w-full max-w-2xl mx-auto py-6 px-4 sm:px-6 transition-all",
         "bg-transparent text-slate-900 dark:text-slate-100",
@@ -38,7 +37,7 @@ export const MediumEditor: React.FC<MediumEditorProps> = ({
     >
       {debug && (
         <div className="absolute right-4 top-2 select-none rounded bg-red-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-red-600 shadow-sm ring-1 ring-red-200">
-          Medium Preset · Debug
+          Zettly Editor · Debug
         </div>
       )}
 

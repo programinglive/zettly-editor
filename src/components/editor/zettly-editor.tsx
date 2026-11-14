@@ -27,9 +27,7 @@ import {
   defaultMessages,
 } from "./editor-context";
 import { MediumEditor } from "./medium/medium-editor";
-import { ClassicEditor } from "./classic/classic-editor";
 import { emitDebugEvent, type DebugEventInput } from "./debug-utils";
-import { ZETTLY_EDITOR_VERSION } from "../../version";
 import { normalizeToDocumentV1, createEmptyDocument } from "../../core/document-validator";
 
 const computeMeta = (editor: Editor): EditorMeta => {
@@ -65,7 +63,6 @@ const computeMeta = (editor: Editor): EditorMeta => {
 };
 
 interface EditorShellProps extends ZettlyEditorProps {
-  commands: Required<ZettlyEditorProps>["commands"];
   permissions: NonNullable<ZettlyEditorProps["permissions"]>;
   messages: EditorMessages;
 }
@@ -73,19 +70,15 @@ interface EditorShellProps extends ZettlyEditorProps {
 const EditorShell: React.FC<EditorShellProps> = ({
   value,
   onChange,
-  preset = "medium",
   blockRegistry,
   extensions,
-  commands,
   permissions,
   messages,
-  toolbar,
   className,
   editorClassName,
   autoFocus = false,
   debug = false,
   onDebugEvent,
-  onDebugToggle,
   onImageUpload,
   onJsonChange,
 }) => {
@@ -94,22 +87,7 @@ const EditorShell: React.FC<EditorShellProps> = ({
   const skipNextEmitRef = React.useRef(false);
   const serializationScheduledRef = React.useRef(false);
 
-  // Allow toolbar to toggle debug even if consumer didn't provide onDebugToggle
-  const [internalDebug, setInternalDebug] = React.useState(debug);
-  React.useEffect(() => {
-    setInternalDebug(debug);
-  }, [debug]);
-  const effectiveDebug = onDebugToggle ? debug : internalDebug;
-  const handleToggleDebug = React.useCallback(
-    (next: boolean) => {
-      if (onDebugToggle) {
-        onDebugToggle(next);
-      } else {
-        setInternalDebug(next);
-      }
-    },
-    [onDebugToggle]
-  );
+  const effectiveDebug = debug;
 
   const emit = React.useCallback(
     (event: DebugEventInput) => {
@@ -327,27 +305,6 @@ const EditorShell: React.FC<EditorShellProps> = ({
     return null;
   }
 
-  const isClassic = preset === "classic";
-
-  if (isClassic) {
-    return (
-      <ClassicEditor
-        editor={editor}
-        commands={commands}
-        permissions={permissions}
-        messages={messages}
-        toolbar={toolbar}
-        className={className}
-        editorClassName={editorClassName}
-        debug={effectiveDebug}
-        onDebugEvent={onDebugEvent}
-        onToggleDebug={handleToggleDebug}
-        onImageUpload={onImageUpload}
-        version={ZETTLY_EDITOR_VERSION}
-      />
-    );
-  }
-
   return (
     <MediumEditor
       editor={editor}
@@ -364,17 +321,17 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
   const {
     value,
     onChange,
-    preset = "medium",
     blockRegistry,
     commands = defaultCommands,
     permissions = {},
     messages = {},
     debug = false,
     onDebugEvent,
-    onDebugToggle,
+    onDebugToggle: _onDebugToggle,
     onImageUpload,
     ...rest
   } = props;
+  void _onDebugToggle;
 
   const mergedMessages = React.useMemo<EditorMessages>(
     () => ({ ...defaultMessages, ...messages }),
@@ -397,14 +354,11 @@ export const ZettlyEditor: React.FC<ZettlyEditorProps> = (props) => {
       <EditorShell
         value={value}
         onChange={onChange}
-        preset={preset}
         blockRegistry={blockRegistry}
-        commands={commands}
         permissions={normalizedPermissions}
         messages={mergedMessages}
         debug={debug}
         onDebugEvent={onDebugEvent}
-        onDebugToggle={onDebugToggle}
         onImageUpload={onImageUpload}
         {...rest}
       />

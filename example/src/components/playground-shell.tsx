@@ -12,7 +12,6 @@ import {
 import {
   ZettlyEditor,
   type DebugEvent,
-  type EditorPreset,
 } from "@programinglive/zettly-editor";
 
 export const defaultPlaygroundContent = `<h1>The Art of Distraction-Free Writing</h1>
@@ -31,7 +30,7 @@ export const defaultPlaygroundContent = `<h1>The Art of Distraction-Free Writing
 <ul>
   <li>Clean editorial typography with comfortable reading line-length</li>
   <li>Instant block commands palette with keyboard navigation</li>
-  <li>Full backward compatibility with classic toolbar layout</li>
+  <li>Floating bubble formatting toolbar and accessible link popover</li>
 </ul>
 <pre><code class="language-typescript">// Minimal React integration
 import { ZettlyEditor } from "@programinglive/zettly-editor";
@@ -39,7 +38,7 @@ import "@programinglive/zettly-editor/styles";
 
 export function NoteEditor() {
   const [content, setContent] = React.useState("<p>Hello world</p>");
-  return &lt;ZettlyEditor value={content} onChange={setContent} preset="medium" /&gt;;
+  return &lt;ZettlyEditor value={content} onChange={setContent} /&gt;;
 }</code></pre>`;
 
 export interface PlaygroundShellProps {
@@ -48,7 +47,6 @@ export interface PlaygroundShellProps {
 
 export const PlaygroundShell: React.FC<PlaygroundShellProps> = () => {
   const [value, setValue] = useState(defaultPlaygroundContent);
-  const [preset, setPreset] = useState<EditorPreset>("medium");
   const [mode, setMode] = useState<"edit" | "preview">("edit");
   const [words, setWords] = useState(0);
   const [characters, setCharacters] = useState(0);
@@ -72,36 +70,8 @@ export const PlaygroundShell: React.FC<PlaygroundShellProps> = () => {
         <div className="overflow-hidden rounded-xl border border-zinc-200/90 bg-white shadow-sm dark:border-zinc-800 dark:bg-zinc-900 transition-colors">
           {/* Functional Editor Toolbar Header (No decorative macOS dots) */}
           <div className="flex flex-wrap items-center justify-between border-b border-zinc-100 bg-zinc-50/70 px-3.5 py-2 dark:border-zinc-800/80 dark:bg-zinc-950/60 gap-2.5">
-            {/* Left: Preset Switcher + Mode */}
+            {/* Left: Mode Switcher & Reset */}
             <div className="flex flex-wrap items-center gap-2">
-              {/* Preset Switcher */}
-              <div className="inline-flex items-center rounded-lg border border-zinc-200 bg-white p-0.5 shadow-2xs dark:border-zinc-800 dark:bg-zinc-900 text-xs">
-                <button
-                  type="button"
-                  onClick={() => setPreset("medium")}
-                  className={`rounded-md px-2.5 py-1 font-medium transition cursor-pointer ${
-                    preset === "medium"
-                      ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 shadow-2xs"
-                      : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                  }`}
-                  aria-pressed={preset === "medium"}
-                >
-                  Medium Preset
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPreset("classic")}
-                  className={`rounded-md px-2.5 py-1 font-medium transition cursor-pointer ${
-                    preset === "classic"
-                      ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 shadow-2xs"
-                      : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                  }`}
-                  aria-pressed={preset === "classic"}
-                >
-                  Classic Toolbar
-                </button>
-              </div>
-
               {/* Edit / Preview Segmented Switch */}
               <div className="inline-flex items-center rounded-lg border border-zinc-200 bg-white p-0.5 shadow-2xs dark:border-zinc-800 dark:bg-zinc-900 text-xs">
                 <button
@@ -160,11 +130,11 @@ export const PlaygroundShell: React.FC<PlaygroundShellProps> = () => {
             </div>
           </div>
 
-          {/* Medium Contextual Hint Banner */}
-          {preset === "medium" && mode === "edit" && (
+          {/* Contextual Hint Banner */}
+          {mode === "edit" && (
             <div className="border-b border-zinc-100 bg-zinc-50/50 px-4 py-1.5 text-[11px] text-zinc-600 dark:border-zinc-800/80 dark:bg-zinc-950/40 dark:text-zinc-400 flex items-center justify-between">
               <div>
-                <span className="font-medium text-zinc-800 dark:text-zinc-200">Medium Mode:</span> Highlight text to format, or type <kbd className="rounded bg-white px-1 py-0.2 font-mono shadow-2xs dark:bg-zinc-800 text-[10px]">/</kbd> on any line to insert blocks.
+                <span className="font-medium text-zinc-800 dark:text-zinc-200">Contextual Editing:</span> Highlight text to format with the floating bubble toolbar, or type <kbd className="rounded bg-white px-1 py-0.2 font-mono shadow-2xs dark:bg-zinc-800 text-[10px]">/</kbd> on any line to insert blocks.
               </div>
             </div>
           )}
@@ -173,7 +143,6 @@ export const PlaygroundShell: React.FC<PlaygroundShellProps> = () => {
           <div className="min-h-[340px] p-4 sm:p-6 sm:py-6">
             {mode === "edit" ? (
               <ZettlyEditor
-                preset={preset}
                 value={value}
                 onChange={(nextValue, meta) => {
                   setValue(nextValue);

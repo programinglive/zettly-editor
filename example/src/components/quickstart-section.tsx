@@ -17,7 +17,6 @@ export function NoteEditor() {
   return (
     <div className="max-w-2xl mx-auto py-8">
       <ZettlyEditor
-        preset="medium"
         value={content}
         onChange={(nextHtml) => setContent(nextHtml)}
         messages={{ placeholder: "Type '/' for contextual commands..." }}
@@ -110,7 +109,7 @@ export const QuickstartSection: React.FC = () => {
             </div>
 
             <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-              Import <code className="font-mono text-zinc-700 dark:text-zinc-300">@programinglive/zettly-editor/styles</code> in your app entry. The editor includes default styles for both presets and responds to dark mode automatically.
+              Import <code className="font-mono text-zinc-700 dark:text-zinc-300">@programinglive/zettly-editor/styles</code> in your app entry. The editor includes styles for the modern contextual editor and responds to dark mode automatically.
             </p>
           </div>
 

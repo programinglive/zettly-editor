@@ -109,30 +109,22 @@ The editor ships with opinionated defaults that match the example playground. Bo
 
 The editable surface uses the full container width and a comfortable minimum height, matching the mockups shown in the docs.
 
-### Presets: Medium vs Classic
+### Modern Contextual Writing Architecture
 
-Zettly Editor provides two built-in presets:
-
-1. **`medium` (Default)**: A clean, distraction-free writing experience inspired by Medium. The editor renders on a borderless, centered reading canvas (`max-w-2xl`) with comfortable prose typography.
-   - **Floating Bubble Toolbar**: Contextually floats directly above highlighted text for inline formatting (bold, italic, strike, link, code).
-   - **Slash Command Palette (`/`)**: Type `/` on any line to open an accessible block insertion palette with real-time fuzzy search, keyboard navigation (`↑`, `↓`, `Enter`, `Esc`), and ARIA listbox semantics.
-   - **Floating Block Inserter (`+`)**: Hover or place cursor on an empty line to reveal a minimal `+` button in the left margin, allowing instant one-click block insertion without cluttering the screen.
-2. **`classic`**: Preserves the complete boxed editor container with the fixed top toolbar for 100% backward compatibility with earlier versions.
+Zettly Editor is engineered around a distraction-free, modern contextual writing experience inspired by Medium:
+- **Clean Editorial Canvas**: The editor renders on a borderless, centered reading canvas (`max-w-2xl`) with comfortable prose typography.
+- **Floating Bubble Toolbar**: Contextually floats directly above highlighted text for inline formatting (bold, italic, strike, link, code).
+- **Slash Command Palette (`/`)**: Type `/` on any line to open an accessible block insertion palette with real-time fuzzy search, keyboard navigation (`↑`, `↓`, `Enter`, `Esc`), and ARIA listbox semantics.
+- **Floating Block Inserter (`+`)**: Hover or place cursor on an empty line to reveal a minimal `+` button in the left margin, allowing instant one-click block insertion without cluttering the screen.
 
 ```tsx
-// Medium preset (default) with contextual block controls
-<ZettlyEditor
-  value={content}
-  onChange={setContent}
-  preset="medium"
-/>
+import { ZettlyEditor } from "@programinglive/zettly-editor";
+import "@programinglive/zettly-editor/styles";
 
-// Classic preset (full top toolbar)
-<ZettlyEditor
-  value={content}
-  onChange={setContent}
-  preset="classic"
-/>
+export function MyEditor() {
+  const [content, setContent] = React.useState("<p>Welcome to modern editing</p>");
+  return <ZettlyEditor value={content} onChange={setContent} />;
+}
 ```
 
 ### Customizing Block Commands
@@ -167,23 +159,47 @@ export function EditorWithCustomBlocks() {
     <ZettlyEditor
       value={content}
       onChange={setContent}
-      preset="medium"
       blockRegistry={customRegistry}
     />
   );
 }
 ```
 
-### Toolbar defaults (Classic preset)
+### Migration Guide: Removing Classic & Upgrading to Modern
 
-- **Heading select**: Switch between `Paragraph` and `Heading 1-6` for structured titles.
-- **Bold / Italic / Strike**: Toggle inline emphasis with buttons or keyboard shortcuts (`Mod+B`, `Mod+I`, `Mod+Shift+X`).
-- **Lists**: Insert bullet or ordered lists to outline ideas quickly.
-- **Blockquote**: Highlight important quotes or callouts.
-- **Code block**: Add syntax-highlighted blocks for snippets or documentation.
-- **Link**: Prompted link control honors permissions and allows quick insertion/removal.
-- **Highlight**: Toggle yellow background marks. The library ships explicit mark styling so host CSS resets cannot hide the highlight.
-- **Debug toggle**: When `onDebugToggle` is provided, a 🐞 button exposes lifecycle events for troubleshooting.
+The legacy Classic top toolbar and `preset="classic"` have been removed in favor of the canonical contextual editing experience.
+
+#### Automatic Migration via AST Codemod
+
+Run the shipped migration executable on your repository to automatically update imports and JSX elements (requires `typescript` installed in your project):
+
+```bash
+# Dry run to inspect planned changes without altering files:
+npx zettly-editor-migrate src/ --dry-run
+
+# Apply migration:
+npx zettly-editor-migrate src/
+```
+
+The codemod safely:
+1. Rewrites `<ClassicEditor>` imports and components to `<ZettlyEditor>`.
+2. Strips obsolete `preset="classic"` and `preset="medium"` attributes.
+3. Removes deprecated `EditorPreset` imports while preserving all other props, event handlers, and formatting.
+
+#### Manual Migration
+
+If you were using `ClassicEditor` or `preset="classic"`:
+
+```diff
+- import { ClassicEditor, EditorPreset } from "@programinglive/zettly-editor";
++ import { ZettlyEditor } from "@programinglive/zettly-editor";
+
+- <ClassicEditor value={content} onChange={setContent} />
++ <ZettlyEditor value={content} onChange={setContent} />
+
+- <ZettlyEditor preset="classic" value={content} onChange={setContent} />
++ <ZettlyEditor value={content} onChange={setContent} />
+```
 
 ## Syntax highlighting
 
@@ -220,7 +236,6 @@ Styling is handled in `src/components/editor/code-highlight.css`. Override the `
 | `value` | `string` | Controlled HTML content. |
 | `onChange` | `(value: string, meta: EditorMeta) => void` | Receive updates plus meta information. |
 | `onJsonChange` | `(doc: ZettlyDocumentV1) => void` | Optional callback receiving normalized ZettlyDocumentV1 AST on document changes. |
-| `preset` | `"medium" \| "classic"` | Writing preset (defaults to `"medium"` for clean borderless canvas with floating bubble toolbar; `"classic"` preserves the boxed layout with top toolbar). |
 | `blockRegistry` | `BlockCommandRegistry` | Optional custom registry for contextual slash commands and block inserter. |
 | `extensions` | `AnyExtension[]` | Additional TipTap extensions. |
 | `commands` | `CommandDefinition[]` | Custom toolbar commands. |

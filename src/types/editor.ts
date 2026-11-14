@@ -6,8 +6,6 @@ import type { ZettlyDocumentV1 } from "./document";
 
 export type EditorFlowState = "idle" | "loading" | "success" | "warning" | "error" | "info";
 
-export type EditorPreset = "medium" | "classic";
-
 export interface EditorMeta {
   characters: number;
   words: number;
@@ -56,11 +54,6 @@ export type DebugEvent =
   | (DebugEventBase & {
     type: "selectionUpdate";
     selection: EditorSelectionJSON;
-  })
-  | (DebugEventBase & {
-    type: "toolbarUpdate";
-    selection: EditorSelectionJSON;
-    activeCommands: string[];
   })
   | (DebugEventBase & {
     type: "error";
@@ -123,25 +116,12 @@ export interface EditorValueSync {
   onChange: (value: string, meta: EditorMeta) => void;
 }
 
-export interface ToolbarRenderProps {
-  editor: Editor;
-  commands: CommandDefinition[];
-  permissions: EditorPermissions;
-  messages: EditorMessages;
-  debug: boolean;
-  onDebugEvent?: (event: DebugEvent) => void;
-  onToggleDebug?: (next: boolean) => void;
-  onImageUpload?: (file: File) => Promise<string>;
-}
-
 export interface ZettlyEditorProps extends EditorValueSync {
-  preset?: EditorPreset;
   blockRegistry?: BlockCommandRegistry;
   extensions?: AnyExtension[];
   commands?: CommandDefinition[];
   permissions?: EditorPermissions;
   messages?: Partial<EditorMessages>;
-  toolbar?: (props: ToolbarRenderProps) => ReactNode;
   className?: string;
   editorClassName?: string;
   autoFocus?: boolean;

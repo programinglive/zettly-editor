@@ -2,13 +2,12 @@ import { describe, expect, test } from "vitest";
 import pkg from "../package.json";
 import versionrc from "../.versionrc.json";
 
-import { ZettlyEditor, MediumEditor, ClassicEditor, BubbleToolbar } from "./index";
+import { ZettlyEditor, MediumEditor, BubbleToolbar } from "./index";
 
 describe("@programinglive/zettly-editor", () => {
-  test("exports ZettlyEditor and preset components", () => {
+  test("exports ZettlyEditor and modern contextual components", () => {
     expect(ZettlyEditor).toBeTypeOf("function");
     expect(MediumEditor).toBeTypeOf("function");
-    expect(ClassicEditor).toBeTypeOf("function");
     expect(BubbleToolbar).toBeTypeOf("function");
   });
 
